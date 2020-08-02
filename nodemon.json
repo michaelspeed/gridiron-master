@@ -1,0 +1,10 @@
+{
+  "watch": [
+    "src",
+    "nuxt.config.ts",
+    "libs"
+  ],
+  "verbose": true,
+  "ext": "ts js vue",
+  "exec": "ts-node -r tsconfig-paths/register"
+}

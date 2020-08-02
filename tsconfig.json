@@ -1,0 +1,48 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "target": "es2017",
+    "noLib": false,
+    "allowJs": true,
+    "sourceMap": true,
+    "outDir": "./dist",
+    "baseUrl": ".",
+    "incremental": true,
+    "skipDefaultLibCheck": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "noImplicitAny": false,
+    "types": [
+      "@types/node",
+      "@nuxt/types",
+      "@nuxtjs/axios",
+      "@nuxtjs/apollo",
+      "vue-apollo"
+    ],
+    "paths": {
+      "@gridiron/core": [
+        "libs/core/src"
+      ],
+      "@gridiron/core/*": [
+        "libs/core/src/*"
+      ],
+      "@gridiron/asset-server-plugin": [
+        "libs/asset-server-plugin/src"
+      ],
+      "@gridiron/asset-server-plugin/*": [
+        "libs/asset-server-plugin/src/*"
+      ]
+    }
+  },
+  "exclude": [
+    "node_modules",
+    "dist",
+    "admin/assets",
+    "admin/static"
+  ]
+}

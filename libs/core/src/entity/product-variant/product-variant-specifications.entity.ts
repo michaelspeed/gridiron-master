@@ -1,0 +1,29 @@
+import {Field, ID, ObjectType} from '@nestjs/graphql';
+import {BaseEntity, Column, CreateDateColumn, Entity, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn} from 'typeorm';
+import {FilterableField, Relation} from '@nestjs-query/query-graphql';
+import {ProductVariant} from '../';
+import GraphQLJSON from 'graphql-type-json';
+
+@ObjectType('ProductVariantSpecs')
+@Entity({name: 'product-variant-specs'})
+@Relation('variant', () => ProductVariant, {nullable: true})
+export class ProductVariantSpecifications extends BaseEntity {
+    @FilterableField(() => ID)
+    @PrimaryGeneratedColumn('uuid')
+    id: string;
+
+    @FilterableField()
+    @CreateDateColumn()
+    createdAt: Date;
+
+    @FilterableField()
+    @UpdateDateColumn()
+    updatedAt: Date;
+
+    @Field(() => GraphQLJSON)
+    @Column('simple-json')
+    specs: JSON
+
+    @OneToOne(() => ProductVariant, variant => variant.specs)
+    variant: ProductVariant
+}

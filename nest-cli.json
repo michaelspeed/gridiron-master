@@ -1,0 +1,28 @@
+{
+  "collection": "@nestjs/schematics",
+  "sourceRoot": "src",
+  "projects": {
+    "core": {
+      "type": "library",
+      "root": "libs/core",
+      "entryFile": "index.ts",
+      "sourceRoot": "libs/core/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/core/tsconfig.lib.json"
+      }
+    },
+    "asset-server-plugin": {
+      "type": "library",
+      "root": "libs/asset-server-plugin",
+      "entryFile": "index",
+      "sourceRoot": "libs/asset-server-plugin/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/asset-server-plugin/tsconfig.lib.json"
+      }
+    }
+  },
+  "compilerOptions": {
+    "webpack": true,
+    "webpackConfigPath": "webpack.config.js"
+  }
+}
