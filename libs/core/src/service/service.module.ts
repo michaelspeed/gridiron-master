@@ -20,7 +20,6 @@ import {JobQueueModule} from '../job-queue/job-queue.module';
 import {ListQueryBuilder} from './helpers/list-query-builder/list-query-builder';
 import {ProductService} from './services/admin/product.service';
 import {ProductVariantsService} from './services/admin/product-variants.service';
-import {PrismaService} from './services/global/prisma.service';
 import {SessionService} from './services/global/session.service';
 import {VendorPlanService} from './services/admin/vendor-plan.service';
 import {BillingAgreementService} from './services/admin/billing-agreement.service';
@@ -55,7 +54,6 @@ export const adminServices = [
 ]
 
 export const globalServices = [
-    PrismaService,
     SessionService
 ]
 

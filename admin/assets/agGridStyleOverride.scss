@@ -24,8 +24,8 @@ $secondary-font-size: inherit;
 $secondary-font-weight: 600;
 $primary-color: #7367F0;
 
-@import "../../../../../../../node_modules/ag-grid-community/src/styles/ag-grid";
-@import "../../../../../../../node_modules/ag-grid-community/src/styles/ag-theme-material/sass/ag-theme-material";
+@import "../../node_modules/ag-grid-community/src/styles/ag-grid";
+@import "../../node_modules/ag-grid-community/src/styles/ag-theme-material/sass/ag-theme-material";
 
 $ag-suppress-legacy-var-import: true;
 

@@ -2,17 +2,15 @@ import {Injectable} from '@nestjs/common';
 import {Administrator, User} from '../../../entity';
 import {JwtService} from '@nestjs/jwt';
 import {InjectConnection} from '@nestjs/typeorm';
-import {Connection} from 'typeorm';
+import {Connection, Like} from 'typeorm';
 import {AdministratorEnum} from '../../../enums';
 import * as bcrypt from 'bcrypt';
-import {PrismaService} from '../../services/global/prisma.service';
 
 @Injectable()
 export class AdministratorService {
 
     constructor(
         private readonly jwtService: JwtService,
-        private readonly prismaService: PrismaService,
         @InjectConnection() private readonly connection: Connection
     ) {
     }
@@ -71,22 +69,16 @@ export class AdministratorService {
     }
 
     async getAllAdministrators(name?: string): Promise<Administrator[]> {
-        return await this.prismaService.administrator.findMany({
-            where:{
-                OR: [
-                    {
-                        firstName: {
-                            contains: name
-                        }
-                    },
-                    {
-                        lastName: {
-                            contains: name
-                        }
-                    }
-                ]
-            }
-        }) as any
+        return this.connection.getRepository(Administrator).find({
+            where: [
+                {
+                    firstName: Like(`%${name} %`)
+                },
+                {
+                    lastName: Like(`%${name} %`)
+                }
+            ]
+        })
     }
 
     createToken(userId: string, adminId: string): Promise<string> {

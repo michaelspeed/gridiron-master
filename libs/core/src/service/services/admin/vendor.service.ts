@@ -9,7 +9,6 @@ import {JwtService} from '@nestjs/jwt';
 import {SessionService} from '../global/session.service';
 import {EventBus, VendorEvents} from '../../../event-bus';
 import moment from 'moment';
-import {PrismaService} from '../global/prisma.service';
 
 @Injectable()
 export class VendorService {
@@ -18,7 +17,6 @@ export class VendorService {
        private readonly jwtService: JwtService,
        private readonly sessionService: SessionService,
        private eventBus: EventBus,
-       private prisma: PrismaService
     ) {}
 
     async findOneVendor(userId: string): Promise<Vendor> {
@@ -43,16 +41,15 @@ export class VendorService {
 
     onLoginVendor(email: string, password: string): Promise<{vendor: Vendor, user: User, session: AuthenticatedSession}> {
         return new Promise<{vendor: Vendor, user: User, session: AuthenticatedSession}>(async (resolve, reject) => {
-            const user = await this.prisma.user.findOne({where:{email}})
-            const vendor = await this.prisma.user.findOne({where:{email}}).vendor()
+            const user = await this.connection.getRepository(User).findOne({where:{email}, relations: ['vendor']})
             if (user) {
-                if (vendor) {
+                if (user.vendor) {
                     const valid = await bcrypt.compare(password, user.password)
                     if (valid) {
                         const tokensession = await this.sessionService.CreateAuthenticatedSession(user as any)
                         resolve({
-                            user: user as any,
-                            vendor: vendor as any,
+                            user: user,
+                            vendor: user.vendor,
                             session: tokensession
                         })
                     }

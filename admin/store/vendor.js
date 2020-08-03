@@ -1,4 +1,8 @@
 import {GetVendorInfoDocument} from "../gql";
+import VueCompositionApi from '@vue/composition-api'
+import Vue from 'vue'
+
+Vue.use(VueCompositionApi)
 
 export const state = () => ({
     vendor: null

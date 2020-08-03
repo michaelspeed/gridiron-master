@@ -1,6 +1,5 @@
 import {Injectable} from '@nestjs/common';
 import {Country, Zone} from '../../../entity';
-import {PrismaService} from '../global/prisma.service';
 import {InjectConnection} from '@nestjs/typeorm';
 import {Connection} from 'typeorm';
 
@@ -8,17 +7,16 @@ import {Connection} from 'typeorm';
 export class ZoneService {
 
     constructor(
-        private readonly prisma: PrismaService,
         @InjectConnection() readonly connection: Connection
     ) {
     }
 
     async FindAll(): Promise<Zone[]> {
-        return await this.prisma.zone.findMany() as any
+        return await this.connection.getRepository(Zone).find({relations: ['members', 'taxrates', 'stores']})
     }
 
     async FindOne(id: string): Promise<Zone> {
-        return this.connection.getRepository(Zone).findOne({where:{id}, relations: ['members']})
+        return this.connection.getRepository(Zone).findOne({where:{id}, relations: ['members', 'stores', 'taxrates']})
     }
 
     async AddCountryToZone(id: string, countryId: string): Promise<Zone> {

@@ -2,6 +2,7 @@ import gql from 'graphql-tag';
 import * as VueApolloComposable from '@vue/apollo-composable';
 import * as VueCompositionApi from '@vue/composition-api';
 export type Maybe<T> = T | null;
+export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type ReactiveFunction<TParam> = () => TParam;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
@@ -5696,10 +5697,10 @@ export type CreateManyMenusInput = {
   menus: Array<CreateMenu>;
 };
 
-export type AdministratorLoginMutationVariables = {
+export type AdministratorLoginMutationVariables = Exact<{
   email: Scalars['String'];
   password: Scalars['String'];
-};
+}>;
 
 
 export type AdministratorLoginMutation = (
@@ -5721,7 +5722,7 @@ export type AdministratorLoginMutation = (
   ) }
 );
 
-export type CreateDefaultStoreMutationVariables = {
+export type CreateDefaultStoreMutationVariables = Exact<{
   countryId: Scalars['String'];
   zipcode: Scalars['String'];
   streetAddress2: Scalars['String'];
@@ -5730,7 +5731,7 @@ export type CreateDefaultStoreMutationVariables = {
   officialemail: Scalars['String'];
   phoneNumber: Scalars['String'];
   storeName: Scalars['String'];
-};
+}>;
 
 
 export type CreateDefaultStoreMutation = (
@@ -5741,7 +5742,7 @@ export type CreateDefaultStoreMutation = (
   ) }
 );
 
-export type CreateOneStoreMutationVariables = {
+export type CreateOneStoreMutationVariables = Exact<{
   storeName?: Maybe<Scalars['String']>;
   phoneNumber?: Maybe<Scalars['String']>;
   officialemail?: Maybe<Scalars['String']>;
@@ -5750,7 +5751,7 @@ export type CreateOneStoreMutationVariables = {
   streetAddress1?: Maybe<Scalars['String']>;
   streetAddress2?: Maybe<Scalars['String']>;
   zipcode?: Maybe<Scalars['String']>;
-};
+}>;
 
 
 export type CreateOneStoreMutation = (
@@ -5761,10 +5762,10 @@ export type CreateOneStoreMutation = (
   ) }
 );
 
-export type SetCountryOnStoreMutationVariables = {
+export type SetCountryOnStoreMutationVariables = Exact<{
   countryId: Scalars['ID'];
   storeId: Scalars['ID'];
-};
+}>;
 
 
 export type SetCountryOnStoreMutation = (
@@ -5775,9 +5776,9 @@ export type SetCountryOnStoreMutation = (
   ) }
 );
 
-export type CreateOneZoneMutationVariables = {
+export type CreateOneZoneMutationVariables = Exact<{
   zone?: Maybe<Scalars['String']>;
-};
+}>;
 
 
 export type CreateOneZoneMutation = (
@@ -5788,7 +5789,7 @@ export type CreateOneZoneMutation = (
   ) }
 );
 
-export type UpdateOneStoreMutationVariables = {
+export type UpdateOneStoreMutationVariables = Exact<{
   id: Scalars['ID'];
   storeName?: Maybe<Scalars['String']>;
   phoneNumber?: Maybe<Scalars['String']>;
@@ -5799,7 +5800,7 @@ export type UpdateOneStoreMutationVariables = {
   GSTIN?: Maybe<Scalars['String']>;
   singleStore?: Maybe<Scalars['Boolean']>;
   rentalStore?: Maybe<Scalars['Boolean']>;
-};
+}>;
 
 
 export type UpdateOneStoreMutation = (
@@ -5810,9 +5811,9 @@ export type UpdateOneStoreMutation = (
   ) }
 );
 
-export type CreateTaxRuleMutationVariables = {
+export type CreateTaxRuleMutationVariables = Exact<{
   name?: Maybe<Scalars['String']>;
-};
+}>;
 
 
 export type CreateTaxRuleMutation = (
@@ -5823,11 +5824,11 @@ export type CreateTaxRuleMutation = (
   ) }
 );
 
-export type CreateTaxRateMutationVariables = {
+export type CreateTaxRateMutationVariables = Exact<{
   name?: Maybe<Scalars['String']>;
   value?: Maybe<Scalars['Float']>;
   enabled?: Maybe<Scalars['Boolean']>;
-};
+}>;
 
 
 export type CreateTaxRateMutation = (
@@ -5838,10 +5839,10 @@ export type CreateTaxRateMutation = (
   ) }
 );
 
-export type SetZoneOnTaxRateMutationVariables = {
+export type SetZoneOnTaxRateMutationVariables = Exact<{
   id: Scalars['ID'];
   zoneID: Scalars['ID'];
-};
+}>;
 
 
 export type SetZoneOnTaxRateMutation = (
@@ -5852,10 +5853,10 @@ export type SetZoneOnTaxRateMutation = (
   ) }
 );
 
-export type SetCategoryOnTaxRateMutationVariables = {
+export type SetCategoryOnTaxRateMutationVariables = Exact<{
   id: Scalars['ID'];
   categoryId: Scalars['ID'];
-};
+}>;
 
 
 export type SetCategoryOnTaxRateMutation = (
@@ -5866,13 +5867,13 @@ export type SetCategoryOnTaxRateMutation = (
   ) }
 );
 
-export type CreateOneChannelMutationVariables = {
+export type CreateOneChannelMutationVariables = Exact<{
   code?: Maybe<Scalars['String']>;
   token?: Maybe<Scalars['String']>;
   currencyCode?: Maybe<Scalars['String']>;
   pricesIncludeTax?: Maybe<Scalars['Boolean']>;
   defaultLanguageCode: Scalars['String'];
-};
+}>;
 
 
 export type CreateOneChannelMutation = (
@@ -5883,11 +5884,11 @@ export type CreateOneChannelMutation = (
   ) }
 );
 
-export type CreateOneCollectionMutationVariables = {
+export type CreateOneCollectionMutationVariables = Exact<{
   isRoot?: Maybe<Scalars['Boolean']>;
   name?: Maybe<Scalars['String']>;
   desc?: Maybe<Scalars['String']>;
-};
+}>;
 
 
 export type CreateOneCollectionMutation = (
@@ -5898,10 +5899,10 @@ export type CreateOneCollectionMutation = (
   ) }
 );
 
-export type AddParentToChildCollectionMutationVariables = {
+export type AddParentToChildCollectionMutationVariables = Exact<{
   parentId: Scalars['String'];
   childId: Scalars['String'];
-};
+}>;
 
 
 export type AddParentToChildCollectionMutation = (
@@ -5912,12 +5913,12 @@ export type AddParentToChildCollectionMutation = (
   ) }
 );
 
-export type CreateOneSeoMutationVariables = {
+export type CreateOneSeoMutationVariables = Exact<{
   urlKey?: Maybe<Scalars['String']>;
   metatitle?: Maybe<Scalars['String']>;
   metakeywords?: Maybe<Array<Scalars['String']>>;
   metadesc?: Maybe<Scalars['String']>;
-};
+}>;
 
 
 export type CreateOneSeoMutation = (
@@ -5928,10 +5929,10 @@ export type CreateOneSeoMutation = (
   ) }
 );
 
-export type SetSeoOnCollectionMutationVariables = {
+export type SetSeoOnCollectionMutationVariables = Exact<{
   id: Scalars['ID'];
   relationId: Scalars['ID'];
-};
+}>;
 
 
 export type SetSeoOnCollectionMutation = (
@@ -5942,7 +5943,7 @@ export type SetSeoOnCollectionMutation = (
   ) }
 );
 
-export type UpdateCollectionMutationVariables = {
+export type UpdateCollectionMutationVariables = Exact<{
   colId: Scalars['ID'];
   seoID: Scalars['ID'];
   name?: Maybe<Scalars['String']>;
@@ -5952,7 +5953,7 @@ export type UpdateCollectionMutationVariables = {
   metatitle?: Maybe<Scalars['String']>;
   metadesc?: Maybe<Scalars['String']>;
   metakeywords: Array<Scalars['String']>;
-};
+}>;
 
 
 export type UpdateCollectionMutation = (
@@ -5966,9 +5967,9 @@ export type UpdateCollectionMutation = (
   ) }
 );
 
-export type CreateAssetMutationVariables = {
+export type CreateAssetMutationVariables = Exact<{
   file: Scalars['Upload'];
-};
+}>;
 
 
 export type CreateAssetMutation = (
@@ -5979,11 +5980,11 @@ export type CreateAssetMutation = (
   ) }
 );
 
-export type CreateFacetMutationVariables = {
+export type CreateFacetMutationVariables = Exact<{
   name?: Maybe<Scalars['String']>;
   isPrivate?: Maybe<Scalars['Boolean']>;
   code?: Maybe<Scalars['String']>;
-};
+}>;
 
 
 export type CreateFacetMutation = (
@@ -5994,9 +5995,9 @@ export type CreateFacetMutation = (
   ) }
 );
 
-export type CreateFacetValueMutationVariables = {
+export type CreateFacetValueMutationVariables = Exact<{
   code?: Maybe<Scalars['String']>;
-};
+}>;
 
 
 export type CreateFacetValueMutation = (
@@ -6007,10 +6008,10 @@ export type CreateFacetValueMutation = (
   ) }
 );
 
-export type SetFacetOnValueMutationVariables = {
+export type SetFacetOnValueMutationVariables = Exact<{
   id: Scalars['ID'];
   rel: Scalars['ID'];
-};
+}>;
 
 
 export type SetFacetOnValueMutation = (
@@ -6021,14 +6022,14 @@ export type SetFacetOnValueMutation = (
   ) }
 );
 
-export type CreateProductMutationVariables = {
+export type CreateProductMutationVariables = Exact<{
   name: Scalars['String'];
   slug: Scalars['String'];
   desc: Scalars['String'];
   facet: Array<Scalars['String']>;
   asset: Array<Scalars['String']>;
   featured: Scalars['String'];
-};
+}>;
 
 
 export type CreateProductMutation = (
@@ -6039,14 +6040,14 @@ export type CreateProductMutation = (
   ) }
 );
 
-export type UpdateProductMutationVariables = {
+export type UpdateProductMutationVariables = Exact<{
   name: Scalars['String'];
   id: Scalars['ID'];
   desc: Scalars['String'];
   facet: Array<Scalars['String']>;
   asset: Array<Scalars['String']>;
   featured: Scalars['String'];
-};
+}>;
 
 
 export type UpdateProductMutation = (
@@ -6057,12 +6058,12 @@ export type UpdateProductMutation = (
   ) }
 );
 
-export type CreatePlanMutationVariables = {
+export type CreatePlanMutationVariables = Exact<{
   value: Scalars['Float'];
   name: Scalars['String'];
   priceStrategy: VendorPlanPrice;
   tenureStrategy: VendorPlanTenure;
-};
+}>;
 
 
 export type CreatePlanMutation = (
@@ -6073,10 +6074,10 @@ export type CreatePlanMutation = (
   ) }
 );
 
-export type UpdatePlanMutationVariables = {
+export type UpdatePlanMutationVariables = Exact<{
   id: Scalars['ID'];
   status: Scalars['Boolean'];
-};
+}>;
 
 
 export type UpdatePlanMutation = (
@@ -6087,10 +6088,10 @@ export type UpdatePlanMutation = (
   ) }
 );
 
-export type CreateProductVariantsMutationVariables = {
+export type CreateProductVariantsMutationVariables = Exact<{
   prodId: Scalars['ID'];
   options: Scalars['String'];
-};
+}>;
 
 
 export type CreateProductVariantsMutation = (
@@ -6101,12 +6102,12 @@ export type CreateProductVariantsMutation = (
   )> }
 );
 
-export type CreateVariantPriceMutationVariables = {
+export type CreateVariantPriceMutationVariables = Exact<{
   taxId: Scalars['ID'];
   price: Scalars['Float'];
   variantId: Scalars['ID'];
   taxIncluded: Scalars['Boolean'];
-};
+}>;
 
 
 export type CreateVariantPriceMutation = (
@@ -6117,12 +6118,12 @@ export type CreateVariantPriceMutation = (
   ) }
 );
 
-export type UpdateVariantPriceMutationVariables = {
+export type UpdateVariantPriceMutationVariables = Exact<{
   taxId: Scalars['ID'];
   price: Scalars['Float'];
   variantPriceId: Scalars['ID'];
   taxIncluded: Scalars['Boolean'];
-};
+}>;
 
 
 export type UpdateVariantPriceMutation = (
@@ -6133,7 +6134,7 @@ export type UpdateVariantPriceMutation = (
   ) }
 );
 
-export type RegisterVendorMutationVariables = {
+export type RegisterVendorMutationVariables = Exact<{
   firstname: Scalars['String'];
   lastname: Scalars['String'];
   email: Scalars['String'];
@@ -6148,7 +6149,7 @@ export type RegisterVendorMutationVariables = {
   streetAddress2: Scalars['String'];
   rentals: Scalars['Boolean'];
   planID: Scalars['String'];
-};
+}>;
 
 
 export type RegisterVendorMutation = (
@@ -6166,10 +6167,10 @@ export type RegisterVendorMutation = (
   ) }
 );
 
-export type LoginVendorMutationVariables = {
+export type LoginVendorMutationVariables = Exact<{
   email: Scalars['String'];
   password: Scalars['String'];
-};
+}>;
 
 
 export type LoginVendorMutation = (
@@ -6187,11 +6188,11 @@ export type LoginVendorMutation = (
   ) }
 );
 
-export type CreateRoleMutationVariables = {
+export type CreateRoleMutationVariables = Exact<{
   roles: Array<Permission>;
   description: Scalars['String'];
   code: Scalars['String'];
-};
+}>;
 
 
 export type CreateRoleMutation = (
@@ -6202,11 +6203,11 @@ export type CreateRoleMutation = (
   ) }
 );
 
-export type UpdateRoleMutationVariables = {
+export type UpdateRoleMutationVariables = Exact<{
   roles: Array<Permission>;
   description: Scalars['String'];
   id: Scalars['ID'];
-};
+}>;
 
 
 export type UpdateRoleMutation = (
@@ -6217,13 +6218,13 @@ export type UpdateRoleMutation = (
   ) }
 );
 
-export type CreateAdministratorMutationVariables = {
+export type CreateAdministratorMutationVariables = Exact<{
   type: AdministratorEnum;
   email: Scalars['String'];
   lname: Scalars['String'];
   fname: Scalars['String'];
   phone: Scalars['String'];
-};
+}>;
 
 
 export type CreateAdministratorMutation = (
@@ -6234,10 +6235,10 @@ export type CreateAdministratorMutation = (
   ) }
 );
 
-export type CreateProductVariantSpecificationMutationVariables = {
+export type CreateProductVariantSpecificationMutationVariables = Exact<{
   specs: Scalars['JSON'];
   variantId: Scalars['ID'];
-};
+}>;
 
 
 export type CreateProductVariantSpecificationMutation = (
@@ -6248,10 +6249,10 @@ export type CreateProductVariantSpecificationMutation = (
   ) }
 );
 
-export type UpdateProductVariantSpecificationMutationVariables = {
+export type UpdateProductVariantSpecificationMutationVariables = Exact<{
   specs: Scalars['JSON'];
   id: Scalars['ID'];
-};
+}>;
 
 
 export type UpdateProductVariantSpecificationMutation = (
@@ -6262,10 +6263,10 @@ export type UpdateProductVariantSpecificationMutation = (
   ) }
 );
 
-export type UpdateProductCollectionMutationVariables = {
+export type UpdateProductCollectionMutationVariables = Exact<{
   id: Scalars['ID'];
   collectionId: Scalars['ID'];
-};
+}>;
 
 
 export type UpdateProductCollectionMutation = (
@@ -6276,12 +6277,12 @@ export type UpdateProductCollectionMutation = (
   ) }
 );
 
-export type UpdateOneSeoMutationVariables = {
+export type UpdateOneSeoMutationVariables = Exact<{
   id: Scalars['ID'];
   metatitle?: Maybe<Scalars['String']>;
   metakeywords: Array<Scalars['String']>;
   metadesc?: Maybe<Scalars['String']>;
-};
+}>;
 
 
 export type UpdateOneSeoMutation = (
@@ -6292,10 +6293,10 @@ export type UpdateOneSeoMutation = (
   ) }
 );
 
-export type CreateBillingRequestMutationVariables = {
+export type CreateBillingRequestMutationVariables = Exact<{
   id: Scalars['String'];
   value: Scalars['String'];
-};
+}>;
 
 
 export type CreateBillingRequestMutation = (
@@ -6306,10 +6307,10 @@ export type CreateBillingRequestMutation = (
   ) }
 );
 
-export type UpdateBillingRequestMutationVariables = {
+export type UpdateBillingRequestMutationVariables = Exact<{
   id: Scalars['String'];
   value: Scalars['String'];
-};
+}>;
 
 
 export type UpdateBillingRequestMutation = (
@@ -6320,10 +6321,10 @@ export type UpdateBillingRequestMutation = (
   ) }
 );
 
-export type AddCountryToZoneMutationVariables = {
+export type AddCountryToZoneMutationVariables = Exact<{
   id: Scalars['ID'];
   countryId: Scalars['ID'];
-};
+}>;
 
 
 export type AddCountryToZoneMutation = (
@@ -6334,9 +6335,9 @@ export type AddCountryToZoneMutation = (
   ) }
 );
 
-export type DeleteOneFacetMutationVariables = {
+export type DeleteOneFacetMutationVariables = Exact<{
   id: Scalars['ID'];
-};
+}>;
 
 
 export type DeleteOneFacetMutation = (
@@ -6347,9 +6348,9 @@ export type DeleteOneFacetMutation = (
   ) }
 );
 
-export type DeleteOneFacetValueMutationVariables = {
+export type DeleteOneFacetValueMutationVariables = Exact<{
   id: Scalars['ID'];
-};
+}>;
 
 
 export type DeleteOneFacetValueMutation = (
@@ -6360,10 +6361,10 @@ export type DeleteOneFacetValueMutation = (
   ) }
 );
 
-export type CreateProductVariantAssetMutationVariables = {
+export type CreateProductVariantAssetMutationVariables = Exact<{
   assetId: Scalars['ID'];
   id: Scalars['ID'];
-};
+}>;
 
 
 export type CreateProductVariantAssetMutation = (
@@ -6374,13 +6375,13 @@ export type CreateProductVariantAssetMutation = (
   ) }
 );
 
-export type CreateProductSeoMutationVariables = {
+export type CreateProductSeoMutationVariables = Exact<{
   variantId: Scalars['ID'];
   metadesc: Scalars['String'];
   metakeywords: Array<Scalars['String']>;
   urlKey: Scalars['String'];
   metatitle: Scalars['String'];
-};
+}>;
 
 
 export type CreateProductSeoMutation = (
@@ -6391,13 +6392,13 @@ export type CreateProductSeoMutation = (
   ) }
 );
 
-export type UpdateProductSeoMutationVariables = {
+export type UpdateProductSeoMutationVariables = Exact<{
   seoId: Scalars['ID'];
   metadesc: Scalars['String'];
   metakeywords: Array<Scalars['String']>;
   urlKey: Scalars['String'];
   metatitle: Scalars['String'];
-};
+}>;
 
 
 export type UpdateProductSeoMutation = (
@@ -6408,7 +6409,7 @@ export type UpdateProductSeoMutation = (
   ) }
 );
 
-export type CreateOrUpdateStockMutationVariables = {
+export type CreateOrUpdateStockMutationVariables = Exact<{
   quantity: Scalars['Float'];
   threshold: Scalars['Float'];
   sku: Scalars['String'];
@@ -6419,7 +6420,7 @@ export type CreateOrUpdateStockMutationVariables = {
   stockId?: Maybe<Scalars['ID']>;
   storeId?: Maybe<Scalars['ID']>;
   type?: Maybe<StockKeepingType>;
-};
+}>;
 
 
 export type CreateOrUpdateStockMutation = (
@@ -6430,9 +6431,9 @@ export type CreateOrUpdateStockMutation = (
   ) }
 );
 
-export type CreateOneZipMutationVariables = {
+export type CreateOneZipMutationVariables = Exact<{
   code: Scalars['Float'];
-};
+}>;
 
 
 export type CreateOneZipMutation = (
@@ -6443,11 +6444,11 @@ export type CreateOneZipMutation = (
   ) }
 );
 
-export type CreateOneMenuMutationVariables = {
+export type CreateOneMenuMutationVariables = Exact<{
   title?: Maybe<Scalars['String']>;
   targetId?: Maybe<Scalars['String']>;
   target?: Maybe<Scalars['String']>;
-};
+}>;
 
 
 export type CreateOneMenuMutation = (
@@ -6458,12 +6459,12 @@ export type CreateOneMenuMutation = (
   ) }
 );
 
-export type CreateMenuChildNodeMutationVariables = {
+export type CreateMenuChildNodeMutationVariables = Exact<{
   nodeId: Scalars['ID'];
   target: Scalars['String'];
   targetId: Scalars['String'];
   title: Scalars['String'];
-};
+}>;
 
 
 export type CreateMenuChildNodeMutation = (
@@ -6474,7 +6475,7 @@ export type CreateMenuChildNodeMutation = (
   ) }
 );
 
-export type GetAdministratorDataQueryVariables = {};
+export type GetAdministratorDataQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetAdministratorDataQuery = (
@@ -6485,7 +6486,7 @@ export type GetAdministratorDataQuery = (
   ) }
 );
 
-export type GetVendorInfoQueryVariables = {};
+export type GetVendorInfoQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetVendorInfoQuery = (
@@ -6500,7 +6501,7 @@ export type GetVendorInfoQuery = (
   )> }
 );
 
-export type GetDefaultStoreQueryVariables = {};
+export type GetDefaultStoreQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetDefaultStoreQuery = (
@@ -6515,7 +6516,7 @@ export type GetDefaultStoreQuery = (
   ) }
 );
 
-export type GetAllCountriesQueryVariables = {};
+export type GetAllCountriesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetAllCountriesQuery = (
@@ -6526,7 +6527,7 @@ export type GetAllCountriesQuery = (
   )> }
 );
 
-export type GetAllZonesQueryVariables = {};
+export type GetAllZonesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetAllZonesQuery = (
@@ -6546,13 +6547,13 @@ export type GetAllZonesQuery = (
   ) }
 );
 
-export type GetTaxRulesQueryVariables = {
+export type GetTaxRulesQueryVariables = Exact<{
   first?: Maybe<Scalars['Int']>;
   iLike?: Maybe<Scalars['String']>;
   after?: Maybe<Scalars['ConnectionCursor']>;
   last?: Maybe<Scalars['Int']>;
   before?: Maybe<Scalars['ConnectionCursor']>;
-};
+}>;
 
 
 export type GetTaxRulesQuery = (
@@ -6572,12 +6573,12 @@ export type GetTaxRulesQuery = (
   ) }
 );
 
-export type GetTaxRatesQueryVariables = {
+export type GetTaxRatesQueryVariables = Exact<{
   before?: Maybe<Scalars['ConnectionCursor']>;
   after?: Maybe<Scalars['ConnectionCursor']>;
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
-};
+}>;
 
 
 export type GetTaxRatesQuery = (
@@ -6604,13 +6605,13 @@ export type GetTaxRatesQuery = (
   ) }
 );
 
-export type GetAllChannelsQueryVariables = {
+export type GetAllChannelsQueryVariables = Exact<{
   before?: Maybe<Scalars['ConnectionCursor']>;
   after?: Maybe<Scalars['ConnectionCursor']>;
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
   search?: Maybe<Scalars['String']>;
-};
+}>;
 
 
 export type GetAllChannelsQuery = (
@@ -6630,7 +6631,7 @@ export type GetAllChannelsQuery = (
   ) }
 );
 
-export type GetallcollectionQueryVariables = {};
+export type GetallcollectionQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetallcollectionQuery = (
@@ -6661,9 +6662,9 @@ export type GetallcollectionQuery = (
   )> }
 );
 
-export type GetOneCollectionQueryVariables = {
+export type GetOneCollectionQueryVariables = Exact<{
   id: Scalars['ID'];
-};
+}>;
 
 
 export type GetOneCollectionQuery = (
@@ -6678,12 +6679,12 @@ export type GetOneCollectionQuery = (
   )> }
 );
 
-export type GetAllAssetsQueryVariables = {
+export type GetAllAssetsQueryVariables = Exact<{
   before?: Maybe<Scalars['ConnectionCursor']>;
   after?: Maybe<Scalars['ConnectionCursor']>;
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
-};
+}>;
 
 
 export type GetAllAssetsQuery = (
@@ -6703,12 +6704,12 @@ export type GetAllAssetsQuery = (
   ) }
 );
 
-export type GetAllFacetsQueryVariables = {
+export type GetAllFacetsQueryVariables = Exact<{
   before?: Maybe<Scalars['ConnectionCursor']>;
   after?: Maybe<Scalars['ConnectionCursor']>;
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
-};
+}>;
 
 
 export type GetAllFacetsQuery = (
@@ -6728,13 +6729,13 @@ export type GetAllFacetsQuery = (
   ) }
 );
 
-export type GetFacetValuesQueryVariables = {
+export type GetFacetValuesQueryVariables = Exact<{
   before?: Maybe<Scalars['ConnectionCursor']>;
   after?: Maybe<Scalars['ConnectionCursor']>;
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
   search?: Maybe<Scalars['String']>;
-};
+}>;
 
 
 export type GetFacetValuesQuery = (
@@ -6758,12 +6759,12 @@ export type GetFacetValuesQuery = (
   ) }
 );
 
-export type GetAllProductsQueryVariables = {
+export type GetAllProductsQueryVariables = Exact<{
   before?: Maybe<Scalars['ConnectionCursor']>;
   after?: Maybe<Scalars['ConnectionCursor']>;
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
-};
+}>;
 
 
 export type GetAllProductsQuery = (
@@ -6813,9 +6814,9 @@ export type GetAllProductsQuery = (
   ) }
 );
 
-export type GetFacetQueryVariables = {
+export type GetFacetQueryVariables = Exact<{
   id: Scalars['ID'];
-};
+}>;
 
 
 export type GetFacetQuery = (
@@ -6836,9 +6837,9 @@ export type GetFacetQuery = (
   )> }
 );
 
-export type GetOneProductQueryVariables = {
+export type GetOneProductQueryVariables = Exact<{
   id: Scalars['ID'];
-};
+}>;
 
 
 export type GetOneProductQuery = (
@@ -6882,12 +6883,12 @@ export type GetOneProductQuery = (
   )> }
 );
 
-export type GetAllVendurePlansQueryVariables = {
+export type GetAllVendurePlansQueryVariables = Exact<{
   before?: Maybe<Scalars['ConnectionCursor']>;
   after?: Maybe<Scalars['ConnectionCursor']>;
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
-};
+}>;
 
 
 export type GetAllVendurePlansQuery = (
@@ -6907,9 +6908,9 @@ export type GetAllVendurePlansQuery = (
   ) }
 );
 
-export type GetProductVariantQueryVariables = {
+export type GetProductVariantQueryVariables = Exact<{
   id: Scalars['ID'];
-};
+}>;
 
 
 export type GetProductVariantQuery = (
@@ -6970,7 +6971,7 @@ export type GetProductVariantQuery = (
   )> }
 );
 
-export type GetAllTaxRatesQueryVariables = {};
+export type GetAllTaxRatesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetAllTaxRatesQuery = (
@@ -6988,7 +6989,7 @@ export type GetAllTaxRatesQuery = (
   )> }
 );
 
-export type ZoneFindManyQueryVariables = {};
+export type ZoneFindManyQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type ZoneFindManyQuery = (
@@ -6999,7 +7000,7 @@ export type ZoneFindManyQuery = (
   )> }
 );
 
-export type FindAllVendorPlansQueryVariables = {};
+export type FindAllVendorPlansQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type FindAllVendorPlansQuery = (
@@ -7010,7 +7011,7 @@ export type FindAllVendorPlansQuery = (
   )> }
 );
 
-export type GetAllRolesQueryVariables = {};
+export type GetAllRolesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetAllRolesQuery = (
@@ -7027,9 +7028,9 @@ export type GetAllRolesQuery = (
   ) }
 );
 
-export type GetRoleQueryVariables = {
+export type GetRoleQueryVariables = Exact<{
   id: Scalars['ID'];
-};
+}>;
 
 
 export type GetRoleQuery = (
@@ -7040,9 +7041,9 @@ export type GetRoleQuery = (
   )> }
 );
 
-export type GetAllAdministratorQueryVariables = {
+export type GetAllAdministratorQueryVariables = Exact<{
   search?: Maybe<Scalars['String']>;
-};
+}>;
 
 
 export type GetAllAdministratorQuery = (
@@ -7053,9 +7054,9 @@ export type GetAllAdministratorQuery = (
   )> }
 );
 
-export type GetSingleProductVariantQueryVariables = {
+export type GetSingleProductVariantQueryVariables = Exact<{
   id: Scalars['ID'];
-};
+}>;
 
 
 export type GetSingleProductVariantQuery = (
@@ -7070,7 +7071,7 @@ export type GetSingleProductVariantQuery = (
   )> }
 );
 
-export type GetBillingAgreementByVendorQueryVariables = {};
+export type GetBillingAgreementByVendorQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetBillingAgreementByVendorQuery = (
@@ -7092,12 +7093,12 @@ export type GetBillingAgreementByVendorQuery = (
   )> }
 );
 
-export type GetAllSeoQueryVariables = {
+export type GetAllSeoQueryVariables = Exact<{
   before?: Maybe<Scalars['ConnectionCursor']>;
   after?: Maybe<Scalars['ConnectionCursor']>;
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
-};
+}>;
 
 
 export type GetAllSeoQuery = (
@@ -7124,9 +7125,9 @@ export type GetAllSeoQuery = (
   ) }
 );
 
-export type GetOneSeoQueryVariables = {
+export type GetOneSeoQueryVariables = Exact<{
   id: Scalars['ID'];
-};
+}>;
 
 
 export type GetOneSeoQuery = (
@@ -7144,9 +7145,9 @@ export type GetOneSeoQuery = (
   )> }
 );
 
-export type GetBillingAgreementQueryVariables = {
+export type GetBillingAgreementQueryVariables = Exact<{
   id: Scalars['ID'];
-};
+}>;
 
 
 export type GetBillingAgreementQuery = (
@@ -7157,9 +7158,9 @@ export type GetBillingAgreementQuery = (
   ) }
 );
 
-export type GetBillingRequestForAgreementQueryVariables = {
+export type GetBillingRequestForAgreementQueryVariables = Exact<{
   id: Scalars['String'];
-};
+}>;
 
 
 export type GetBillingRequestForAgreementQuery = (
@@ -7170,9 +7171,9 @@ export type GetBillingRequestForAgreementQuery = (
   )> }
 );
 
-export type ZoneFindOneQueryVariables = {
+export type ZoneFindOneQueryVariables = Exact<{
   id: Scalars['ID'];
-};
+}>;
 
 
 export type ZoneFindOneQuery = (
@@ -7193,7 +7194,7 @@ export type ZoneFindOneQuery = (
   ) }
 );
 
-export type GetAllTaxCategoryQueryVariables = {};
+export type GetAllTaxCategoryQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetAllTaxCategoryQuery = (
@@ -7204,10 +7205,10 @@ export type GetAllTaxCategoryQuery = (
   )> }
 );
 
-export type GetStockKeepingVendorQueryVariables = {
+export type GetStockKeepingVendorQueryVariables = Exact<{
   variantId: Scalars['ID'];
   vendorId?: Maybe<Scalars['ID']>;
-};
+}>;
 
 
 export type GetStockKeepingVendorQuery = (
@@ -7218,7 +7219,7 @@ export type GetStockKeepingVendorQuery = (
   )> }
 );
 
-export type FindAllZipQueryVariables = {};
+export type FindAllZipQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type FindAllZipQuery = (
@@ -7229,7 +7230,7 @@ export type FindAllZipQuery = (
   )> }
 );
 
-export type GetStockKeepingByStoreQueryVariables = {};
+export type GetStockKeepingByStoreQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetStockKeepingByStoreQuery = (
@@ -7244,7 +7245,7 @@ export type GetStockKeepingByStoreQuery = (
   )> }
 );
 
-export type GetMenuTreeQueryVariables = {};
+export type GetMenuTreeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetMenuTreeQuery = (
@@ -7255,9 +7256,9 @@ export type GetMenuTreeQuery = (
   ) }
 );
 
-export type SearchProductVariantsQueryVariables = {
+export type SearchProductVariantsQueryVariables = Exact<{
   search?: Maybe<Scalars['String']>;
-};
+}>;
 
 
 export type SearchProductVariantsQuery = (
@@ -7274,9 +7275,9 @@ export type SearchProductVariantsQuery = (
   ) }
 );
 
-export type SearchCollectionQueryVariables = {
+export type SearchCollectionQueryVariables = Exact<{
   search?: Maybe<Scalars['String']>;
-};
+}>;
 
 
 export type SearchCollectionQuery = (
@@ -7293,9 +7294,9 @@ export type SearchCollectionQuery = (
   ) }
 );
 
-export type SearchFacetValueQueryVariables = {
+export type SearchFacetValueQueryVariables = Exact<{
   search?: Maybe<Scalars['String']>;
-};
+}>;
 
 
 export type SearchFacetValueQuery = (
@@ -7356,7 +7357,7 @@ export const AdministratorLoginDocument = gql`
  *   },
  * });
  */
-export function useAdministratorLoginMutation(options: VueApolloComposable.UseMutationOptionsWithVariables<AdministratorLoginMutation, AdministratorLoginMutationVariables>) {
+export function useAdministratorLoginMutation(options: VueApolloComposable.UseMutationOptions<AdministratorLoginMutation, AdministratorLoginMutationVariables>) {
             return VueApolloComposable.useMutation<AdministratorLoginMutation, AdministratorLoginMutationVariables>(AdministratorLoginDocument, options);
           }
 export type AdministratorLoginMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<AdministratorLoginMutation, AdministratorLoginMutationVariables>;
@@ -7392,7 +7393,7 @@ export const CreateDefaultStoreDocument = gql`
  *   },
  * });
  */
-export function useCreateDefaultStoreMutation(options: VueApolloComposable.UseMutationOptionsWithVariables<CreateDefaultStoreMutation, CreateDefaultStoreMutationVariables>) {
+export function useCreateDefaultStoreMutation(options: VueApolloComposable.UseMutationOptions<CreateDefaultStoreMutation, CreateDefaultStoreMutationVariables>) {
             return VueApolloComposable.useMutation<CreateDefaultStoreMutation, CreateDefaultStoreMutationVariables>(CreateDefaultStoreDocument, options);
           }
 export type CreateDefaultStoreMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<CreateDefaultStoreMutation, CreateDefaultStoreMutationVariables>;
@@ -7458,7 +7459,7 @@ export const SetCountryOnStoreDocument = gql`
  *   },
  * });
  */
-export function useSetCountryOnStoreMutation(options: VueApolloComposable.UseMutationOptionsWithVariables<SetCountryOnStoreMutation, SetCountryOnStoreMutationVariables>) {
+export function useSetCountryOnStoreMutation(options: VueApolloComposable.UseMutationOptions<SetCountryOnStoreMutation, SetCountryOnStoreMutationVariables>) {
             return VueApolloComposable.useMutation<SetCountryOnStoreMutation, SetCountryOnStoreMutationVariables>(SetCountryOnStoreDocument, options);
           }
 export type SetCountryOnStoreMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<SetCountryOnStoreMutation, SetCountryOnStoreMutationVariables>;
@@ -7525,7 +7526,7 @@ export const UpdateOneStoreDocument = gql`
  *   },
  * });
  */
-export function useUpdateOneStoreMutation(options: VueApolloComposable.UseMutationOptionsWithVariables<UpdateOneStoreMutation, UpdateOneStoreMutationVariables>) {
+export function useUpdateOneStoreMutation(options: VueApolloComposable.UseMutationOptions<UpdateOneStoreMutation, UpdateOneStoreMutationVariables>) {
             return VueApolloComposable.useMutation<UpdateOneStoreMutation, UpdateOneStoreMutationVariables>(UpdateOneStoreDocument, options);
           }
 export type UpdateOneStoreMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<UpdateOneStoreMutation, UpdateOneStoreMutationVariables>;
@@ -7615,7 +7616,7 @@ export const SetZoneOnTaxRateDocument = gql`
  *   },
  * });
  */
-export function useSetZoneOnTaxRateMutation(options: VueApolloComposable.UseMutationOptionsWithVariables<SetZoneOnTaxRateMutation, SetZoneOnTaxRateMutationVariables>) {
+export function useSetZoneOnTaxRateMutation(options: VueApolloComposable.UseMutationOptions<SetZoneOnTaxRateMutation, SetZoneOnTaxRateMutationVariables>) {
             return VueApolloComposable.useMutation<SetZoneOnTaxRateMutation, SetZoneOnTaxRateMutationVariables>(SetZoneOnTaxRateDocument, options);
           }
 export type SetZoneOnTaxRateMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<SetZoneOnTaxRateMutation, SetZoneOnTaxRateMutationVariables>;
@@ -7645,7 +7646,7 @@ export const SetCategoryOnTaxRateDocument = gql`
  *   },
  * });
  */
-export function useSetCategoryOnTaxRateMutation(options: VueApolloComposable.UseMutationOptionsWithVariables<SetCategoryOnTaxRateMutation, SetCategoryOnTaxRateMutationVariables>) {
+export function useSetCategoryOnTaxRateMutation(options: VueApolloComposable.UseMutationOptions<SetCategoryOnTaxRateMutation, SetCategoryOnTaxRateMutationVariables>) {
             return VueApolloComposable.useMutation<SetCategoryOnTaxRateMutation, SetCategoryOnTaxRateMutationVariables>(SetCategoryOnTaxRateDocument, options);
           }
 export type SetCategoryOnTaxRateMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<SetCategoryOnTaxRateMutation, SetCategoryOnTaxRateMutationVariables>;
@@ -7678,7 +7679,7 @@ export const CreateOneChannelDocument = gql`
  *   },
  * });
  */
-export function useCreateOneChannelMutation(options: VueApolloComposable.UseMutationOptionsWithVariables<CreateOneChannelMutation, CreateOneChannelMutationVariables>) {
+export function useCreateOneChannelMutation(options: VueApolloComposable.UseMutationOptions<CreateOneChannelMutation, CreateOneChannelMutationVariables>) {
             return VueApolloComposable.useMutation<CreateOneChannelMutation, CreateOneChannelMutationVariables>(CreateOneChannelDocument, options);
           }
 export type CreateOneChannelMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<CreateOneChannelMutation, CreateOneChannelMutationVariables>;
@@ -7739,7 +7740,7 @@ export const AddParentToChildCollectionDocument = gql`
  *   },
  * });
  */
-export function useAddParentToChildCollectionMutation(options: VueApolloComposable.UseMutationOptionsWithVariables<AddParentToChildCollectionMutation, AddParentToChildCollectionMutationVariables>) {
+export function useAddParentToChildCollectionMutation(options: VueApolloComposable.UseMutationOptions<AddParentToChildCollectionMutation, AddParentToChildCollectionMutationVariables>) {
             return VueApolloComposable.useMutation<AddParentToChildCollectionMutation, AddParentToChildCollectionMutationVariables>(AddParentToChildCollectionDocument, options);
           }
 export type AddParentToChildCollectionMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<AddParentToChildCollectionMutation, AddParentToChildCollectionMutationVariables>;
@@ -7801,7 +7802,7 @@ export const SetSeoOnCollectionDocument = gql`
  *   },
  * });
  */
-export function useSetSeoOnCollectionMutation(options: VueApolloComposable.UseMutationOptionsWithVariables<SetSeoOnCollectionMutation, SetSeoOnCollectionMutationVariables>) {
+export function useSetSeoOnCollectionMutation(options: VueApolloComposable.UseMutationOptions<SetSeoOnCollectionMutation, SetSeoOnCollectionMutationVariables>) {
             return VueApolloComposable.useMutation<SetSeoOnCollectionMutation, SetSeoOnCollectionMutationVariables>(SetSeoOnCollectionDocument, options);
           }
 export type SetSeoOnCollectionMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<SetSeoOnCollectionMutation, SetSeoOnCollectionMutationVariables>;
@@ -7841,7 +7842,7 @@ export const UpdateCollectionDocument = gql`
  *   },
  * });
  */
-export function useUpdateCollectionMutation(options: VueApolloComposable.UseMutationOptionsWithVariables<UpdateCollectionMutation, UpdateCollectionMutationVariables>) {
+export function useUpdateCollectionMutation(options: VueApolloComposable.UseMutationOptions<UpdateCollectionMutation, UpdateCollectionMutationVariables>) {
             return VueApolloComposable.useMutation<UpdateCollectionMutation, UpdateCollectionMutationVariables>(UpdateCollectionDocument, options);
           }
 export type UpdateCollectionMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<UpdateCollectionMutation, UpdateCollectionMutationVariables>;
@@ -7872,7 +7873,7 @@ export const CreateAssetDocument = gql`
  *   },
  * });
  */
-export function useCreateAssetMutation(options: VueApolloComposable.UseMutationOptionsWithVariables<CreateAssetMutation, CreateAssetMutationVariables>) {
+export function useCreateAssetMutation(options: VueApolloComposable.UseMutationOptions<CreateAssetMutation, CreateAssetMutationVariables>) {
             return VueApolloComposable.useMutation<CreateAssetMutation, CreateAssetMutationVariables>(CreateAssetDocument, options);
           }
 export type CreateAssetMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<CreateAssetMutation, CreateAssetMutationVariables>;
@@ -7962,7 +7963,7 @@ export const SetFacetOnValueDocument = gql`
  *   },
  * });
  */
-export function useSetFacetOnValueMutation(options: VueApolloComposable.UseMutationOptionsWithVariables<SetFacetOnValueMutation, SetFacetOnValueMutationVariables>) {
+export function useSetFacetOnValueMutation(options: VueApolloComposable.UseMutationOptions<SetFacetOnValueMutation, SetFacetOnValueMutationVariables>) {
             return VueApolloComposable.useMutation<SetFacetOnValueMutation, SetFacetOnValueMutationVariables>(SetFacetOnValueDocument, options);
           }
 export type SetFacetOnValueMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<SetFacetOnValueMutation, SetFacetOnValueMutationVariables>;
@@ -7996,7 +7997,7 @@ export const CreateProductDocument = gql`
  *   },
  * });
  */
-export function useCreateProductMutation(options: VueApolloComposable.UseMutationOptionsWithVariables<CreateProductMutation, CreateProductMutationVariables>) {
+export function useCreateProductMutation(options: VueApolloComposable.UseMutationOptions<CreateProductMutation, CreateProductMutationVariables>) {
             return VueApolloComposable.useMutation<CreateProductMutation, CreateProductMutationVariables>(CreateProductDocument, options);
           }
 export type CreateProductMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<CreateProductMutation, CreateProductMutationVariables>;
@@ -8030,7 +8031,7 @@ export const UpdateProductDocument = gql`
  *   },
  * });
  */
-export function useUpdateProductMutation(options: VueApolloComposable.UseMutationOptionsWithVariables<UpdateProductMutation, UpdateProductMutationVariables>) {
+export function useUpdateProductMutation(options: VueApolloComposable.UseMutationOptions<UpdateProductMutation, UpdateProductMutationVariables>) {
             return VueApolloComposable.useMutation<UpdateProductMutation, UpdateProductMutationVariables>(UpdateProductDocument, options);
           }
 export type UpdateProductMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<UpdateProductMutation, UpdateProductMutationVariables>;
@@ -8062,7 +8063,7 @@ export const CreatePlanDocument = gql`
  *   },
  * });
  */
-export function useCreatePlanMutation(options: VueApolloComposable.UseMutationOptionsWithVariables<CreatePlanMutation, CreatePlanMutationVariables>) {
+export function useCreatePlanMutation(options: VueApolloComposable.UseMutationOptions<CreatePlanMutation, CreatePlanMutationVariables>) {
             return VueApolloComposable.useMutation<CreatePlanMutation, CreatePlanMutationVariables>(CreatePlanDocument, options);
           }
 export type CreatePlanMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<CreatePlanMutation, CreatePlanMutationVariables>;
@@ -8092,7 +8093,7 @@ export const UpdatePlanDocument = gql`
  *   },
  * });
  */
-export function useUpdatePlanMutation(options: VueApolloComposable.UseMutationOptionsWithVariables<UpdatePlanMutation, UpdatePlanMutationVariables>) {
+export function useUpdatePlanMutation(options: VueApolloComposable.UseMutationOptions<UpdatePlanMutation, UpdatePlanMutationVariables>) {
             return VueApolloComposable.useMutation<UpdatePlanMutation, UpdatePlanMutationVariables>(UpdatePlanDocument, options);
           }
 export type UpdatePlanMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<UpdatePlanMutation, UpdatePlanMutationVariables>;
@@ -8122,7 +8123,7 @@ export const CreateProductVariantsDocument = gql`
  *   },
  * });
  */
-export function useCreateProductVariantsMutation(options: VueApolloComposable.UseMutationOptionsWithVariables<CreateProductVariantsMutation, CreateProductVariantsMutationVariables>) {
+export function useCreateProductVariantsMutation(options: VueApolloComposable.UseMutationOptions<CreateProductVariantsMutation, CreateProductVariantsMutationVariables>) {
             return VueApolloComposable.useMutation<CreateProductVariantsMutation, CreateProductVariantsMutationVariables>(CreateProductVariantsDocument, options);
           }
 export type CreateProductVariantsMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<CreateProductVariantsMutation, CreateProductVariantsMutationVariables>;
@@ -8154,7 +8155,7 @@ export const CreateVariantPriceDocument = gql`
  *   },
  * });
  */
-export function useCreateVariantPriceMutation(options: VueApolloComposable.UseMutationOptionsWithVariables<CreateVariantPriceMutation, CreateVariantPriceMutationVariables>) {
+export function useCreateVariantPriceMutation(options: VueApolloComposable.UseMutationOptions<CreateVariantPriceMutation, CreateVariantPriceMutationVariables>) {
             return VueApolloComposable.useMutation<CreateVariantPriceMutation, CreateVariantPriceMutationVariables>(CreateVariantPriceDocument, options);
           }
 export type CreateVariantPriceMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<CreateVariantPriceMutation, CreateVariantPriceMutationVariables>;
@@ -8186,7 +8187,7 @@ export const UpdateVariantPriceDocument = gql`
  *   },
  * });
  */
-export function useUpdateVariantPriceMutation(options: VueApolloComposable.UseMutationOptionsWithVariables<UpdateVariantPriceMutation, UpdateVariantPriceMutationVariables>) {
+export function useUpdateVariantPriceMutation(options: VueApolloComposable.UseMutationOptions<UpdateVariantPriceMutation, UpdateVariantPriceMutationVariables>) {
             return VueApolloComposable.useMutation<UpdateVariantPriceMutation, UpdateVariantPriceMutationVariables>(UpdateVariantPriceDocument, options);
           }
 export type UpdateVariantPriceMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<UpdateVariantPriceMutation, UpdateVariantPriceMutationVariables>;
@@ -8234,7 +8235,7 @@ export const RegisterVendorDocument = gql`
  *   },
  * });
  */
-export function useRegisterVendorMutation(options: VueApolloComposable.UseMutationOptionsWithVariables<RegisterVendorMutation, RegisterVendorMutationVariables>) {
+export function useRegisterVendorMutation(options: VueApolloComposable.UseMutationOptions<RegisterVendorMutation, RegisterVendorMutationVariables>) {
             return VueApolloComposable.useMutation<RegisterVendorMutation, RegisterVendorMutationVariables>(RegisterVendorDocument, options);
           }
 export type RegisterVendorMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<RegisterVendorMutation, RegisterVendorMutationVariables>;
@@ -8270,7 +8271,7 @@ export const LoginVendorDocument = gql`
  *   },
  * });
  */
-export function useLoginVendorMutation(options: VueApolloComposable.UseMutationOptionsWithVariables<LoginVendorMutation, LoginVendorMutationVariables>) {
+export function useLoginVendorMutation(options: VueApolloComposable.UseMutationOptions<LoginVendorMutation, LoginVendorMutationVariables>) {
             return VueApolloComposable.useMutation<LoginVendorMutation, LoginVendorMutationVariables>(LoginVendorDocument, options);
           }
 export type LoginVendorMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<LoginVendorMutation, LoginVendorMutationVariables>;
@@ -8301,7 +8302,7 @@ export const CreateRoleDocument = gql`
  *   },
  * });
  */
-export function useCreateRoleMutation(options: VueApolloComposable.UseMutationOptionsWithVariables<CreateRoleMutation, CreateRoleMutationVariables>) {
+export function useCreateRoleMutation(options: VueApolloComposable.UseMutationOptions<CreateRoleMutation, CreateRoleMutationVariables>) {
             return VueApolloComposable.useMutation<CreateRoleMutation, CreateRoleMutationVariables>(CreateRoleDocument, options);
           }
 export type CreateRoleMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<CreateRoleMutation, CreateRoleMutationVariables>;
@@ -8332,7 +8333,7 @@ export const UpdateRoleDocument = gql`
  *   },
  * });
  */
-export function useUpdateRoleMutation(options: VueApolloComposable.UseMutationOptionsWithVariables<UpdateRoleMutation, UpdateRoleMutationVariables>) {
+export function useUpdateRoleMutation(options: VueApolloComposable.UseMutationOptions<UpdateRoleMutation, UpdateRoleMutationVariables>) {
             return VueApolloComposable.useMutation<UpdateRoleMutation, UpdateRoleMutationVariables>(UpdateRoleDocument, options);
           }
 export type UpdateRoleMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<UpdateRoleMutation, UpdateRoleMutationVariables>;
@@ -8365,7 +8366,7 @@ export const CreateAdministratorDocument = gql`
  *   },
  * });
  */
-export function useCreateAdministratorMutation(options: VueApolloComposable.UseMutationOptionsWithVariables<CreateAdministratorMutation, CreateAdministratorMutationVariables>) {
+export function useCreateAdministratorMutation(options: VueApolloComposable.UseMutationOptions<CreateAdministratorMutation, CreateAdministratorMutationVariables>) {
             return VueApolloComposable.useMutation<CreateAdministratorMutation, CreateAdministratorMutationVariables>(CreateAdministratorDocument, options);
           }
 export type CreateAdministratorMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<CreateAdministratorMutation, CreateAdministratorMutationVariables>;
@@ -8396,7 +8397,7 @@ export const CreateProductVariantSpecificationDocument = gql`
  *   },
  * });
  */
-export function useCreateProductVariantSpecificationMutation(options: VueApolloComposable.UseMutationOptionsWithVariables<CreateProductVariantSpecificationMutation, CreateProductVariantSpecificationMutationVariables>) {
+export function useCreateProductVariantSpecificationMutation(options: VueApolloComposable.UseMutationOptions<CreateProductVariantSpecificationMutation, CreateProductVariantSpecificationMutationVariables>) {
             return VueApolloComposable.useMutation<CreateProductVariantSpecificationMutation, CreateProductVariantSpecificationMutationVariables>(CreateProductVariantSpecificationDocument, options);
           }
 export type CreateProductVariantSpecificationMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<CreateProductVariantSpecificationMutation, CreateProductVariantSpecificationMutationVariables>;
@@ -8427,7 +8428,7 @@ export const UpdateProductVariantSpecificationDocument = gql`
  *   },
  * });
  */
-export function useUpdateProductVariantSpecificationMutation(options: VueApolloComposable.UseMutationOptionsWithVariables<UpdateProductVariantSpecificationMutation, UpdateProductVariantSpecificationMutationVariables>) {
+export function useUpdateProductVariantSpecificationMutation(options: VueApolloComposable.UseMutationOptions<UpdateProductVariantSpecificationMutation, UpdateProductVariantSpecificationMutationVariables>) {
             return VueApolloComposable.useMutation<UpdateProductVariantSpecificationMutation, UpdateProductVariantSpecificationMutationVariables>(UpdateProductVariantSpecificationDocument, options);
           }
 export type UpdateProductVariantSpecificationMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<UpdateProductVariantSpecificationMutation, UpdateProductVariantSpecificationMutationVariables>;
@@ -8457,7 +8458,7 @@ export const UpdateProductCollectionDocument = gql`
  *   },
  * });
  */
-export function useUpdateProductCollectionMutation(options: VueApolloComposable.UseMutationOptionsWithVariables<UpdateProductCollectionMutation, UpdateProductCollectionMutationVariables>) {
+export function useUpdateProductCollectionMutation(options: VueApolloComposable.UseMutationOptions<UpdateProductCollectionMutation, UpdateProductCollectionMutationVariables>) {
             return VueApolloComposable.useMutation<UpdateProductCollectionMutation, UpdateProductCollectionMutationVariables>(UpdateProductCollectionDocument, options);
           }
 export type UpdateProductCollectionMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<UpdateProductCollectionMutation, UpdateProductCollectionMutationVariables>;
@@ -8489,7 +8490,7 @@ export const UpdateOneSeoDocument = gql`
  *   },
  * });
  */
-export function useUpdateOneSeoMutation(options: VueApolloComposable.UseMutationOptionsWithVariables<UpdateOneSeoMutation, UpdateOneSeoMutationVariables>) {
+export function useUpdateOneSeoMutation(options: VueApolloComposable.UseMutationOptions<UpdateOneSeoMutation, UpdateOneSeoMutationVariables>) {
             return VueApolloComposable.useMutation<UpdateOneSeoMutation, UpdateOneSeoMutationVariables>(UpdateOneSeoDocument, options);
           }
 export type UpdateOneSeoMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<UpdateOneSeoMutation, UpdateOneSeoMutationVariables>;
@@ -8519,7 +8520,7 @@ export const CreateBillingRequestDocument = gql`
  *   },
  * });
  */
-export function useCreateBillingRequestMutation(options: VueApolloComposable.UseMutationOptionsWithVariables<CreateBillingRequestMutation, CreateBillingRequestMutationVariables>) {
+export function useCreateBillingRequestMutation(options: VueApolloComposable.UseMutationOptions<CreateBillingRequestMutation, CreateBillingRequestMutationVariables>) {
             return VueApolloComposable.useMutation<CreateBillingRequestMutation, CreateBillingRequestMutationVariables>(CreateBillingRequestDocument, options);
           }
 export type CreateBillingRequestMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<CreateBillingRequestMutation, CreateBillingRequestMutationVariables>;
@@ -8549,7 +8550,7 @@ export const UpdateBillingRequestDocument = gql`
  *   },
  * });
  */
-export function useUpdateBillingRequestMutation(options: VueApolloComposable.UseMutationOptionsWithVariables<UpdateBillingRequestMutation, UpdateBillingRequestMutationVariables>) {
+export function useUpdateBillingRequestMutation(options: VueApolloComposable.UseMutationOptions<UpdateBillingRequestMutation, UpdateBillingRequestMutationVariables>) {
             return VueApolloComposable.useMutation<UpdateBillingRequestMutation, UpdateBillingRequestMutationVariables>(UpdateBillingRequestDocument, options);
           }
 export type UpdateBillingRequestMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<UpdateBillingRequestMutation, UpdateBillingRequestMutationVariables>;
@@ -8580,7 +8581,7 @@ export const AddCountryToZoneDocument = gql`
  *   },
  * });
  */
-export function useAddCountryToZoneMutation(options: VueApolloComposable.UseMutationOptionsWithVariables<AddCountryToZoneMutation, AddCountryToZoneMutationVariables>) {
+export function useAddCountryToZoneMutation(options: VueApolloComposable.UseMutationOptions<AddCountryToZoneMutation, AddCountryToZoneMutationVariables>) {
             return VueApolloComposable.useMutation<AddCountryToZoneMutation, AddCountryToZoneMutationVariables>(AddCountryToZoneDocument, options);
           }
 export type AddCountryToZoneMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<AddCountryToZoneMutation, AddCountryToZoneMutationVariables>;
@@ -8609,7 +8610,7 @@ export const DeleteOneFacetDocument = gql`
  *   },
  * });
  */
-export function useDeleteOneFacetMutation(options: VueApolloComposable.UseMutationOptionsWithVariables<DeleteOneFacetMutation, DeleteOneFacetMutationVariables>) {
+export function useDeleteOneFacetMutation(options: VueApolloComposable.UseMutationOptions<DeleteOneFacetMutation, DeleteOneFacetMutationVariables>) {
             return VueApolloComposable.useMutation<DeleteOneFacetMutation, DeleteOneFacetMutationVariables>(DeleteOneFacetDocument, options);
           }
 export type DeleteOneFacetMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<DeleteOneFacetMutation, DeleteOneFacetMutationVariables>;
@@ -8638,7 +8639,7 @@ export const DeleteOneFacetValueDocument = gql`
  *   },
  * });
  */
-export function useDeleteOneFacetValueMutation(options: VueApolloComposable.UseMutationOptionsWithVariables<DeleteOneFacetValueMutation, DeleteOneFacetValueMutationVariables>) {
+export function useDeleteOneFacetValueMutation(options: VueApolloComposable.UseMutationOptions<DeleteOneFacetValueMutation, DeleteOneFacetValueMutationVariables>) {
             return VueApolloComposable.useMutation<DeleteOneFacetValueMutation, DeleteOneFacetValueMutationVariables>(DeleteOneFacetValueDocument, options);
           }
 export type DeleteOneFacetValueMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<DeleteOneFacetValueMutation, DeleteOneFacetValueMutationVariables>;
@@ -8668,7 +8669,7 @@ export const CreateProductVariantAssetDocument = gql`
  *   },
  * });
  */
-export function useCreateProductVariantAssetMutation(options: VueApolloComposable.UseMutationOptionsWithVariables<CreateProductVariantAssetMutation, CreateProductVariantAssetMutationVariables>) {
+export function useCreateProductVariantAssetMutation(options: VueApolloComposable.UseMutationOptions<CreateProductVariantAssetMutation, CreateProductVariantAssetMutationVariables>) {
             return VueApolloComposable.useMutation<CreateProductVariantAssetMutation, CreateProductVariantAssetMutationVariables>(CreateProductVariantAssetDocument, options);
           }
 export type CreateProductVariantAssetMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<CreateProductVariantAssetMutation, CreateProductVariantAssetMutationVariables>;
@@ -8701,7 +8702,7 @@ export const CreateProductSeoDocument = gql`
  *   },
  * });
  */
-export function useCreateProductSeoMutation(options: VueApolloComposable.UseMutationOptionsWithVariables<CreateProductSeoMutation, CreateProductSeoMutationVariables>) {
+export function useCreateProductSeoMutation(options: VueApolloComposable.UseMutationOptions<CreateProductSeoMutation, CreateProductSeoMutationVariables>) {
             return VueApolloComposable.useMutation<CreateProductSeoMutation, CreateProductSeoMutationVariables>(CreateProductSeoDocument, options);
           }
 export type CreateProductSeoMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<CreateProductSeoMutation, CreateProductSeoMutationVariables>;
@@ -8734,7 +8735,7 @@ export const UpdateProductSeoDocument = gql`
  *   },
  * });
  */
-export function useUpdateProductSeoMutation(options: VueApolloComposable.UseMutationOptionsWithVariables<UpdateProductSeoMutation, UpdateProductSeoMutationVariables>) {
+export function useUpdateProductSeoMutation(options: VueApolloComposable.UseMutationOptions<UpdateProductSeoMutation, UpdateProductSeoMutationVariables>) {
             return VueApolloComposable.useMutation<UpdateProductSeoMutation, UpdateProductSeoMutationVariables>(UpdateProductSeoDocument, options);
           }
 export type UpdateProductSeoMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<UpdateProductSeoMutation, UpdateProductSeoMutationVariables>;
@@ -8772,7 +8773,7 @@ export const CreateOrUpdateStockDocument = gql`
  *   },
  * });
  */
-export function useCreateOrUpdateStockMutation(options: VueApolloComposable.UseMutationOptionsWithVariables<CreateOrUpdateStockMutation, CreateOrUpdateStockMutationVariables>) {
+export function useCreateOrUpdateStockMutation(options: VueApolloComposable.UseMutationOptions<CreateOrUpdateStockMutation, CreateOrUpdateStockMutationVariables>) {
             return VueApolloComposable.useMutation<CreateOrUpdateStockMutation, CreateOrUpdateStockMutationVariables>(CreateOrUpdateStockDocument, options);
           }
 export type CreateOrUpdateStockMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<CreateOrUpdateStockMutation, CreateOrUpdateStockMutationVariables>;
@@ -8801,7 +8802,7 @@ export const CreateOneZipDocument = gql`
  *   },
  * });
  */
-export function useCreateOneZipMutation(options: VueApolloComposable.UseMutationOptionsWithVariables<CreateOneZipMutation, CreateOneZipMutationVariables>) {
+export function useCreateOneZipMutation(options: VueApolloComposable.UseMutationOptions<CreateOneZipMutation, CreateOneZipMutationVariables>) {
             return VueApolloComposable.useMutation<CreateOneZipMutation, CreateOneZipMutationVariables>(CreateOneZipDocument, options);
           }
 export type CreateOneZipMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<CreateOneZipMutation, CreateOneZipMutationVariables>;
@@ -8864,7 +8865,7 @@ export const CreateMenuChildNodeDocument = gql`
  *   },
  * });
  */
-export function useCreateMenuChildNodeMutation(options: VueApolloComposable.UseMutationOptionsWithVariables<CreateMenuChildNodeMutation, CreateMenuChildNodeMutationVariables>) {
+export function useCreateMenuChildNodeMutation(options: VueApolloComposable.UseMutationOptions<CreateMenuChildNodeMutation, CreateMenuChildNodeMutationVariables>) {
             return VueApolloComposable.useMutation<CreateMenuChildNodeMutation, CreateMenuChildNodeMutationVariables>(CreateMenuChildNodeDocument, options);
           }
 export type CreateMenuChildNodeMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<CreateMenuChildNodeMutation, CreateMenuChildNodeMutationVariables>;

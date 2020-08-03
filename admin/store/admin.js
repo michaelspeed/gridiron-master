@@ -1,4 +1,8 @@
 import {GetAdministratorDataDocument} from "../gql";
+import VueCompositionApi from '@vue/composition-api'
+import Vue from 'vue'
+
+Vue.use(VueCompositionApi)
 
 export const state = () => ({
     administrator: null

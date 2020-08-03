@@ -12,7 +12,6 @@ export * from './services/admin/user.service'
 export * from './services/admin/vendor.service'
 export * from './services/admin/zone.service'
 export * from './services/admin/product.service'
-export * from './services/global/prisma.service'
 export * from './services/global/session.service'
 export * from './services/admin/billing-agreement.service'
 

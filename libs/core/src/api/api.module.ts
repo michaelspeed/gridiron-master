@@ -13,7 +13,7 @@ import {ServiceModule} from '../service/service.module';
             apiType: 'admin',
             apiPath: configService.apiOptions.adminApiPath,
             playground: true,
-            debug: true,
+            debug: false,
             typePaths: ['./admin.gql'],
             resolverModule: [
                 AdminApiModule,
@@ -31,7 +31,7 @@ export class AdminGQLModule {}
             apiType: 'shop',
             apiPath: configService.apiOptions.shopApiPath,
             playground: true,
-            debug: true,
+            debug: false,
             typePaths: [],
             resolverModule: [
                 ShopApiModule,
