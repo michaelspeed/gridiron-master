@@ -8,7 +8,7 @@ export enum Permission {
     // Invoices
     CreateInvoices = 'CreateInvoices',
     ReadInvoices = 'ReadInvoices',
-    UpdateInvoices = 'UpdateInvoice',
+    UpdateInvoices = 'UpdateInvoices',
     DeleteInvoices = 'DeleteInvoices',
 
     // Catalog
