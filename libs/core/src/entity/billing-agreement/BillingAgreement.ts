@@ -1,6 +1,6 @@
 import {GridIronEntity} from '../../entity/base/base.entity';
 import {Field, ID, ObjectType, registerEnumType} from '@nestjs/graphql';
-import {Connection, FilterableField, Relation} from '@nestjs-query/query-graphql';
+import {Connection, FilterableField, FilterableRelation, PagingStrategies, Relation} from '@nestjs-query/query-graphql';
 import {
     BaseEntity,
     Column,
@@ -26,9 +26,9 @@ registerEnumType(BillingAgreementState, {
 
 @ObjectType('BillingAgreement')
 @Entity('billing-agreement')
-@Relation('collection', () => Collection, {nullable: true})
-@Relation('store', () => Store)
-@Connection('request', () => BillingAgreementRequest)
+@Relation('collection', () => Collection, {nullable: true,pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
+@FilterableRelation('store', () => Store, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
+@Connection('request', () => BillingAgreementRequest, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 export class BillingAgreement extends BaseEntity {
 
     @FilterableField(() => ID)

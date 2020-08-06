@@ -1,12 +1,12 @@
 import {Field, ID, ObjectType} from '@nestjs/graphql';
 import {BaseEntity, Column, CreateDateColumn, Entity, ManyToOne, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn} from 'typeorm';
-import {FilterableField, Relation} from '@nestjs-query/query-graphql';
+import {FilterableField, FilterableRelation, PagingStrategies, Relation} from '@nestjs-query/query-graphql';
 import {BillingAgreement} from '..';
 import {BillingAgreementState} from '../../enums';
 
 @ObjectType('BillingAgreementRequest')
 @Entity('billing-agreement-request')
-@Relation('agreement', () => BillingAgreement)
+@FilterableRelation('agreement', () => BillingAgreement, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 export class BillingAgreementRequest extends BaseEntity {
 
     @FilterableField(() => ID)

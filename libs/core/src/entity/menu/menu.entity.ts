@@ -1,6 +1,6 @@
 import {ID, ObjectType, registerEnumType} from '@nestjs/graphql';
 import {BaseEntity, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, Tree, TreeChildren, TreeParent, UpdateDateColumn} from 'typeorm';
-import {Connection, FilterableField, Relation} from '@nestjs-query/query-graphql';
+import {Connection, FilterableField, PagingStrategies, Relation} from '@nestjs-query/query-graphql';
 import {MenuBuilderTypes} from '../../enums/MenuBuilderTypes';
 
 registerEnumType(MenuBuilderTypes, {
@@ -10,8 +10,8 @@ registerEnumType(MenuBuilderTypes, {
 @ObjectType('Menu')
 @Entity({name: 'menu'})
 @Tree("nested-set")
-@Connection('children', () => Menu)
-@Relation('parent', () => Menu, {nullable: true})
+@Connection('children', () => Menu, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
+@Relation('parent', () => Menu, {nullable: true, pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 export class Menu extends BaseEntity {
     @FilterableField(() => ID)
     @PrimaryGeneratedColumn('uuid')

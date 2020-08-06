@@ -1,16 +1,17 @@
 import {Args, Mutation, Query, Resolver} from '@nestjs/graphql';
-import {CRUDResolver} from '@nestjs-query/query-graphql';
+import {CRUDResolver, PagingStrategies} from '@nestjs-query/query-graphql';
 import {InjectQueryService, QueryService} from '@nestjs-query/core';
 import {Country, Store} from '../../../entity';
 import {StoreService} from '../../../service/services/admin/store.service';
 
 @Resolver(of => Store)
 export class StoreResolver extends CRUDResolver(Store, {
-    relations: {
-        one: {
-            country: {DTO: Country, disableRemove: true}
-        }
-    }
+    pagingStrategy: PagingStrategies.OFFSET,
+    enableAggregate: true,
+    aggregate: {
+        enabled: true
+    },
+    enableSubscriptions: true
 }){
     constructor(
         @InjectQueryService(Store) readonly service: QueryService<Store>,

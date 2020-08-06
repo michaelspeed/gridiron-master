@@ -11,17 +11,17 @@ import {
     UpdateDateColumn
 } from 'typeorm';
 import {ID, ObjectType} from '@nestjs/graphql';
-import {Connection, FilterableField, Relation} from '@nestjs-query/query-graphql';
+import {Connection, FilterableField, PagingStrategies, Relation} from '@nestjs-query/query-graphql';
 import {Asset, Collection, Facet, FacetValue, ProductAsset, ProductOptionGroup, ProductVariant} from '../';
 
 @ObjectType('Product')
 @Entity({name: 'product'})
-@Connection('assets', () => ProductAsset)
-@Connection('variants', () => ProductVariant)
-@Connection('facets', () => FacetValue)
-@Connection('options', () => ProductOptionGroup)
-@Relation('featuredAsset', () => Asset)
-@Relation('collection', () => Collection, {nullable: true})
+@Connection('assets', () => ProductAsset, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
+@Connection('variants', () => ProductVariant, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
+@Connection('facets', () => FacetValue, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
+@Connection('options', () => ProductOptionGroup, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
+@Relation('featuredAsset', () => Asset, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
+@Relation('collection', () => Collection, {nullable: true, pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 export class Product extends BaseEntity {
     @FilterableField(() => ID)
     @PrimaryGeneratedColumn('uuid')

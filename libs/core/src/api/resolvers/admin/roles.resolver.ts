@@ -1,5 +1,5 @@
 import {Args, ID, Mutation, Resolver} from '@nestjs/graphql';
-import {CRUDResolver} from '@nestjs-query/query-graphql';
+import {CRUDResolver, PagingStrategies} from '@nestjs-query/query-graphql';
 import {InjectQueryService, QueryService} from '@nestjs-query/core';
 import {Role} from '../../../entity';
 import {RolesService} from '../../../service';
@@ -15,7 +15,13 @@ export class RolesResolver extends CRUDResolver(Role, {
     },
     delete: {
         disabled: true
-    }
+    },
+    pagingStrategy: PagingStrategies.OFFSET,
+    enableAggregate: true,
+    aggregate: {
+        enabled: true
+    },
+    enableSubscriptions: true
 }){
     constructor(
         @InjectQueryService(Role) readonly service: QueryService<Role>,

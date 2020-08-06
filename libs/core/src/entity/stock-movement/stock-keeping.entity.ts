@@ -1,6 +1,6 @@
 import {ID, ObjectType, registerEnumType} from '@nestjs/graphql';
 import {BaseEntity, Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn} from 'typeorm';
-import {Connection, FilterableField, Relation} from '@nestjs-query/query-graphql';
+import {Connection, FilterableField, PagingStrategies, Relation} from '@nestjs-query/query-graphql';
 import {Cancellation, ProductVariant, Sale, StockMovement, Store,} from '..';
 import {StockKeepingType} from '@gridiron/core/enums/StockKeepingType';
 
@@ -10,11 +10,11 @@ registerEnumType(StockKeepingType, {
 
 @ObjectType('StockKeeping')
 @Entity({name: 'StockKeeping'})
-@Relation('variant', () => ProductVariant)
-@Relation('store', () => Store)
-@Connection('movement', () => StockMovement)
-@Connection('cancels', () => Cancellation)
-@Connection('sale', () => Sale)
+@Relation('variant', () => ProductVariant, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
+@Relation('store', () => Store, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
+@Connection('movement', () => StockMovement, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
+@Connection('cancels', () => Cancellation, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
+@Connection('sale', () => Sale, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 export class StockKeeping extends BaseEntity {
     @FilterableField(() => ID)
     @PrimaryGeneratedColumn('uuid')

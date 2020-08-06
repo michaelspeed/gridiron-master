@@ -1,14 +1,14 @@
 import {BaseEntity, Column, CreateDateColumn, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn} from 'typeorm';
 import {ID, ObjectType} from '@nestjs/graphql';
-import {FilterableField, Relation} from '@nestjs-query/query-graphql';
+import {FilterableField, PagingStrategies, Relation} from '@nestjs-query/query-graphql';
 import {User} from '../user/user.entity';
 import {Store, VendorLicense} from '../';
 
 @ObjectType('Vendor')
 @Entity({name: 'vendor'})
-@Relation('user', () => User)
-@Relation('license', () => VendorLicense)
-@Relation('store', () => Store)
+@Relation('user', () => User, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
+@Relation('license', () => VendorLicense, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
+@Relation('store', () => Store, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 export class Vendor extends BaseEntity {
     @FilterableField(() => ID)
     @PrimaryGeneratedColumn('uuid')

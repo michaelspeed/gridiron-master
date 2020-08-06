@@ -1,12 +1,12 @@
 import {Field, ID, ObjectType} from '@nestjs/graphql';
 import {BaseEntity, Column, CreateDateColumn, Entity, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn} from 'typeorm';
-import {FilterableField, Relation} from '@nestjs-query/query-graphql';
+import {FilterableField, PagingStrategies, Relation} from '@nestjs-query/query-graphql';
 import {ProductVariant} from '../';
 import GraphQLJSON from 'graphql-type-json';
 
 @ObjectType('ProductVariantSpecs')
 @Entity({name: 'product-variant-specs'})
-@Relation('variant', () => ProductVariant, {nullable: true})
+@Relation('variant', () => ProductVariant, {nullable: true, pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 export class ProductVariantSpecifications extends BaseEntity {
     @FilterableField(() => ID)
     @PrimaryGeneratedColumn('uuid')

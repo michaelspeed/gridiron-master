@@ -1,6 +1,6 @@
 import {Args, Context, ID, Mutation, Query, Resolver} from '@nestjs/graphql';
 import {Vendor} from '../../../entity';
-import {CRUDResolver} from '@nestjs-query/query-graphql';
+import {CRUDResolver, PagingStrategies} from '@nestjs-query/query-graphql';
 import {InjectQueryService, QueryService} from '@nestjs-query/core';
 import {VendorService} from '../../../service';
 import {VendorDto} from '@gridiron/core/api/dto/vendors/vendor.dto';
@@ -16,7 +16,13 @@ export class VendorResolver extends CRUDResolver(Vendor, {
     },
     delete: {
         disabled: true
-    }
+    },
+    pagingStrategy: PagingStrategies.OFFSET,
+    enableAggregate: true,
+    aggregate: {
+        enabled: true
+    },
+    enableSubscriptions: true
 }){
     constructor(
         @InjectQueryService(Vendor) readonly service: QueryService<Vendor>,

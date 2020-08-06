@@ -1,11 +1,11 @@
 import {ID, ObjectType} from '@nestjs/graphql';
 import {BaseEntity, Column, CreateDateColumn, Entity, ManyToOne, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn} from 'typeorm';
-import {FilterableField, Relation} from '@nestjs-query/query-graphql';
+import {FilterableField, PagingStrategies, Relation} from '@nestjs-query/query-graphql';
 import {Vendor, VendorPlans} from '../';
 
 @ObjectType('VendorLicense')
 @Entity({name: 'vendor-license'})
-@Relation('vendor', () => Vendor)
+@Relation('vendor', () => Vendor, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 export class VendorLicense extends BaseEntity {
     @FilterableField(() => ID)
     @PrimaryGeneratedColumn('uuid')

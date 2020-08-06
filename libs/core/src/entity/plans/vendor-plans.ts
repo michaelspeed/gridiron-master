@@ -1,8 +1,8 @@
 import {Field, ID, ObjectType, registerEnumType} from '@nestjs/graphql';
 import {BaseEntity, Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn} from 'typeorm';
-import {Connection, FilterableField} from '@nestjs-query/query-graphql';
+import {Connection, FilterableField, PagingStrategies} from '@nestjs-query/query-graphql';
 import {VendorPlanPrice, VendorPlanTenure} from '../../enums/VendorPlan';
-import {VendorLicense} from '@gridiron/core/entity';
+import {VendorLicense} from './vendor-license';
 
 registerEnumType(VendorPlanPrice, {
     name: 'VendorPlanPrice'
@@ -14,7 +14,7 @@ registerEnumType(VendorPlanTenure, {
 
 @ObjectType('VendorPlans')
 @Entity({name: 'vendor-plans'})
-@Connection('licences', () => VendorLicense)
+@Connection('licences', () => VendorLicense, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 export class VendorPlans extends BaseEntity {
     @FilterableField(() => ID)
     @PrimaryGeneratedColumn('uuid')

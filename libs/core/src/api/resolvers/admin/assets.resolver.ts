@@ -1,6 +1,6 @@
 import {Args, Mutation, Query, Resolver} from '@nestjs/graphql';
 import {Asset} from '../../../entity';
-import {CRUDResolver} from '@nestjs-query/query-graphql';
+import {CRUDResolver, PagingStrategies} from '@nestjs-query/query-graphql';
 import {InjectQueryService, QueryService} from '@nestjs-query/core';
 import {AssetsService} from '../../../service/services/admin/assets.service';
 import {GraphQLUpload} from 'apollo-server-core';
@@ -17,7 +17,13 @@ export class AssetsResolver extends CRUDResolver(Asset, {
     },
     delete: {
         disabled: true
-    }
+    },
+    pagingStrategy: PagingStrategies.OFFSET,
+    enableAggregate: true,
+    aggregate: {
+        enabled: true
+    },
+    enableSubscriptions: true
 }){
 
     constructor(

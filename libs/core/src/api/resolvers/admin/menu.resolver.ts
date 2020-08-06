@@ -1,20 +1,18 @@
 import {Args, ID, Mutation, Query, Resolver} from '@nestjs/graphql';
 import {Menu} from '../../../entity';
-import {CRUDResolver} from '@nestjs-query/query-graphql';
+import {CRUDResolver, PagingStrategies} from '@nestjs-query/query-graphql';
 import {InjectQueryService, QueryService} from '@nestjs-query/core';
 import {MenuResponseTypes} from '../../dto/admin/menu-response.types';
 import {AdminMenuService} from '../../../service/services/admin/menu.service';
 
 @Resolver(() => Menu)
 export class AdminMenuResolver extends CRUDResolver(Menu, {
-    relations: {
-        many: {
-            children: {DTO: Menu, disableRemove: false}
-        },
-        one: {
-            parent: {DTO: Menu, disableRemove: false}
-        }
-    }
+    pagingStrategy: PagingStrategies.OFFSET,
+    enableAggregate: true,
+    aggregate: {
+        enabled: true
+    },
+    enableSubscriptions: true
 }){
     constructor(
         @InjectQueryService(Menu) readonly service: QueryService<Menu>,

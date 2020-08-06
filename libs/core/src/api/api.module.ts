@@ -14,7 +14,8 @@ import {ServiceModule} from '../service/service.module';
             apiPath: configService.apiOptions.adminApiPath,
             playground: true,
             debug: false,
-            typePaths: ['./admin.gql'],
+            typePaths: [],
+            //typePaths: ['./admin.gql'],
             resolverModule: [
                 AdminApiModule,
             ],

@@ -1,12 +1,12 @@
 import {BaseEntity, Column, CreateDateColumn, Entity, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn} from 'typeorm';
 import {ID, ObjectType} from '@nestjs/graphql';
-import {Connection, FilterableField, Relation} from '@nestjs-query/query-graphql';
+import {Connection, FilterableField, PagingStrategies, Relation} from '@nestjs-query/query-graphql';
 import {FacetValue, Product} from '../';
 
 @ObjectType('Facet')
 @Entity({name: 'facet'})
-@Connection('values', () => FacetValue)
-@Connection('product', () => Product)
+@Connection('values', () => FacetValue, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
+@Connection('product', () => Product, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 export class Facet extends BaseEntity {
 
     @FilterableField(() => ID)

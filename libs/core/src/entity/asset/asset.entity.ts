@@ -1,7 +1,15 @@
-import {BaseEntity, Column, CreateDateColumn, Entity, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn} from 'typeorm';
+import {
+    Column,
+    CreateDateColumn,
+    Entity,
+    ManyToOne,
+    OneToMany,
+    PrimaryGeneratedColumn,
+    UpdateDateColumn
+} from 'typeorm';
 import {AssetType} from '../../enums/AssetType';
 import {Field, ID, ObjectType} from '@nestjs/graphql';
-import {Connection, FilterableField} from '@nestjs-query/query-graphql';
+import {Connection, FilterableField, PagingStrategies} from '@nestjs-query/query-graphql';
 import {FocalPoint} from '../common/FocalPoint';
 import {GraphQLJSONObject} from 'graphql-type-json';
 import {AssetsFolder} from './assets-folder.entity';
@@ -11,8 +19,8 @@ import {Product, ProductAsset, ProductVariant} from '../';
 
 @ObjectType('Asset')
 @Entity({name: 'Asset'})
-@Connection('productAsset', () => ProductAsset)
-@Connection('featured', () => Product)
+@Connection('productAsset', () => ProductAsset, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
+@Connection('featured', () => Product, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 export class Asset extends GridIronEntity {
 
     constructor(input?: DeepPartial<Asset>) {

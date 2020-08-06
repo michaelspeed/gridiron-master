@@ -1,12 +1,12 @@
 import {BaseEntity, Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn} from 'typeorm';
 import {ID, ObjectType} from '@nestjs/graphql';
-import {Connection, FilterableField, Relation} from '@nestjs-query/query-graphql';
+import {Connection, FilterableField, PagingStrategies, Relation} from '@nestjs-query/query-graphql';
 import {Product, ProductOption} from '../';
 
 @ObjectType('ProductOptionGroup')
 @Entity({name: 'productOptionGroup'})
-@Connection('options', () => ProductOption)
-@Relation('product', () => Product)
+@Connection('options', () => ProductOption, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
+@Relation('product', () => Product, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 export class ProductOptionGroup extends BaseEntity {
     @FilterableField(() => ID)
     @PrimaryGeneratedColumn('uuid')

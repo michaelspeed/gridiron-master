@@ -1,11 +1,18 @@
 import {Args, ID, Mutation, Resolver} from '@nestjs/graphql';
 import {Product} from '../../../entity';
-import {CRUDResolver} from '@nestjs-query/query-graphql';
+import {CRUDResolver, PagingStrategies} from '@nestjs-query/query-graphql';
 import {InjectQueryService, QueryService} from '@nestjs-query/core';
 import {ProductService} from '@gridiron/core/service/services/admin/product.service';
 
 @Resolver(of => Product)
-export class ProductResolver extends CRUDResolver(Product){
+export class ProductResolver extends CRUDResolver(Product, {
+    pagingStrategy: PagingStrategies.OFFSET,
+    enableAggregate: true,
+    aggregate: {
+        enabled: true
+    },
+    enableSubscriptions: true
+}){
     constructor(
         @InjectQueryService(Product) readonly service: QueryService<Product>,
         private readonly productService: ProductService

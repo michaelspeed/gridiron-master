@@ -11,16 +11,17 @@ import {
     UpdateDateColumn
 } from 'typeorm';
 import {Field, ID, ObjectType} from '@nestjs/graphql';
-import {Connection, FilterableField, Relation} from '@nestjs-query/query-graphql';
+import {Connection, FilterableField, PagingStrategies, Relation} from '@nestjs-query/query-graphql';
 import {Seo, BillingAgreement, Product, Store} from '../';
 
 @ObjectType('Collection')
 @Entity({name: 'collection'})
 @Tree("nested-set")
-@Connection('agreements', () => BillingAgreement)
-@Connection('products', () => Product)
-@Connection('children', () => Collection)
-@Relation('parent', () => Collection, {nullable: true})
+@Connection('agreements', () => BillingAgreement, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
+@Connection('products', () => Product, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
+@Connection('children', () => Collection, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
+@Relation('parent', () => Collection, {nullable: true, pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
+@Relation('seo', () => Seo, {nullable: true, pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 export class Collection extends BaseEntity {
     @FilterableField(() => ID)
     @PrimaryGeneratedColumn('uuid')

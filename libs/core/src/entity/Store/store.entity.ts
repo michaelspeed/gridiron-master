@@ -10,7 +10,7 @@ import {
     PrimaryGeneratedColumn,
     UpdateDateColumn
 } from 'typeorm';
-import {Connection, FilterableField, Relation} from '@nestjs-query/query-graphql';
+import {Connection, FilterableField, PagingStrategies, Relation} from '@nestjs-query/query-graphql';
 import {BillingAgreement, Country, StockKeeping, TaxCategory, Vendor, Zone} from '..';
 
 export enum StoreTypeEnum {
@@ -23,8 +23,8 @@ registerEnumType(StoreTypeEnum, {
 });
 
 @ObjectType('Store')
-@Relation('region', () => Zone)
-@Connection('sku', () => StockKeeping)
+@Relation('country', () => Country, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
+@Connection('sku', () => StockKeeping, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @Entity({name: 'store'})
 export class Store extends BaseEntity {
     @FilterableField(() => ID)

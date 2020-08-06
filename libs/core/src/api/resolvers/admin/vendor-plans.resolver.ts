@@ -1,6 +1,6 @@
 import {Args, Float, ID, Mutation, Query, Resolver} from '@nestjs/graphql';
 import {VendorPlans} from '../../../entity';
-import {CRUDResolver} from '@nestjs-query/query-graphql';
+import {CRUDResolver, PagingStrategies} from '@nestjs-query/query-graphql';
 import {InjectQueryService, QueryService} from '@nestjs-query/core';
 import {VendorService} from '../../../service';
 import {VendorPlanPrice, VendorPlanTenure} from '../../../enums/VendorPlan';
@@ -16,7 +16,13 @@ export class VendorPlansResolver extends CRUDResolver(VendorPlans, {
     },
     delete: {
         disabled: true
-    }
+    },
+    pagingStrategy: PagingStrategies.OFFSET,
+    enableAggregate: true,
+    aggregate: {
+        enabled: true
+    },
+    enableSubscriptions: true
 }){
     constructor(
         @InjectQueryService(VendorPlans) readonly service: QueryService<VendorPlans>,

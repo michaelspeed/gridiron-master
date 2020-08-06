@@ -1,11 +1,11 @@
 import {BaseEntity, Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn} from 'typeorm';
 import {ID, ObjectType} from '@nestjs/graphql';
-import {Connection, FilterableField} from '@nestjs-query/query-graphql';
+import {Connection, FilterableField, PagingStrategies} from '@nestjs-query/query-graphql';
 import {Store, TaxRate} from '..';
 
 @ObjectType('TaxCategory')
 @Entity({name: 'taxCategory'})
-@Connection('rate', () => TaxRate)
+@Connection('rate', () => TaxRate, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 export class TaxCategory extends BaseEntity {
     @FilterableField(() => ID)
     @PrimaryGeneratedColumn('uuid')

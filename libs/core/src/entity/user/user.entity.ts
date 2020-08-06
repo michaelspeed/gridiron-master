@@ -1,11 +1,11 @@
 import {BaseEntity, Column, CreateDateColumn, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn} from 'typeorm';
 import {Field, ID, ObjectType} from '@nestjs/graphql';
-import {FilterableField, Relation} from '@nestjs-query/query-graphql';
+import {FilterableField, PagingStrategies, Relation} from '@nestjs-query/query-graphql';
 import {Administrator, Cart, Vendor, View} from '..';
 
 @ObjectType('User')
-@Relation('administrator', () => Administrator)
-@Relation('vendor', () => Vendor)
+@Relation('administrator', () => Administrator, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
+@Relation('vendor', () => Vendor, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @Entity({name: 'user'})
 export class User extends BaseEntity {
 

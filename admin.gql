@@ -38,47 +38,46 @@ type Asset {
   focalPoint: JSONObject!
   featureds(
     """Limit or page results."""
-    paging: CursorPaging = {first: 10}
+    paging: OffsetPaging = {limit: 10}
 
     """Specify to filter the records returned."""
     filter: ProductFilter = {}
 
     """Specify to sort results."""
     sorting: [ProductSort!] = []
-  ): ProductConnection!
+  ): [Product!]!
   productAssets(
     """Limit or page results."""
-    paging: CursorPaging = {first: 10}
+    paging: OffsetPaging = {limit: 10}
 
     """Specify to filter the records returned."""
     filter: ProductAssetFilter = {}
 
     """Specify to sort results."""
     sorting: [ProductAssetSort!] = []
-  ): ProductAssetConnection!
+  ): [ProductAsset!]!
+  featuredsAggregate(
+    """Filter to find records to aggregate on"""
+    filter: ProductAggregateFilter
+  ): AssetFeaturedsAggregateResponse!
+  productAssetsAggregate(
+    """Filter to find records to aggregate on"""
+    filter: ProductAssetAggregateFilter
+  ): AssetProductAssetsAggregateResponse!
 }
 
 """
 The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
 """
-scalar JSONObject
+scalar JSONObject @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
 
-input CursorPaging {
-  """Paginate before opaque cursor"""
-  before: ConnectionCursor
+input OffsetPaging {
+  """Limit the number of records returned"""
+  limit: Int
 
-  """Paginate after opaque cursor"""
-  after: ConnectionCursor
-
-  """Paginate first"""
-  first: Int
-
-  """Paginate last"""
-  last: Int
+  """Offset to start returning records from"""
+  offset: Int
 }
-
-"""Cursor for paging through collections"""
-scalar ConnectionCursor
 
 input ProductFilter {
   and: [ProductFilter!]
@@ -119,6 +118,13 @@ input DateFieldComparison {
   lte: DateTime
   in: [DateTime!]
   notIn: [DateTime!]
+  between: DateFieldComparisonBetween
+  notBetween: DateFieldComparisonBetween
+}
+
+input DateFieldComparisonBetween {
+  lower: DateTime!
+  upper: DateTime!
 }
 
 input StringFieldComparison {
@@ -185,6 +191,25 @@ enum ProductAssetSortFields {
   updatedAt
 }
 
+input ProductAggregateFilter {
+  and: [ProductAggregateFilter!]
+  or: [ProductAggregateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  productName: StringFieldComparison
+  slug: StringFieldComparison
+  description: StringFieldComparison
+}
+
+input ProductAssetAggregateFilter {
+  and: [ProductAssetAggregateFilter!]
+  or: [ProductAssetAggregateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+}
+
 type Channel {
   id: ID!
   createdAt: DateTime!
@@ -208,36 +233,48 @@ type Collection {
   description: String!
   children(
     """Limit or page results."""
-    paging: CursorPaging = {first: 10}
+    paging: OffsetPaging = {limit: 10}
 
     """Specify to filter the records returned."""
     filter: CollectionFilter = {}
 
     """Specify to sort results."""
     sorting: [CollectionSort!] = []
-  ): CollectionConnection!
+  ): [Collection!]!
   products(
     """Limit or page results."""
-    paging: CursorPaging = {first: 10}
+    paging: OffsetPaging = {limit: 10}
 
     """Specify to filter the records returned."""
     filter: ProductFilter = {}
 
     """Specify to sort results."""
     sorting: [ProductSort!] = []
-  ): ProductConnection!
+  ): [Product!]!
   agreements(
     """Limit or page results."""
-    paging: CursorPaging = {first: 10}
+    paging: OffsetPaging = {limit: 10}
 
     """Specify to filter the records returned."""
     filter: BillingAgreementFilter = {}
 
     """Specify to sort results."""
     sorting: [BillingAgreementSort!] = []
-  ): BillingAgreementConnection!
+  ): [BillingAgreement!]!
+  seo: Seo
   parent: Collection
-  seo: Seo!
+  childrenAggregate(
+    """Filter to find records to aggregate on"""
+    filter: CollectionAggregateFilter
+  ): CollectionChildrenAggregateResponse!
+  productsAggregate(
+    """Filter to find records to aggregate on"""
+    filter: ProductAggregateFilter
+  ): CollectionProductsAggregateResponse!
+  agreementsAggregate(
+    """Filter to find records to aggregate on"""
+    filter: BillingAgreementAggregateFilter
+  ): CollectionAgreementsAggregateResponse!
 }
 
 input CollectionFilter {
@@ -270,6 +307,13 @@ input NumberFieldComparison {
   lte: Float
   in: [Float!]
   notIn: [Float!]
+  between: NumberFieldComparisonBetween
+  notBetween: NumberFieldComparisonBetween
+}
+
+input NumberFieldComparisonBetween {
+  lower: Float!
+  upper: Float!
 }
 
 input CollectionSort {
@@ -297,6 +341,25 @@ input BillingAgreementFilter {
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
   value: NumberFieldComparison
+  store: BillingAgreementFilterStoreFilter
+}
+
+input BillingAgreementFilterStoreFilter {
+  and: [BillingAgreementFilterStoreFilter!]
+  or: [BillingAgreementFilterStoreFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  storeName: StringFieldComparison
+  phoneNumber: StringFieldComparison
+  officialemail: StringFieldComparison
+  zipcode: StringFieldComparison
+  streetAddress1: StringFieldComparison
+  streetAddress2: StringFieldComparison
+  GSTIN: StringFieldComparison
+  singleStore: BooleanFieldComparison
+  rentalStore: BooleanFieldComparison
+  channelMarkets: BooleanFieldComparison
 }
 
 input BillingAgreementSort {
@@ -312,6 +375,29 @@ enum BillingAgreementSortFields {
   value
 }
 
+input CollectionAggregateFilter {
+  and: [CollectionAggregateFilter!]
+  or: [CollectionAggregateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  isRoot: BooleanFieldComparison
+  inMenu: BooleanFieldComparison
+  position: NumberFieldComparison
+  isPrivate: BooleanFieldComparison
+  name: StringFieldComparison
+  description: StringFieldComparison
+}
+
+input BillingAgreementAggregateFilter {
+  and: [BillingAgreementAggregateFilter!]
+  or: [BillingAgreementAggregateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  value: NumberFieldComparison
+}
+
 type Facet {
   id: ID!
   createdAt: DateTime!
@@ -321,24 +407,32 @@ type Facet {
   code: String!
   products(
     """Limit or page results."""
-    paging: CursorPaging = {first: 10}
+    paging: OffsetPaging = {limit: 10}
 
     """Specify to filter the records returned."""
     filter: ProductFilter = {}
 
     """Specify to sort results."""
     sorting: [ProductSort!] = []
-  ): ProductConnection!
+  ): [Product!]!
   values(
     """Limit or page results."""
-    paging: CursorPaging = {first: 10}
+    paging: OffsetPaging = {limit: 10}
 
     """Specify to filter the records returned."""
     filter: FacetValueFilter = {}
 
     """Specify to sort results."""
     sorting: [FacetValueSort!] = []
-  ): FacetValueConnection!
+  ): [FacetValue!]!
+  productsAggregate(
+    """Filter to find records to aggregate on"""
+    filter: ProductAggregateFilter
+  ): FacetProductsAggregateResponse!
+  valuesAggregate(
+    """Filter to find records to aggregate on"""
+    filter: FacetValueAggregateFilter
+  ): FacetValuesAggregateResponse!
 }
 
 input FacetValueFilter {
@@ -363,6 +457,15 @@ enum FacetValueSortFields {
   code
 }
 
+input FacetValueAggregateFilter {
+  and: [FacetValueAggregateFilter!]
+  or: [FacetValueAggregateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  code: StringFieldComparison
+}
+
 type FacetValue {
   id: ID!
   createdAt: DateTime!
@@ -370,15 +473,19 @@ type FacetValue {
   code: String!
   products(
     """Limit or page results."""
-    paging: CursorPaging = {first: 10}
+    paging: OffsetPaging = {limit: 10}
 
     """Specify to filter the records returned."""
     filter: ProductFilter = {}
 
     """Specify to sort results."""
     sorting: [ProductSort!] = []
-  ): ProductConnection!
+  ): [Product!]!
   facet: Facet!
+  productsAggregate(
+    """Filter to find records to aggregate on"""
+    filter: ProductAggregateFilter
+  ): FacetValueProductsAggregateResponse!
 }
 
 type Order {
@@ -406,46 +513,62 @@ type Product {
   description: String!
   options(
     """Limit or page results."""
-    paging: CursorPaging = {first: 10}
+    paging: OffsetPaging = {limit: 10}
 
     """Specify to filter the records returned."""
     filter: ProductOptionGroupFilter = {}
 
     """Specify to sort results."""
     sorting: [ProductOptionGroupSort!] = []
-  ): ProductOptionGroupConnection!
+  ): [ProductOptionGroup!]!
   facets(
     """Limit or page results."""
-    paging: CursorPaging = {first: 10}
+    paging: OffsetPaging = {limit: 10}
 
     """Specify to filter the records returned."""
     filter: FacetValueFilter = {}
 
     """Specify to sort results."""
     sorting: [FacetValueSort!] = []
-  ): FacetValueConnection!
+  ): [FacetValue!]!
   variants(
     """Limit or page results."""
-    paging: CursorPaging = {first: 10}
+    paging: OffsetPaging = {limit: 10}
 
     """Specify to filter the records returned."""
     filter: ProductVariantFilter = {}
 
     """Specify to sort results."""
     sorting: [ProductVariantSort!] = []
-  ): ProductVariantConnection!
+  ): [ProductVariant!]!
   assets(
     """Limit or page results."""
-    paging: CursorPaging = {first: 10}
+    paging: OffsetPaging = {limit: 10}
 
     """Specify to filter the records returned."""
     filter: ProductAssetFilter = {}
 
     """Specify to sort results."""
     sorting: [ProductAssetSort!] = []
-  ): ProductAssetConnection!
+  ): [ProductAsset!]!
   collection: Collection
   featuredAsset: Asset!
+  optionsAggregate(
+    """Filter to find records to aggregate on"""
+    filter: ProductOptionGroupAggregateFilter
+  ): ProductOptionsAggregateResponse!
+  facetsAggregate(
+    """Filter to find records to aggregate on"""
+    filter: FacetValueAggregateFilter
+  ): ProductFacetsAggregateResponse!
+  variantsAggregate(
+    """Filter to find records to aggregate on"""
+    filter: ProductVariantAggregateFilter
+  ): ProductVariantsAggregateResponse!
+  assetsAggregate(
+    """Filter to find records to aggregate on"""
+    filter: ProductAssetAggregateFilter
+  ): ProductAssetsAggregateResponse!
 }
 
 input ProductOptionGroupFilter {
@@ -504,6 +627,30 @@ enum ProductVariantSortFields {
   trackInventory
 }
 
+input ProductOptionGroupAggregateFilter {
+  and: [ProductOptionGroupAggregateFilter!]
+  or: [ProductOptionGroupAggregateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  name: StringFieldComparison
+  code: StringFieldComparison
+}
+
+input ProductVariantAggregateFilter {
+  and: [ProductVariantAggregateFilter!]
+  or: [ProductVariantAggregateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
+  dum_price: NumberFieldComparison
+  enabled: BooleanFieldComparison
+  sku: StringFieldComparison
+  name: StringFieldComparison
+  trackInventory: BooleanFieldComparison
+}
+
 type User {
   id: ID!
   createdAt: DateTime!
@@ -543,14 +690,18 @@ type TaxCategory {
   name: String!
   rates(
     """Limit or page results."""
-    paging: CursorPaging = {first: 10}
+    paging: OffsetPaging = {limit: 10}
 
     """Specify to filter the records returned."""
     filter: TaxRateFilter = {}
 
     """Specify to sort results."""
     sorting: [TaxRateSort!] = []
-  ): TaxRateConnection!
+  ): [TaxRate!]!
+  ratesAggregate(
+    """Filter to find records to aggregate on"""
+    filter: TaxRateAggregateFilter
+  ): TaxCategoryRatesAggregateResponse!
 }
 
 input TaxRateFilter {
@@ -579,6 +730,17 @@ enum TaxRateSortFields {
   enabled
 }
 
+input TaxRateAggregateFilter {
+  and: [TaxRateAggregateFilter!]
+  or: [TaxRateAggregateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  name: StringFieldComparison
+  value: NumberFieldComparison
+  enabled: BooleanFieldComparison
+}
+
 type TaxRate {
   id: ID!
   createdAt: DateTime!
@@ -588,16 +750,20 @@ type TaxRate {
   enabled: Boolean!
   variants(
     """Limit or page results."""
-    paging: CursorPaging = {first: 10}
+    paging: OffsetPaging = {limit: 10}
 
     """Specify to filter the records returned."""
     filter: ProductVariantPriceFilter = {}
 
     """Specify to sort results."""
     sorting: [ProductVariantPriceSort!] = []
-  ): ProductVariantPriceConnection!
+  ): [ProductVariantPrice!]!
   zone: Zone!
   category: TaxCategory!
+  variantsAggregate(
+    """Filter to find records to aggregate on"""
+    filter: ProductVariantPriceAggregateFilter
+  ): TaxRateVariantsAggregateResponse!
 }
 
 input ProductVariantPriceFilter {
@@ -624,6 +790,16 @@ enum ProductVariantPriceSortFields {
   taxIncluded
 }
 
+input ProductVariantPriceAggregateFilter {
+  and: [ProductVariantPriceAggregateFilter!]
+  or: [ProductVariantPriceAggregateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  price: NumberFieldComparison
+  taxIncluded: BooleanFieldComparison
+}
+
 type Zone {
   id: ID!
   createdAt: DateTime!
@@ -631,34 +807,46 @@ type Zone {
   name: String!
   members(
     """Limit or page results."""
-    paging: CursorPaging = {first: 10}
+    paging: OffsetPaging = {limit: 10}
 
     """Specify to filter the records returned."""
     filter: CountryFilter = {}
 
     """Specify to sort results."""
     sorting: [CountrySort!] = []
-  ): CountryConnection!
+  ): [Country!]!
   stores(
     """Limit or page results."""
-    paging: CursorPaging = {first: 10}
+    paging: OffsetPaging = {limit: 10}
 
     """Specify to filter the records returned."""
     filter: StoreFilter = {}
 
     """Specify to sort results."""
     sorting: [StoreSort!] = []
-  ): StoreConnection!
+  ): [Store!]!
   taxrates(
     """Limit or page results."""
-    paging: CursorPaging = {first: 10}
+    paging: OffsetPaging = {limit: 10}
 
     """Specify to filter the records returned."""
     filter: TaxRateFilter = {}
 
     """Specify to sort results."""
     sorting: [TaxRateSort!] = []
-  ): TaxRateConnection!
+  ): [TaxRate!]!
+  membersAggregate(
+    """Filter to find records to aggregate on"""
+    filter: CountryAggregateFilter
+  ): ZoneMembersAggregateResponse!
+  storesAggregate(
+    """Filter to find records to aggregate on"""
+    filter: StoreAggregateFilter
+  ): ZoneStoresAggregateResponse!
+  taxratesAggregate(
+    """Filter to find records to aggregate on"""
+    filter: TaxRateAggregateFilter
+  ): ZoneTaxratesAggregateResponse!
 }
 
 input CountryFilter {
@@ -727,6 +915,35 @@ enum StoreSortFields {
   channelMarkets
 }
 
+input CountryAggregateFilter {
+  and: [CountryAggregateFilter!]
+  or: [CountryAggregateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  code: StringFieldComparison
+  name: StringFieldComparison
+  enabled: BooleanFieldComparison
+}
+
+input StoreAggregateFilter {
+  and: [StoreAggregateFilter!]
+  or: [StoreAggregateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  storeName: StringFieldComparison
+  phoneNumber: StringFieldComparison
+  officialemail: StringFieldComparison
+  zipcode: StringFieldComparison
+  streetAddress1: StringFieldComparison
+  streetAddress2: StringFieldComparison
+  GSTIN: StringFieldComparison
+  singleStore: BooleanFieldComparison
+  rentalStore: BooleanFieldComparison
+  channelMarkets: BooleanFieldComparison
+}
+
 type Store {
   id: ID!
   createdAt: DateTime!
@@ -744,16 +961,19 @@ type Store {
   type: StoreTypeEnum!
   skus(
     """Limit or page results."""
-    paging: CursorPaging = {first: 10}
+    paging: OffsetPaging = {limit: 10}
 
     """Specify to filter the records returned."""
     filter: StockKeepingFilter = {}
 
     """Specify to sort results."""
     sorting: [StockKeepingSort!] = []
-  ): StockKeepingConnection!
+  ): [StockKeeping!]!
   country: Country!
-  region: Zone!
+  skusAggregate(
+    """Filter to find records to aggregate on"""
+    filter: StockKeepingAggregateFilter
+  ): StoreSkusAggregateResponse!
 }
 
 enum StoreTypeEnum {
@@ -795,6 +1015,22 @@ enum StockKeepingSortFields {
   stockstatus
   sku
   type
+}
+
+input StockKeepingAggregateFilter {
+  and: [StockKeepingAggregateFilter!]
+  or: [StockKeepingAggregateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  quantity: NumberFieldComparison
+  available_quantity: NumberFieldComparison
+  threshold: NumberFieldComparison
+  multiple: BooleanFieldComparison
+  backorder: BooleanFieldComparison
+  stockstatus: BooleanFieldComparison
+  sku: StringFieldComparison
+  type: StringFieldComparison
 }
 
 type Role {
@@ -862,8 +1098,8 @@ type Seo {
   metatitle: String!
   metakeywords: [String!]
   metadesc: String!
-  collection: Collection
   variant: ProductVariant
+  collection: Collection
 }
 
 type ProductAsset {
@@ -888,36 +1124,48 @@ type StockKeeping {
   type: String!
   sales(
     """Limit or page results."""
-    paging: CursorPaging = {first: 10}
+    paging: OffsetPaging = {limit: 10}
 
     """Specify to filter the records returned."""
     filter: SaleFilter = {}
 
     """Specify to sort results."""
     sorting: [SaleSort!] = []
-  ): SaleConnection!
+  ): [Sale!]!
   cancels(
     """Limit or page results."""
-    paging: CursorPaging = {first: 10}
+    paging: OffsetPaging = {limit: 10}
 
     """Specify to filter the records returned."""
     filter: CancellationFilter = {}
 
     """Specify to sort results."""
     sorting: [CancellationSort!] = []
-  ): CancellationConnection!
+  ): [Cancellation!]!
   movements(
     """Limit or page results."""
-    paging: CursorPaging = {first: 10}
+    paging: OffsetPaging = {limit: 10}
 
     """Specify to filter the records returned."""
     filter: StockMovementFilter = {}
 
     """Specify to sort results."""
     sorting: [StockMovementSort!] = []
-  ): StockMovementConnection!
+  ): [StockMovement!]!
   store: Store!
   variant: ProductVariant!
+  salesAggregate(
+    """Filter to find records to aggregate on"""
+    filter: SaleAggregateFilter
+  ): StockKeepingSalesAggregateResponse!
+  cancelsAggregate(
+    """Filter to find records to aggregate on"""
+    filter: CancellationAggregateFilter
+  ): StockKeepingCancelsAggregateResponse!
+  movementsAggregate(
+    """Filter to find records to aggregate on"""
+    filter: StockMovementAggregateFilter
+  ): StockKeepingMovementsAggregateResponse!
 }
 
 input SaleFilter {
@@ -986,6 +1234,33 @@ enum StockMovementSortFields {
   quantity
 }
 
+input SaleAggregateFilter {
+  and: [SaleAggregateFilter!]
+  or: [SaleAggregateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  quantity: NumberFieldComparison
+}
+
+input CancellationAggregateFilter {
+  and: [CancellationAggregateFilter!]
+  or: [CancellationAggregateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  quantity: NumberFieldComparison
+}
+
+input StockMovementAggregateFilter {
+  and: [StockMovementAggregateFilter!]
+  or: [StockMovementAggregateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  quantity: NumberFieldComparison
+}
+
 type ProductVariant {
   id: ID!
   createdAt: DateTime!
@@ -998,19 +1273,23 @@ type ProductVariant {
   trackInventory: Boolean!
   stocks(
     """Limit or page results."""
-    paging: CursorPaging = {first: 10}
+    paging: OffsetPaging = {limit: 10}
 
     """Specify to filter the records returned."""
     filter: StockKeepingFilter = {}
 
     """Specify to sort results."""
     sorting: [StockKeepingSort!] = []
-  ): StockKeepingConnection!
+  ): [StockKeeping!]!
   seo: Seo
   specs: ProductVariantSpecs
   price: ProductVariantPrice
   asset: ProductVariantAsset
   product: Product!
+  stocksAggregate(
+    """Filter to find records to aggregate on"""
+    filter: StockKeepingAggregateFilter
+  ): ProductVariantStocksAggregateResponse!
 }
 
 type ProductVariantAsset {
@@ -1039,15 +1318,19 @@ type ProductOption {
   code: String!
   variants(
     """Limit or page results."""
-    paging: CursorPaging = {first: 10}
+    paging: OffsetPaging = {limit: 10}
 
     """Specify to filter the records returned."""
     filter: ProductVariantFilter = {}
 
     """Specify to sort results."""
     sorting: [ProductVariantSort!] = []
-  ): ProductVariantConnection!
+  ): [ProductVariant!]!
   group: ProductOptionGroup!
+  variantsAggregate(
+    """Filter to find records to aggregate on"""
+    filter: ProductVariantAggregateFilter
+  ): ProductOptionVariantsAggregateResponse!
 }
 
 type ProductOptionGroup {
@@ -1058,15 +1341,19 @@ type ProductOptionGroup {
   code: String!
   options(
     """Limit or page results."""
-    paging: CursorPaging = {first: 10}
+    paging: OffsetPaging = {limit: 10}
 
     """Specify to filter the records returned."""
     filter: ProductOptionFilter = {}
 
     """Specify to sort results."""
     sorting: [ProductOptionSort!] = []
-  ): ProductOptionConnection!
+  ): [ProductOption!]!
   product: Product!
+  optionsAggregate(
+    """Filter to find records to aggregate on"""
+    filter: ProductOptionAggregateFilter
+  ): ProductOptionGroupOptionsAggregateResponse!
 }
 
 input ProductOptionFilter {
@@ -1093,6 +1380,23 @@ enum ProductOptionSortFields {
   code
 }
 
+input ProductOptionAggregateFilter {
+  and: [ProductOptionAggregateFilter!]
+  or: [ProductOptionAggregateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  name: StringFieldComparison
+  code: StringFieldComparison
+}
+
+type VendorLicense {
+  id: ID!
+  tenureStart: DateTime!
+  tenureEnd: DateTime!
+  vendor: Vendor!
+}
+
 type VendorPlans {
   id: ID!
   createdAt: DateTime!
@@ -1104,14 +1408,18 @@ type VendorPlans {
   tenureStrategy: VendorPlanTenure!
   licences(
     """Limit or page results."""
-    paging: CursorPaging = {first: 10}
+    paging: OffsetPaging = {limit: 10}
 
     """Specify to filter the records returned."""
     filter: VendorLicenseFilter = {}
 
     """Specify to sort results."""
     sorting: [VendorLicenseSort!] = []
-  ): VendorLicenseConnection!
+  ): [VendorLicense!]!
+  licencesAggregate(
+    """Filter to find records to aggregate on"""
+    filter: VendorLicenseAggregateFilter
+  ): VendorPlansLicencesAggregateResponse!
 }
 
 enum VendorPlanTenure {
@@ -1140,11 +1448,12 @@ enum VendorLicenseSortFields {
   tenureEnd
 }
 
-type VendorLicense {
-  id: ID!
-  tenureStart: DateTime!
-  tenureEnd: DateTime!
-  vendor: Vendor!
+input VendorLicenseAggregateFilter {
+  and: [VendorLicenseAggregateFilter!]
+  or: [VendorLicenseAggregateFilter!]
+  id: IDFilterComparison
+  tenureStart: DateFieldComparison
+  tenureEnd: DateFieldComparison
 }
 
 type BillingAgreement {
@@ -1181,7 +1490,7 @@ type ProductVariantSpecs {
 """
 The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
 """
-scalar JSON
+scalar JSON @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
 
 type BillingAgreementRequest {
   id: ID!
@@ -1233,15 +1542,19 @@ type Menu {
   target: String!
   children(
     """Limit or page results."""
-    paging: CursorPaging = {first: 10}
+    paging: OffsetPaging = {limit: 10}
 
     """Specify to filter the records returned."""
     filter: MenuFilter = {}
 
     """Specify to sort results."""
     sorting: [MenuSort!] = []
-  ): MenuConnection!
+  ): [Menu!]!
   parent: Menu
+  childrenAggregate(
+    """Filter to find records to aggregate on"""
+    filter: MenuAggregateFilter
+  ): MenuChildrenAggregateResponse!
 }
 
 input MenuFilter {
@@ -1270,6 +1583,17 @@ enum MenuSortFields {
   target
 }
 
+input MenuAggregateFilter {
+  and: [MenuAggregateFilter!]
+  or: [MenuAggregateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  title: StringFieldComparison
+  targetId: StringFieldComparison
+  target: StringFieldComparison
+}
+
 type Country {
   id: ID!
   createdAt: DateTime!
@@ -1277,16 +1601,34 @@ type Country {
   code: String!
   name: String!
   enabled: Boolean!
+  stores(
+    """Limit or page results."""
+    paging: OffsetPaging = {limit: 10}
+
+    """Specify to filter the records returned."""
+    filter: StoreFilter = {}
+
+    """Specify to sort results."""
+    sorting: [StoreSort!] = []
+  ): [Store!]!
   zones(
     """Limit or page results."""
-    paging: CursorPaging = {first: 10}
+    paging: OffsetPaging = {limit: 10}
 
     """Specify to filter the records returned."""
     filter: ZoneFilter = {}
 
     """Specify to sort results."""
     sorting: [ZoneSort!] = []
-  ): ZoneConnection!
+  ): [Zone!]!
+  storesAggregate(
+    """Filter to find records to aggregate on"""
+    filter: StoreAggregateFilter
+  ): CountryStoresAggregateResponse!
+  zonesAggregate(
+    """Filter to find records to aggregate on"""
+    filter: ZoneAggregateFilter
+  ): CountryZonesAggregateResponse!
 }
 
 input ZoneFilter {
@@ -1311,6 +1653,15 @@ enum ZoneSortFields {
   name
 }
 
+input ZoneAggregateFilter {
+  and: [ZoneAggregateFilter!]
+  or: [ZoneAggregateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  name: StringFieldComparison
+}
+
 type AdministratorDto {
   user: User!
   token: String!
@@ -1322,87 +1673,183 @@ type DeleteManyResponse {
   deletedCount: Int!
 }
 
+type AssetDeleteResponse {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  name: String
+  type: String
+  mimeType: String
+  width: Float
+  height: Float
+  fileSize: Float
+  source: String
+  preview: String
+  focalPoint: JSONObject
+}
+
 type UpdateManyResponse {
   """The number of records updated."""
   updatedCount: Int!
 }
 
-type AssetEdge {
-  """The node containing the Asset"""
-  node: Asset!
-
-  """Cursor for this node."""
-  cursor: ConnectionCursor!
+type AssetCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  name: Int
+  type: Int
+  mimeType: Int
+  width: Int
+  height: Int
+  fileSize: Int
+  source: Int
+  preview: Int
 }
 
-type PageInfo {
-  """true if paging forward and there are more records."""
-  hasNextPage: Boolean
-
-  """true if paging backwards and there are more records."""
-  hasPreviousPage: Boolean
-
-  """The cursor of the first returned record."""
-  startCursor: ConnectionCursor
-
-  """The cursor of the last returned record."""
-  endCursor: ConnectionCursor
+type AssetSumAggregate {
+  width: Float
+  height: Float
+  fileSize: Float
 }
 
-type AssetConnection {
-  """Paging information"""
-  pageInfo: PageInfo!
-
-  """Array of edges."""
-  edges: [AssetEdge!]!
+type AssetAvgAggregate {
+  width: Float
+  height: Float
+  fileSize: Float
 }
 
-type ProductEdge {
-  """The node containing the Product"""
-  node: Product!
-
-  """Cursor for this node."""
-  cursor: ConnectionCursor!
+type AssetMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  name: String
+  type: String
+  mimeType: String
+  width: Float
+  height: Float
+  fileSize: Float
+  source: String
+  preview: String
 }
 
-type ProductConnection {
-  """Paging information"""
-  pageInfo: PageInfo!
-
-  """Array of edges."""
-  edges: [ProductEdge!]!
+type AssetMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  name: String
+  type: String
+  mimeType: String
+  width: Float
+  height: Float
+  fileSize: Float
+  source: String
+  preview: String
 }
 
-type ProductAssetEdge {
-  """The node containing the ProductAsset"""
-  node: ProductAsset!
-
-  """Cursor for this node."""
-  cursor: ConnectionCursor!
+type AssetAggregateResponse {
+  count: AssetCountAggregate
+  sum: AssetSumAggregate
+  avg: AssetAvgAggregate
+  min: AssetMinAggregate
+  max: AssetMaxAggregate
 }
 
-type ProductAssetConnection {
-  """Paging information"""
-  pageInfo: PageInfo!
-
-  """Array of edges."""
-  edges: [ProductAssetEdge!]!
+type AssetFeaturedsCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  productName: Int
+  slug: Int
+  description: Int
 }
 
-type RoleEdge {
-  """The node containing the Role"""
-  node: Role!
-
-  """Cursor for this node."""
-  cursor: ConnectionCursor!
+type AssetFeaturedsMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  productName: String
+  slug: String
+  description: String
 }
 
-type RoleConnection {
-  """Paging information"""
-  pageInfo: PageInfo!
+type AssetFeaturedsMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  productName: String
+  slug: String
+  description: String
+}
 
-  """Array of edges."""
-  edges: [RoleEdge!]!
+type AssetFeaturedsAggregateResponse {
+  count: AssetFeaturedsCountAggregate
+  min: AssetFeaturedsMinAggregate
+  max: AssetFeaturedsMaxAggregate
+}
+
+type AssetProductAssetsCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+}
+
+type AssetProductAssetsMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+type AssetProductAssetsMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+type AssetProductAssetsAggregateResponse {
+  count: AssetProductAssetsCountAggregate
+  min: AssetProductAssetsMinAggregate
+  max: AssetProductAssetsMaxAggregate
+}
+
+type RoleDeleteResponse {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  code: String
+  description: String
+  permissions: [Permission!]
+  type: RoleType
+}
+
+type RoleCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  code: Int
+  description: Int
+}
+
+type RoleMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  code: String
+  description: String
+}
+
+type RoleMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  code: String
+  description: String
+}
+
+type RoleAggregateResponse {
+  count: RoleCountAggregate
+  min: RoleMinAggregate
+  max: RoleMaxAggregate
 }
 
 type CollectionDeleteResponse {
@@ -1417,36 +1864,166 @@ type CollectionDeleteResponse {
   description: String
 }
 
-type CollectionEdge {
-  """The node containing the Collection"""
-  node: Collection!
-
-  """Cursor for this node."""
-  cursor: ConnectionCursor!
+type CollectionCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  isRoot: Int
+  inMenu: Int
+  position: Int
+  isPrivate: Int
+  name: Int
+  description: Int
 }
 
-type CollectionConnection {
-  """Paging information"""
-  pageInfo: PageInfo!
-
-  """Array of edges."""
-  edges: [CollectionEdge!]!
+type CollectionSumAggregate {
+  position: Float
 }
 
-type BillingAgreementEdge {
-  """The node containing the BillingAgreement"""
-  node: BillingAgreement!
-
-  """Cursor for this node."""
-  cursor: ConnectionCursor!
+type CollectionAvgAggregate {
+  position: Float
 }
 
-type BillingAgreementConnection {
-  """Paging information"""
-  pageInfo: PageInfo!
+type CollectionMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  position: Float
+  name: String
+  description: String
+}
 
-  """Array of edges."""
-  edges: [BillingAgreementEdge!]!
+type CollectionMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  position: Float
+  name: String
+  description: String
+}
+
+type CollectionAggregateResponse {
+  count: CollectionCountAggregate
+  sum: CollectionSumAggregate
+  avg: CollectionAvgAggregate
+  min: CollectionMinAggregate
+  max: CollectionMaxAggregate
+}
+
+type CollectionChildrenCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  isRoot: Int
+  inMenu: Int
+  position: Int
+  isPrivate: Int
+  name: Int
+  description: Int
+}
+
+type CollectionChildrenSumAggregate {
+  position: Float
+}
+
+type CollectionChildrenAvgAggregate {
+  position: Float
+}
+
+type CollectionChildrenMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  position: Float
+  name: String
+  description: String
+}
+
+type CollectionChildrenMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  position: Float
+  name: String
+  description: String
+}
+
+type CollectionChildrenAggregateResponse {
+  count: CollectionChildrenCountAggregate
+  sum: CollectionChildrenSumAggregate
+  avg: CollectionChildrenAvgAggregate
+  min: CollectionChildrenMinAggregate
+  max: CollectionChildrenMaxAggregate
+}
+
+type CollectionProductsCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  productName: Int
+  slug: Int
+  description: Int
+}
+
+type CollectionProductsMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  productName: String
+  slug: String
+  description: String
+}
+
+type CollectionProductsMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  productName: String
+  slug: String
+  description: String
+}
+
+type CollectionProductsAggregateResponse {
+  count: CollectionProductsCountAggregate
+  min: CollectionProductsMinAggregate
+  max: CollectionProductsMaxAggregate
+}
+
+type CollectionAgreementsCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  value: Int
+}
+
+type CollectionAgreementsSumAggregate {
+  value: Float
+}
+
+type CollectionAgreementsAvgAggregate {
+  value: Float
+}
+
+type CollectionAgreementsMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  value: Float
+}
+
+type CollectionAgreementsMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  value: Float
+}
+
+type CollectionAgreementsAggregateResponse {
+  count: CollectionAgreementsCountAggregate
+  sum: CollectionAgreementsSumAggregate
+  avg: CollectionAgreementsAvgAggregate
+  min: CollectionAgreementsMinAggregate
+  max: CollectionAgreementsMaxAggregate
 }
 
 type ChannelDeleteResponse {
@@ -1460,20 +2037,41 @@ type ChannelDeleteResponse {
   pricesIncludeTax: Boolean
 }
 
-type ChannelEdge {
-  """The node containing the Channel"""
-  node: Channel!
-
-  """Cursor for this node."""
-  cursor: ConnectionCursor!
+type ChannelCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  code: Int
+  token: Int
+  defaultLanguageCode: Int
+  currencyCode: Int
+  pricesIncludeTax: Int
 }
 
-type ChannelConnection {
-  """Paging information"""
-  pageInfo: PageInfo!
+type ChannelMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  code: String
+  token: String
+  defaultLanguageCode: String
+  currencyCode: String
+}
 
-  """Array of edges."""
-  edges: [ChannelEdge!]!
+type ChannelMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  code: String
+  token: String
+  defaultLanguageCode: String
+  currencyCode: String
+}
+
+type ChannelAggregateResponse {
+  count: ChannelCountAggregate
+  min: ChannelMinAggregate
+  max: ChannelMaxAggregate
 }
 
 type StoreDeleteResponse {
@@ -1493,36 +2091,108 @@ type StoreDeleteResponse {
   type: StoreTypeEnum
 }
 
-type StoreEdge {
-  """The node containing the Store"""
-  node: Store!
-
-  """Cursor for this node."""
-  cursor: ConnectionCursor!
+type StoreCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  storeName: Int
+  phoneNumber: Int
+  officialemail: Int
+  zipcode: Int
+  streetAddress1: Int
+  streetAddress2: Int
+  GSTIN: Int
+  singleStore: Int
+  rentalStore: Int
+  channelMarkets: Int
 }
 
-type StoreConnection {
-  """Paging information"""
-  pageInfo: PageInfo!
-
-  """Array of edges."""
-  edges: [StoreEdge!]!
+type StoreMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  storeName: String
+  phoneNumber: String
+  officialemail: String
+  zipcode: String
+  streetAddress1: String
+  streetAddress2: String
+  GSTIN: String
 }
 
-type StockKeepingEdge {
-  """The node containing the StockKeeping"""
-  node: StockKeeping!
-
-  """Cursor for this node."""
-  cursor: ConnectionCursor!
+type StoreMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  storeName: String
+  phoneNumber: String
+  officialemail: String
+  zipcode: String
+  streetAddress1: String
+  streetAddress2: String
+  GSTIN: String
 }
 
-type StockKeepingConnection {
-  """Paging information"""
-  pageInfo: PageInfo!
+type StoreAggregateResponse {
+  count: StoreCountAggregate
+  min: StoreMinAggregate
+  max: StoreMaxAggregate
+}
 
-  """Array of edges."""
-  edges: [StockKeepingEdge!]!
+type StoreSkusCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  quantity: Int
+  available_quantity: Int
+  threshold: Int
+  multiple: Int
+  backorder: Int
+  stockstatus: Int
+  sku: Int
+  type: Int
+}
+
+type StoreSkusSumAggregate {
+  quantity: Float
+  available_quantity: Float
+  threshold: Float
+}
+
+type StoreSkusAvgAggregate {
+  quantity: Float
+  available_quantity: Float
+  threshold: Float
+}
+
+type StoreSkusMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  quantity: Float
+  available_quantity: Float
+  threshold: Float
+  sku: String
+  type: String
+}
+
+type StoreSkusMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  quantity: Float
+  available_quantity: Float
+  threshold: Float
+  sku: String
+  type: String
+}
+
+type StoreSkusAggregateResponse {
+  count: StoreSkusCountAggregate
+  sum: StoreSkusSumAggregate
+  avg: StoreSkusAvgAggregate
+  min: StoreSkusMinAggregate
+  max: StoreSkusMaxAggregate
 }
 
 type TaxCategoryDeleteResponse {
@@ -1532,36 +2202,72 @@ type TaxCategoryDeleteResponse {
   name: String
 }
 
-type TaxCategoryEdge {
-  """The node containing the TaxCategory"""
-  node: TaxCategory!
-
-  """Cursor for this node."""
-  cursor: ConnectionCursor!
+type TaxCategoryCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  name: Int
 }
 
-type TaxCategoryConnection {
-  """Paging information"""
-  pageInfo: PageInfo!
-
-  """Array of edges."""
-  edges: [TaxCategoryEdge!]!
+type TaxCategoryMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  name: String
 }
 
-type TaxRateEdge {
-  """The node containing the TaxRate"""
-  node: TaxRate!
-
-  """Cursor for this node."""
-  cursor: ConnectionCursor!
+type TaxCategoryMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  name: String
 }
 
-type TaxRateConnection {
-  """Paging information"""
-  pageInfo: PageInfo!
+type TaxCategoryAggregateResponse {
+  count: TaxCategoryCountAggregate
+  min: TaxCategoryMinAggregate
+  max: TaxCategoryMaxAggregate
+}
 
-  """Array of edges."""
-  edges: [TaxRateEdge!]!
+type TaxCategoryRatesCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  name: Int
+  value: Int
+  enabled: Int
+}
+
+type TaxCategoryRatesSumAggregate {
+  value: Float
+}
+
+type TaxCategoryRatesAvgAggregate {
+  value: Float
+}
+
+type TaxCategoryRatesMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  name: String
+  value: Float
+}
+
+type TaxCategoryRatesMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  name: String
+  value: Float
+}
+
+type TaxCategoryRatesAggregateResponse {
+  count: TaxCategoryRatesCountAggregate
+  sum: TaxCategoryRatesSumAggregate
+  avg: TaxCategoryRatesAvgAggregate
+  min: TaxCategoryRatesMinAggregate
+  max: TaxCategoryRatesMaxAggregate
 }
 
 type TaxRateDeleteResponse {
@@ -1573,20 +2279,83 @@ type TaxRateDeleteResponse {
   enabled: Boolean
 }
 
-type ProductVariantPriceEdge {
-  """The node containing the ProductVariantPrice"""
-  node: ProductVariantPrice!
-
-  """Cursor for this node."""
-  cursor: ConnectionCursor!
+type TaxRateCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  name: Int
+  value: Int
+  enabled: Int
 }
 
-type ProductVariantPriceConnection {
-  """Paging information"""
-  pageInfo: PageInfo!
+type TaxRateSumAggregate {
+  value: Float
+}
 
-  """Array of edges."""
-  edges: [ProductVariantPriceEdge!]!
+type TaxRateAvgAggregate {
+  value: Float
+}
+
+type TaxRateMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  name: String
+  value: Float
+}
+
+type TaxRateMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  name: String
+  value: Float
+}
+
+type TaxRateAggregateResponse {
+  count: TaxRateCountAggregate
+  sum: TaxRateSumAggregate
+  avg: TaxRateAvgAggregate
+  min: TaxRateMinAggregate
+  max: TaxRateMaxAggregate
+}
+
+type TaxRateVariantsCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  price: Int
+  taxIncluded: Int
+}
+
+type TaxRateVariantsSumAggregate {
+  price: Float
+}
+
+type TaxRateVariantsAvgAggregate {
+  price: Float
+}
+
+type TaxRateVariantsMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  price: Float
+}
+
+type TaxRateVariantsMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  price: Float
+}
+
+type TaxRateVariantsAggregateResponse {
+  count: TaxRateVariantsCountAggregate
+  sum: TaxRateVariantsSumAggregate
+  avg: TaxRateVariantsAvgAggregate
+  min: TaxRateVariantsMinAggregate
+  max: TaxRateVariantsMaxAggregate
 }
 
 type VendorDto {
@@ -1595,20 +2364,46 @@ type VendorDto {
   vendor: Vendor!
 }
 
-type VendorEdge {
-  """The node containing the Vendor"""
-  node: Vendor!
-
-  """Cursor for this node."""
-  cursor: ConnectionCursor!
+type VendorDeleteResponse {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  vendorName: String
+  phoneNumber: String
+  email: String
 }
 
-type VendorConnection {
-  """Paging information"""
-  pageInfo: PageInfo!
+type VendorCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  vendorName: Int
+  phoneNumber: Int
+  email: Int
+}
 
-  """Array of edges."""
-  edges: [VendorEdge!]!
+type VendorMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  vendorName: String
+  phoneNumber: String
+  email: String
+}
+
+type VendorMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  vendorName: String
+  phoneNumber: String
+  email: String
+}
+
+type VendorAggregateResponse {
+  count: VendorCountAggregate
+  min: VendorMinAggregate
+  max: VendorMaxAggregate
 }
 
 type ZoneDeleteResponse {
@@ -1618,36 +2413,151 @@ type ZoneDeleteResponse {
   name: String
 }
 
-type ZoneEdge {
-  """The node containing the Zone"""
-  node: Zone!
-
-  """Cursor for this node."""
-  cursor: ConnectionCursor!
+type ZoneCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  name: Int
 }
 
-type ZoneConnection {
-  """Paging information"""
-  pageInfo: PageInfo!
-
-  """Array of edges."""
-  edges: [ZoneEdge!]!
+type ZoneMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  name: String
 }
 
-type CountryEdge {
-  """The node containing the Country"""
-  node: Country!
-
-  """Cursor for this node."""
-  cursor: ConnectionCursor!
+type ZoneMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  name: String
 }
 
-type CountryConnection {
-  """Paging information"""
-  pageInfo: PageInfo!
+type ZoneAggregateResponse {
+  count: ZoneCountAggregate
+  min: ZoneMinAggregate
+  max: ZoneMaxAggregate
+}
 
-  """Array of edges."""
-  edges: [CountryEdge!]!
+type ZoneMembersCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  code: Int
+  name: Int
+  enabled: Int
+}
+
+type ZoneMembersMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  code: String
+  name: String
+}
+
+type ZoneMembersMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  code: String
+  name: String
+}
+
+type ZoneMembersAggregateResponse {
+  count: ZoneMembersCountAggregate
+  min: ZoneMembersMinAggregate
+  max: ZoneMembersMaxAggregate
+}
+
+type ZoneStoresCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  storeName: Int
+  phoneNumber: Int
+  officialemail: Int
+  zipcode: Int
+  streetAddress1: Int
+  streetAddress2: Int
+  GSTIN: Int
+  singleStore: Int
+  rentalStore: Int
+  channelMarkets: Int
+}
+
+type ZoneStoresMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  storeName: String
+  phoneNumber: String
+  officialemail: String
+  zipcode: String
+  streetAddress1: String
+  streetAddress2: String
+  GSTIN: String
+}
+
+type ZoneStoresMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  storeName: String
+  phoneNumber: String
+  officialemail: String
+  zipcode: String
+  streetAddress1: String
+  streetAddress2: String
+  GSTIN: String
+}
+
+type ZoneStoresAggregateResponse {
+  count: ZoneStoresCountAggregate
+  min: ZoneStoresMinAggregate
+  max: ZoneStoresMaxAggregate
+}
+
+type ZoneTaxratesCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  name: Int
+  value: Int
+  enabled: Int
+}
+
+type ZoneTaxratesSumAggregate {
+  value: Float
+}
+
+type ZoneTaxratesAvgAggregate {
+  value: Float
+}
+
+type ZoneTaxratesMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  name: String
+  value: Float
+}
+
+type ZoneTaxratesMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  name: String
+  value: Float
+}
+
+type ZoneTaxratesAggregateResponse {
+  count: ZoneTaxratesCountAggregate
+  sum: ZoneTaxratesSumAggregate
+  avg: ZoneTaxratesAvgAggregate
+  min: ZoneTaxratesMinAggregate
+  max: ZoneTaxratesMaxAggregate
 }
 
 type CountryDeleteResponse {
@@ -1657,6 +2567,112 @@ type CountryDeleteResponse {
   code: String
   name: String
   enabled: Boolean
+}
+
+type CountryCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  code: Int
+  name: Int
+  enabled: Int
+}
+
+type CountryMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  code: String
+  name: String
+}
+
+type CountryMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  code: String
+  name: String
+}
+
+type CountryAggregateResponse {
+  count: CountryCountAggregate
+  min: CountryMinAggregate
+  max: CountryMaxAggregate
+}
+
+type CountryStoresCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  storeName: Int
+  phoneNumber: Int
+  officialemail: Int
+  zipcode: Int
+  streetAddress1: Int
+  streetAddress2: Int
+  GSTIN: Int
+  singleStore: Int
+  rentalStore: Int
+  channelMarkets: Int
+}
+
+type CountryStoresMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  storeName: String
+  phoneNumber: String
+  officialemail: String
+  zipcode: String
+  streetAddress1: String
+  streetAddress2: String
+  GSTIN: String
+}
+
+type CountryStoresMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  storeName: String
+  phoneNumber: String
+  officialemail: String
+  zipcode: String
+  streetAddress1: String
+  streetAddress2: String
+  GSTIN: String
+}
+
+type CountryStoresAggregateResponse {
+  count: CountryStoresCountAggregate
+  min: CountryStoresMinAggregate
+  max: CountryStoresMaxAggregate
+}
+
+type CountryZonesCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  name: Int
+}
+
+type CountryZonesMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  name: String
+}
+
+type CountryZonesMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  name: String
+}
+
+type CountryZonesAggregateResponse {
+  count: CountryZonesCountAggregate
+  min: CountryZonesMinAggregate
+  max: CountryZonesMaxAggregate
 }
 
 type SeoDeleteResponse {
@@ -1670,20 +2686,37 @@ type SeoDeleteResponse {
   metadesc: String
 }
 
-type SeoEdge {
-  """The node containing the Seo"""
-  node: Seo!
-
-  """Cursor for this node."""
-  cursor: ConnectionCursor!
+type SeoCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  deletedAt: Int
+  urlKey: Int
+  metatitle: Int
 }
 
-type SeoConnection {
-  """Paging information"""
-  pageInfo: PageInfo!
+type SeoMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+  urlKey: String
+  metatitle: String
+}
 
-  """Array of edges."""
-  edges: [SeoEdge!]!
+type SeoMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+  urlKey: String
+  metatitle: String
+}
+
+type SeoAggregateResponse {
+  count: SeoCountAggregate
+  min: SeoMinAggregate
+  max: SeoMaxAggregate
 }
 
 type FacetDeleteResponse {
@@ -1695,36 +2728,95 @@ type FacetDeleteResponse {
   code: String
 }
 
-type FacetEdge {
-  """The node containing the Facet"""
-  node: Facet!
-
-  """Cursor for this node."""
-  cursor: ConnectionCursor!
+type FacetCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  name: Int
+  isPrivate: Int
+  code: Int
 }
 
-type FacetConnection {
-  """Paging information"""
-  pageInfo: PageInfo!
-
-  """Array of edges."""
-  edges: [FacetEdge!]!
+type FacetMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  name: String
+  code: String
 }
 
-type FacetValueEdge {
-  """The node containing the FacetValue"""
-  node: FacetValue!
-
-  """Cursor for this node."""
-  cursor: ConnectionCursor!
+type FacetMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  name: String
+  code: String
 }
 
-type FacetValueConnection {
-  """Paging information"""
-  pageInfo: PageInfo!
+type FacetAggregateResponse {
+  count: FacetCountAggregate
+  min: FacetMinAggregate
+  max: FacetMaxAggregate
+}
 
-  """Array of edges."""
-  edges: [FacetValueEdge!]!
+type FacetProductsCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  productName: Int
+  slug: Int
+  description: Int
+}
+
+type FacetProductsMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  productName: String
+  slug: String
+  description: String
+}
+
+type FacetProductsMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  productName: String
+  slug: String
+  description: String
+}
+
+type FacetProductsAggregateResponse {
+  count: FacetProductsCountAggregate
+  min: FacetProductsMinAggregate
+  max: FacetProductsMaxAggregate
+}
+
+type FacetValuesCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  code: Int
+}
+
+type FacetValuesMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  code: String
+}
+
+type FacetValuesMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  code: String
+}
+
+type FacetValuesAggregateResponse {
+  count: FacetValuesCountAggregate
+  min: FacetValuesMinAggregate
+  max: FacetValuesMaxAggregate
 }
 
 type FacetValueDeleteResponse {
@@ -1732,6 +2824,66 @@ type FacetValueDeleteResponse {
   createdAt: DateTime
   updatedAt: DateTime
   code: String
+}
+
+type FacetValueCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  code: Int
+}
+
+type FacetValueMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  code: String
+}
+
+type FacetValueMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  code: String
+}
+
+type FacetValueAggregateResponse {
+  count: FacetValueCountAggregate
+  min: FacetValueMinAggregate
+  max: FacetValueMaxAggregate
+}
+
+type FacetValueProductsCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  productName: Int
+  slug: Int
+  description: Int
+}
+
+type FacetValueProductsMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  productName: String
+  slug: String
+  description: String
+}
+
+type FacetValueProductsMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  productName: String
+  slug: String
+  description: String
+}
+
+type FacetValueProductsAggregateResponse {
+  count: FacetValueProductsCountAggregate
+  min: FacetValueProductsMinAggregate
+  max: FacetValueProductsMaxAggregate
 }
 
 type ProductDeleteResponse {
@@ -1743,36 +2895,166 @@ type ProductDeleteResponse {
   description: String
 }
 
-type ProductOptionGroupEdge {
-  """The node containing the ProductOptionGroup"""
-  node: ProductOptionGroup!
-
-  """Cursor for this node."""
-  cursor: ConnectionCursor!
+type ProductCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  productName: Int
+  slug: Int
+  description: Int
 }
 
-type ProductOptionGroupConnection {
-  """Paging information"""
-  pageInfo: PageInfo!
-
-  """Array of edges."""
-  edges: [ProductOptionGroupEdge!]!
+type ProductMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  productName: String
+  slug: String
+  description: String
 }
 
-type ProductVariantEdge {
-  """The node containing the ProductVariant"""
-  node: ProductVariant!
-
-  """Cursor for this node."""
-  cursor: ConnectionCursor!
+type ProductMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  productName: String
+  slug: String
+  description: String
 }
 
-type ProductVariantConnection {
-  """Paging information"""
-  pageInfo: PageInfo!
+type ProductAggregateResponse {
+  count: ProductCountAggregate
+  min: ProductMinAggregate
+  max: ProductMaxAggregate
+}
 
-  """Array of edges."""
-  edges: [ProductVariantEdge!]!
+type ProductOptionsCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  name: Int
+  code: Int
+}
+
+type ProductOptionsMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  name: String
+  code: String
+}
+
+type ProductOptionsMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  name: String
+  code: String
+}
+
+type ProductOptionsAggregateResponse {
+  count: ProductOptionsCountAggregate
+  min: ProductOptionsMinAggregate
+  max: ProductOptionsMaxAggregate
+}
+
+type ProductFacetsCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  code: Int
+}
+
+type ProductFacetsMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  code: String
+}
+
+type ProductFacetsMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  code: String
+}
+
+type ProductFacetsAggregateResponse {
+  count: ProductFacetsCountAggregate
+  min: ProductFacetsMinAggregate
+  max: ProductFacetsMaxAggregate
+}
+
+type ProductVariantsCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  deletedAt: Int
+  dum_price: Int
+  enabled: Int
+  sku: Int
+  name: Int
+  trackInventory: Int
+}
+
+type ProductVariantsSumAggregate {
+  dum_price: Float
+}
+
+type ProductVariantsAvgAggregate {
+  dum_price: Float
+}
+
+type ProductVariantsMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+  dum_price: Float
+  sku: String
+  name: String
+}
+
+type ProductVariantsMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+  dum_price: Float
+  sku: String
+  name: String
+}
+
+type ProductVariantsAggregateResponse {
+  count: ProductVariantsCountAggregate
+  sum: ProductVariantsSumAggregate
+  avg: ProductVariantsAvgAggregate
+  min: ProductVariantsMinAggregate
+  max: ProductVariantsMaxAggregate
+}
+
+type ProductAssetsCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+}
+
+type ProductAssetsMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+type ProductAssetsMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+type ProductAssetsAggregateResponse {
+  count: ProductAssetsCountAggregate
+  min: ProductAssetsMinAggregate
+  max: ProductAssetsMaxAggregate
 }
 
 type ProductVariantDeleteResponse {
@@ -1787,6 +3069,110 @@ type ProductVariantDeleteResponse {
   trackInventory: Boolean
 }
 
+type ProductVariantCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  deletedAt: Int
+  dum_price: Int
+  enabled: Int
+  sku: Int
+  name: Int
+  trackInventory: Int
+}
+
+type ProductVariantSumAggregate {
+  dum_price: Float
+}
+
+type ProductVariantAvgAggregate {
+  dum_price: Float
+}
+
+type ProductVariantMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+  dum_price: Float
+  sku: String
+  name: String
+}
+
+type ProductVariantMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+  dum_price: Float
+  sku: String
+  name: String
+}
+
+type ProductVariantAggregateResponse {
+  count: ProductVariantCountAggregate
+  sum: ProductVariantSumAggregate
+  avg: ProductVariantAvgAggregate
+  min: ProductVariantMinAggregate
+  max: ProductVariantMaxAggregate
+}
+
+type ProductVariantStocksCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  quantity: Int
+  available_quantity: Int
+  threshold: Int
+  multiple: Int
+  backorder: Int
+  stockstatus: Int
+  sku: Int
+  type: Int
+}
+
+type ProductVariantStocksSumAggregate {
+  quantity: Float
+  available_quantity: Float
+  threshold: Float
+}
+
+type ProductVariantStocksAvgAggregate {
+  quantity: Float
+  available_quantity: Float
+  threshold: Float
+}
+
+type ProductVariantStocksMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  quantity: Float
+  available_quantity: Float
+  threshold: Float
+  sku: String
+  type: String
+}
+
+type ProductVariantStocksMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  quantity: Float
+  available_quantity: Float
+  threshold: Float
+  sku: String
+  type: String
+}
+
+type ProductVariantStocksAggregateResponse {
+  count: ProductVariantStocksCountAggregate
+  sum: ProductVariantStocksSumAggregate
+  avg: ProductVariantStocksAvgAggregate
+  min: ProductVariantStocksMinAggregate
+  max: ProductVariantStocksMaxAggregate
+}
+
 type ProductOptionDeleteResponse {
   id: ID
   createdAt: DateTime
@@ -1795,20 +3181,82 @@ type ProductOptionDeleteResponse {
   code: String
 }
 
-type ProductOptionEdge {
-  """The node containing the ProductOption"""
-  node: ProductOption!
-
-  """Cursor for this node."""
-  cursor: ConnectionCursor!
+type ProductOptionCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  name: Int
+  code: Int
 }
 
-type ProductOptionConnection {
-  """Paging information"""
-  pageInfo: PageInfo!
+type ProductOptionMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  name: String
+  code: String
+}
 
-  """Array of edges."""
-  edges: [ProductOptionEdge!]!
+type ProductOptionMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  name: String
+  code: String
+}
+
+type ProductOptionAggregateResponse {
+  count: ProductOptionCountAggregate
+  min: ProductOptionMinAggregate
+  max: ProductOptionMaxAggregate
+}
+
+type ProductOptionVariantsCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  deletedAt: Int
+  dum_price: Int
+  enabled: Int
+  sku: Int
+  name: Int
+  trackInventory: Int
+}
+
+type ProductOptionVariantsSumAggregate {
+  dum_price: Float
+}
+
+type ProductOptionVariantsAvgAggregate {
+  dum_price: Float
+}
+
+type ProductOptionVariantsMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+  dum_price: Float
+  sku: String
+  name: String
+}
+
+type ProductOptionVariantsMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+  dum_price: Float
+  sku: String
+  name: String
+}
+
+type ProductOptionVariantsAggregateResponse {
+  count: ProductOptionVariantsCountAggregate
+  sum: ProductOptionVariantsSumAggregate
+  avg: ProductOptionVariantsAvgAggregate
+  min: ProductOptionVariantsMinAggregate
+  max: ProductOptionVariantsMaxAggregate
 }
 
 type ProductOptionGroupDeleteResponse {
@@ -1819,6 +3267,66 @@ type ProductOptionGroupDeleteResponse {
   code: String
 }
 
+type ProductOptionGroupCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  name: Int
+  code: Int
+}
+
+type ProductOptionGroupMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  name: String
+  code: String
+}
+
+type ProductOptionGroupMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  name: String
+  code: String
+}
+
+type ProductOptionGroupAggregateResponse {
+  count: ProductOptionGroupCountAggregate
+  min: ProductOptionGroupMinAggregate
+  max: ProductOptionGroupMaxAggregate
+}
+
+type ProductOptionGroupOptionsCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  name: Int
+  code: Int
+}
+
+type ProductOptionGroupOptionsMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  name: String
+  code: String
+}
+
+type ProductOptionGroupOptionsMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  name: String
+  code: String
+}
+
+type ProductOptionGroupOptionsAggregateResponse {
+  count: ProductOptionGroupOptionsCountAggregate
+  min: ProductOptionGroupOptionsMinAggregate
+  max: ProductOptionGroupOptionsMaxAggregate
+}
+
 type ProductVariantPriceDeleteResponse {
   id: ID
   createdAt: DateTime
@@ -1827,20 +3335,72 @@ type ProductVariantPriceDeleteResponse {
   taxIncluded: Boolean
 }
 
-type ProductVariantAssetEdge {
-  """The node containing the ProductVariantAsset"""
-  node: ProductVariantAsset!
-
-  """Cursor for this node."""
-  cursor: ConnectionCursor!
+type ProductVariantPriceCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  price: Int
+  taxIncluded: Int
 }
 
-type ProductVariantAssetConnection {
-  """Paging information"""
-  pageInfo: PageInfo!
+type ProductVariantPriceSumAggregate {
+  price: Float
+}
 
-  """Array of edges."""
-  edges: [ProductVariantAssetEdge!]!
+type ProductVariantPriceAvgAggregate {
+  price: Float
+}
+
+type ProductVariantPriceMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  price: Float
+}
+
+type ProductVariantPriceMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  price: Float
+}
+
+type ProductVariantPriceAggregateResponse {
+  count: ProductVariantPriceCountAggregate
+  sum: ProductVariantPriceSumAggregate
+  avg: ProductVariantPriceAvgAggregate
+  min: ProductVariantPriceMinAggregate
+  max: ProductVariantPriceMaxAggregate
+}
+
+type ProductVariantAssetDeleteResponse {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+type ProductVariantAssetCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+}
+
+type ProductVariantAssetMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+type ProductVariantAssetMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+type ProductVariantAssetAggregateResponse {
+  count: ProductVariantAssetCountAggregate
+  min: ProductVariantAssetMinAggregate
+  max: ProductVariantAssetMaxAggregate
 }
 
 type ProductAssetDeleteResponse {
@@ -1849,36 +3409,134 @@ type ProductAssetDeleteResponse {
   updatedAt: DateTime
 }
 
-type VendorPlansEdge {
-  """The node containing the VendorPlans"""
-  node: VendorPlans!
-
-  """Cursor for this node."""
-  cursor: ConnectionCursor!
+type ProductAssetCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
 }
 
-type VendorPlansConnection {
-  """Paging information"""
-  pageInfo: PageInfo!
-
-  """Array of edges."""
-  edges: [VendorPlansEdge!]!
+type ProductAssetMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
 }
 
-type VendorLicenseEdge {
-  """The node containing the VendorLicense"""
-  node: VendorLicense!
-
-  """Cursor for this node."""
-  cursor: ConnectionCursor!
+type ProductAssetMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
 }
 
-type VendorLicenseConnection {
-  """Paging information"""
-  pageInfo: PageInfo!
+type ProductAssetAggregateResponse {
+  count: ProductAssetCountAggregate
+  min: ProductAssetMinAggregate
+  max: ProductAssetMaxAggregate
+}
 
-  """Array of edges."""
-  edges: [VendorLicenseEdge!]!
+type VendorPlansDeleteResponse {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  isActive: Boolean
+  name: String
+  planValue: Float
+  priceStrategy: String
+  tenureStrategy: VendorPlanTenure
+}
+
+type VendorPlansCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  isActive: Int
+  name: Int
+  planValue: Int
+}
+
+type VendorPlansSumAggregate {
+  planValue: Float
+}
+
+type VendorPlansAvgAggregate {
+  planValue: Float
+}
+
+type VendorPlansMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  name: String
+  planValue: Float
+}
+
+type VendorPlansMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  name: String
+  planValue: Float
+}
+
+type VendorPlansAggregateResponse {
+  count: VendorPlansCountAggregate
+  sum: VendorPlansSumAggregate
+  avg: VendorPlansAvgAggregate
+  min: VendorPlansMinAggregate
+  max: VendorPlansMaxAggregate
+}
+
+type VendorPlansLicencesCountAggregate {
+  id: Int
+  tenureStart: Int
+  tenureEnd: Int
+}
+
+type VendorPlansLicencesMinAggregate {
+  id: ID
+  tenureStart: DateTime
+  tenureEnd: DateTime
+}
+
+type VendorPlansLicencesMaxAggregate {
+  id: ID
+  tenureStart: DateTime
+  tenureEnd: DateTime
+}
+
+type VendorPlansLicencesAggregateResponse {
+  count: VendorPlansLicencesCountAggregate
+  min: VendorPlansLicencesMinAggregate
+  max: VendorPlansLicencesMaxAggregate
+}
+
+type VendorLicenseDeleteResponse {
+  id: ID
+  tenureStart: DateTime
+  tenureEnd: DateTime
+}
+
+type VendorLicenseCountAggregate {
+  id: Int
+  tenureStart: Int
+  tenureEnd: Int
+}
+
+type VendorLicenseMinAggregate {
+  id: ID
+  tenureStart: DateTime
+  tenureEnd: DateTime
+}
+
+type VendorLicenseMaxAggregate {
+  id: ID
+  tenureStart: DateTime
+  tenureEnd: DateTime
+}
+
+type VendorLicenseAggregateResponse {
+  count: VendorLicenseCountAggregate
+  min: VendorLicenseMinAggregate
+  max: VendorLicenseMaxAggregate
 }
 
 type StockKeepingDeleteResponse {
@@ -1895,52 +3553,171 @@ type StockKeepingDeleteResponse {
   type: String
 }
 
-type SaleEdge {
-  """The node containing the Sale"""
-  node: Sale!
-
-  """Cursor for this node."""
-  cursor: ConnectionCursor!
+type StockKeepingCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  quantity: Int
+  available_quantity: Int
+  threshold: Int
+  multiple: Int
+  backorder: Int
+  stockstatus: Int
+  sku: Int
+  type: Int
 }
 
-type SaleConnection {
-  """Paging information"""
-  pageInfo: PageInfo!
-
-  """Array of edges."""
-  edges: [SaleEdge!]!
+type StockKeepingSumAggregate {
+  quantity: Float
+  available_quantity: Float
+  threshold: Float
 }
 
-type CancellationEdge {
-  """The node containing the Cancellation"""
-  node: Cancellation!
-
-  """Cursor for this node."""
-  cursor: ConnectionCursor!
+type StockKeepingAvgAggregate {
+  quantity: Float
+  available_quantity: Float
+  threshold: Float
 }
 
-type CancellationConnection {
-  """Paging information"""
-  pageInfo: PageInfo!
-
-  """Array of edges."""
-  edges: [CancellationEdge!]!
+type StockKeepingMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  quantity: Float
+  available_quantity: Float
+  threshold: Float
+  sku: String
+  type: String
 }
 
-type StockMovementEdge {
-  """The node containing the StockMovement"""
-  node: StockMovement!
-
-  """Cursor for this node."""
-  cursor: ConnectionCursor!
+type StockKeepingMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  quantity: Float
+  available_quantity: Float
+  threshold: Float
+  sku: String
+  type: String
 }
 
-type StockMovementConnection {
-  """Paging information"""
-  pageInfo: PageInfo!
+type StockKeepingAggregateResponse {
+  count: StockKeepingCountAggregate
+  sum: StockKeepingSumAggregate
+  avg: StockKeepingAvgAggregate
+  min: StockKeepingMinAggregate
+  max: StockKeepingMaxAggregate
+}
 
-  """Array of edges."""
-  edges: [StockMovementEdge!]!
+type StockKeepingSalesCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  quantity: Int
+}
+
+type StockKeepingSalesSumAggregate {
+  quantity: Float
+}
+
+type StockKeepingSalesAvgAggregate {
+  quantity: Float
+}
+
+type StockKeepingSalesMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  quantity: Float
+}
+
+type StockKeepingSalesMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  quantity: Float
+}
+
+type StockKeepingSalesAggregateResponse {
+  count: StockKeepingSalesCountAggregate
+  sum: StockKeepingSalesSumAggregate
+  avg: StockKeepingSalesAvgAggregate
+  min: StockKeepingSalesMinAggregate
+  max: StockKeepingSalesMaxAggregate
+}
+
+type StockKeepingCancelsCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  quantity: Int
+}
+
+type StockKeepingCancelsSumAggregate {
+  quantity: Float
+}
+
+type StockKeepingCancelsAvgAggregate {
+  quantity: Float
+}
+
+type StockKeepingCancelsMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  quantity: Float
+}
+
+type StockKeepingCancelsMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  quantity: Float
+}
+
+type StockKeepingCancelsAggregateResponse {
+  count: StockKeepingCancelsCountAggregate
+  sum: StockKeepingCancelsSumAggregate
+  avg: StockKeepingCancelsAvgAggregate
+  min: StockKeepingCancelsMinAggregate
+  max: StockKeepingCancelsMaxAggregate
+}
+
+type StockKeepingMovementsCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  quantity: Int
+}
+
+type StockKeepingMovementsSumAggregate {
+  quantity: Float
+}
+
+type StockKeepingMovementsAvgAggregate {
+  quantity: Float
+}
+
+type StockKeepingMovementsMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  quantity: Float
+}
+
+type StockKeepingMovementsMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  quantity: Float
+}
+
+type StockKeepingMovementsAggregateResponse {
+  count: StockKeepingMovementsCountAggregate
+  sum: StockKeepingMovementsSumAggregate
+  avg: StockKeepingMovementsAvgAggregate
+  min: StockKeepingMovementsMinAggregate
+  max: StockKeepingMovementsMaxAggregate
 }
 
 type SaleDeleteResponse {
@@ -1950,6 +3727,43 @@ type SaleDeleteResponse {
   quantity: Float
 }
 
+type SaleCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  quantity: Int
+}
+
+type SaleSumAggregate {
+  quantity: Float
+}
+
+type SaleAvgAggregate {
+  quantity: Float
+}
+
+type SaleMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  quantity: Float
+}
+
+type SaleMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  quantity: Float
+}
+
+type SaleAggregateResponse {
+  count: SaleCountAggregate
+  sum: SaleSumAggregate
+  avg: SaleAvgAggregate
+  min: SaleMinAggregate
+  max: SaleMaxAggregate
+}
+
 type StockMovementDeleteResponse {
   id: ID
   createdAt: DateTime
@@ -1957,11 +3771,85 @@ type StockMovementDeleteResponse {
   quantity: Float
 }
 
+type StockMovementCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  quantity: Int
+}
+
+type StockMovementSumAggregate {
+  quantity: Float
+}
+
+type StockMovementAvgAggregate {
+  quantity: Float
+}
+
+type StockMovementMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  quantity: Float
+}
+
+type StockMovementMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  quantity: Float
+}
+
+type StockMovementAggregateResponse {
+  count: StockMovementCountAggregate
+  sum: StockMovementSumAggregate
+  avg: StockMovementAvgAggregate
+  min: StockMovementMinAggregate
+  max: StockMovementMaxAggregate
+}
+
 type CancellationDeleteResponse {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
   quantity: Float
+}
+
+type CancellationCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  quantity: Int
+}
+
+type CancellationSumAggregate {
+  quantity: Float
+}
+
+type CancellationAvgAggregate {
+  quantity: Float
+}
+
+type CancellationMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  quantity: Float
+}
+
+type CancellationMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  quantity: Float
+}
+
+type CancellationAggregateResponse {
+  count: CancellationCountAggregate
+  sum: CancellationSumAggregate
+  avg: CancellationAvgAggregate
+  min: CancellationMinAggregate
+  max: CancellationMaxAggregate
 }
 
 type OrderDeleteResponse {
@@ -1973,20 +3861,47 @@ type OrderDeleteResponse {
   address: String
 }
 
-type OrderEdge {
-  """The node containing the Order"""
-  node: Order!
-
-  """Cursor for this node."""
-  cursor: ConnectionCursor!
+type OrderCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  orderPlacedAt: Int
+  totalPrice: Int
+  address: Int
 }
 
-type OrderConnection {
-  """Paging information"""
-  pageInfo: PageInfo!
+type OrderSumAggregate {
+  totalPrice: Float
+}
 
-  """Array of edges."""
-  edges: [OrderEdge!]!
+type OrderAvgAggregate {
+  totalPrice: Float
+}
+
+type OrderMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  orderPlacedAt: DateTime
+  totalPrice: Float
+  address: String
+}
+
+type OrderMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  orderPlacedAt: DateTime
+  totalPrice: Float
+  address: String
+}
+
+type OrderAggregateResponse {
+  count: OrderCountAggregate
+  sum: OrderSumAggregate
+  avg: OrderAvgAggregate
+  min: OrderMinAggregate
+  max: OrderMaxAggregate
 }
 
 type ZipDeleteResponse {
@@ -1998,20 +3913,47 @@ type ZipDeleteResponse {
   code: Float
 }
 
-type ZipEdge {
-  """The node containing the Zip"""
-  node: Zip!
-
-  """Cursor for this node."""
-  cursor: ConnectionCursor!
+type ZipCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  name: Int
+  slug: Int
+  code: Int
 }
 
-type ZipConnection {
-  """Paging information"""
-  pageInfo: PageInfo!
+type ZipSumAggregate {
+  code: Float
+}
 
-  """Array of edges."""
-  edges: [ZipEdge!]!
+type ZipAvgAggregate {
+  code: Float
+}
+
+type ZipMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  name: String
+  slug: String
+  code: Float
+}
+
+type ZipMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  name: String
+  slug: String
+  code: Float
+}
+
+type ZipAggregateResponse {
+  count: ZipCountAggregate
+  sum: ZipSumAggregate
+  avg: ZipAvgAggregate
+  min: ZipMinAggregate
+  max: ZipMaxAggregate
 }
 
 type MenuResponseTypes {
@@ -2027,20 +3969,70 @@ type MenuDeleteResponse {
   target: String
 }
 
-type MenuEdge {
-  """The node containing the Menu"""
-  node: Menu!
-
-  """Cursor for this node."""
-  cursor: ConnectionCursor!
+type MenuCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  title: Int
+  targetId: Int
+  target: Int
 }
 
-type MenuConnection {
-  """Paging information"""
-  pageInfo: PageInfo!
+type MenuMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  title: String
+  targetId: String
+  target: String
+}
 
-  """Array of edges."""
-  edges: [MenuEdge!]!
+type MenuMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  title: String
+  targetId: String
+  target: String
+}
+
+type MenuAggregateResponse {
+  count: MenuCountAggregate
+  min: MenuMinAggregate
+  max: MenuMaxAggregate
+}
+
+type MenuChildrenCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  title: Int
+  targetId: Int
+  target: Int
+}
+
+type MenuChildrenMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  title: String
+  targetId: String
+  target: String
+}
+
+type MenuChildrenMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  title: String
+  targetId: String
+  target: String
+}
+
+type MenuChildrenAggregateResponse {
+  count: MenuChildrenCountAggregate
+  min: MenuChildrenMinAggregate
+  max: MenuChildrenMaxAggregate
 }
 
 type Query {
@@ -2049,338 +4041,454 @@ type Query {
   asset(id: ID!): Asset
   assets(
     """Limit or page results."""
-    paging: CursorPaging = {first: 10}
+    paging: OffsetPaging = {limit: 10}
 
     """Specify to filter the records returned."""
     filter: AssetFilter = {}
 
     """Specify to sort results."""
     sorting: [AssetSort!] = []
-  ): AssetConnection!
+  ): [Asset!]!
+  assetAggregate(
+    """Filter to find records to aggregate on"""
+    filter: AssetAggregateFilter
+  ): AssetAggregateResponse!
   role(id: ID!): Role
   roles(
     """Limit or page results."""
-    paging: CursorPaging = {first: 10}
+    paging: OffsetPaging = {limit: 10}
 
     """Specify to filter the records returned."""
     filter: RoleFilter = {}
 
     """Specify to sort results."""
     sorting: [RoleSort!] = []
-  ): RoleConnection!
+  ): [Role!]!
+  roleAggregate(
+    """Filter to find records to aggregate on"""
+    filter: RoleAggregateFilter
+  ): RoleAggregateResponse!
   collection(id: ID!): Collection
   collections(
     """Limit or page results."""
-    paging: CursorPaging = {first: 10}
+    paging: OffsetPaging = {limit: 10}
 
     """Specify to filter the records returned."""
     filter: CollectionFilter = {}
 
     """Specify to sort results."""
     sorting: [CollectionSort!] = []
-  ): CollectionConnection!
+  ): [Collection!]!
+  collectionAggregate(
+    """Filter to find records to aggregate on"""
+    filter: CollectionAggregateFilter
+  ): CollectionAggregateResponse!
   GetCollectionTree: [Collection!]!
   channel(id: ID!): Channel
   channels(
     """Limit or page results."""
-    paging: CursorPaging = {first: 10}
+    paging: OffsetPaging = {limit: 10}
 
     """Specify to filter the records returned."""
     filter: ChannelFilter = {}
 
     """Specify to sort results."""
     sorting: [ChannelSort!] = []
-  ): ChannelConnection!
+  ): [Channel!]!
+  channelAggregate(
+    """Filter to find records to aggregate on"""
+    filter: ChannelAggregateFilter
+  ): ChannelAggregateResponse!
   store(id: ID!): Store
   stores(
     """Limit or page results."""
-    paging: CursorPaging = {first: 10}
+    paging: OffsetPaging = {limit: 10}
 
     """Specify to filter the records returned."""
     filter: StoreFilter = {}
 
     """Specify to sort results."""
     sorting: [StoreSort!] = []
-  ): StoreConnection!
+  ): [Store!]!
+  storeAggregate(
+    """Filter to find records to aggregate on"""
+    filter: StoreAggregateFilter
+  ): StoreAggregateResponse!
   GetDefaultStore: Store!
   taxCategory(id: ID!): TaxCategory
   taxCategories(
     """Limit or page results."""
-    paging: CursorPaging = {first: 10}
+    paging: OffsetPaging = {limit: 10}
 
     """Specify to filter the records returned."""
     filter: TaxCategoryFilter = {}
 
     """Specify to sort results."""
     sorting: [TaxCategorySort!] = []
-  ): TaxCategoryConnection!
+  ): [TaxCategory!]!
+  taxCategoryAggregate(
+    """Filter to find records to aggregate on"""
+    filter: TaxCategoryAggregateFilter
+  ): TaxCategoryAggregateResponse!
   taxRate(id: ID!): TaxRate
   taxRates(
     """Limit or page results."""
-    paging: CursorPaging = {first: 10}
+    paging: OffsetPaging = {limit: 10}
 
     """Specify to filter the records returned."""
     filter: TaxRateFilter = {}
 
     """Specify to sort results."""
     sorting: [TaxRateSort!] = []
-  ): TaxRateConnection!
+  ): [TaxRate!]!
+  taxRateAggregate(
+    """Filter to find records to aggregate on"""
+    filter: TaxRateAggregateFilter
+  ): TaxRateAggregateResponse!
   GetAllTaxRates: [TaxRate!]!
   GetAllTaxCategory: [TaxCategory!]!
   GetCurrentUser: User!
   vendor(id: ID!): Vendor
   vendors(
     """Limit or page results."""
-    paging: CursorPaging = {first: 10}
+    paging: OffsetPaging = {limit: 10}
 
     """Specify to filter the records returned."""
     filter: VendorFilter = {}
 
     """Specify to sort results."""
     sorting: [VendorSort!] = []
-  ): VendorConnection!
+  ): [Vendor!]!
+  vendorAggregate(
+    """Filter to find records to aggregate on"""
+    filter: VendorAggregateFilter
+  ): VendorAggregateResponse!
   GetVendorInfo: Vendor
   zone(id: ID!): Zone
   zones(
     """Limit or page results."""
-    paging: CursorPaging = {first: 20}
+    paging: OffsetPaging = {limit: 10}
 
     """Specify to filter the records returned."""
     filter: ZoneFilter = {}
 
     """Specify to sort results."""
     sorting: [ZoneSort!] = []
-  ): ZoneConnection!
+  ): [Zone!]!
+  zoneAggregate(
+    """Filter to find records to aggregate on"""
+    filter: ZoneAggregateFilter
+  ): ZoneAggregateResponse!
   ZoneFindMany: [Zone!]!
   ZoneFindOne(id: ID!): Zone!
   country(id: ID!): Country
   countries(
     """Limit or page results."""
-    paging: CursorPaging = {first: 10}
+    paging: OffsetPaging = {limit: 10}
 
     """Specify to filter the records returned."""
     filter: CountryFilter = {}
 
     """Specify to sort results."""
     sorting: [CountrySort!] = []
-  ): CountryConnection!
+  ): [Country!]!
+  countryAggregate(
+    """Filter to find records to aggregate on"""
+    filter: CountryAggregateFilter
+  ): CountryAggregateResponse!
   GetAllCountries: [Country!]!
   seo(id: ID!): Seo
   seos(
     """Limit or page results."""
-    paging: CursorPaging = {first: 10}
+    paging: OffsetPaging = {limit: 10}
 
     """Specify to filter the records returned."""
     filter: SeoFilter = {}
 
     """Specify to sort results."""
     sorting: [SeoSort!] = []
-  ): SeoConnection!
+  ): [Seo!]!
+  seoAggregate(
+    """Filter to find records to aggregate on"""
+    filter: SeoAggregateFilter
+  ): SeoAggregateResponse!
   facet(id: ID!): Facet
   facets(
     """Limit or page results."""
-    paging: CursorPaging = {first: 10}
+    paging: OffsetPaging = {limit: 10}
 
     """Specify to filter the records returned."""
     filter: FacetFilter = {}
 
     """Specify to sort results."""
     sorting: [FacetSort!] = []
-  ): FacetConnection!
+  ): [Facet!]!
+  facetAggregate(
+    """Filter to find records to aggregate on"""
+    filter: FacetAggregateFilter
+  ): FacetAggregateResponse!
   facetValue(id: ID!): FacetValue
   facetValues(
     """Limit or page results."""
-    paging: CursorPaging = {first: 10}
+    paging: OffsetPaging = {limit: 10}
 
     """Specify to filter the records returned."""
     filter: FacetValueFilter = {}
 
     """Specify to sort results."""
     sorting: [FacetValueSort!] = []
-  ): FacetValueConnection!
+  ): [FacetValue!]!
+  facetValueAggregate(
+    """Filter to find records to aggregate on"""
+    filter: FacetValueAggregateFilter
+  ): FacetValueAggregateResponse!
   product(id: ID!): Product
   products(
     """Limit or page results."""
-    paging: CursorPaging = {first: 10}
+    paging: OffsetPaging = {limit: 10}
 
     """Specify to filter the records returned."""
     filter: ProductFilter = {}
 
     """Specify to sort results."""
     sorting: [ProductSort!] = []
-  ): ProductConnection!
+  ): [Product!]!
+  productAggregate(
+    """Filter to find records to aggregate on"""
+    filter: ProductAggregateFilter
+  ): ProductAggregateResponse!
   productVariant(id: ID!): ProductVariant
   productVariants(
     """Limit or page results."""
-    paging: CursorPaging = {first: 10}
+    paging: OffsetPaging = {limit: 10}
 
     """Specify to filter the records returned."""
     filter: ProductVariantFilter = {}
 
     """Specify to sort results."""
     sorting: [ProductVariantSort!] = []
-  ): ProductVariantConnection!
+  ): [ProductVariant!]!
+  productVariantAggregate(
+    """Filter to find records to aggregate on"""
+    filter: ProductVariantAggregateFilter
+  ): ProductVariantAggregateResponse!
   productOption(id: ID!): ProductOption
   productOptions(
     """Limit or page results."""
-    paging: CursorPaging = {first: 10}
+    paging: OffsetPaging = {limit: 10}
 
     """Specify to filter the records returned."""
     filter: ProductOptionFilter = {}
 
     """Specify to sort results."""
     sorting: [ProductOptionSort!] = []
-  ): ProductOptionConnection!
+  ): [ProductOption!]!
+  productOptionAggregate(
+    """Filter to find records to aggregate on"""
+    filter: ProductOptionAggregateFilter
+  ): ProductOptionAggregateResponse!
   productOptionGroup(id: ID!): ProductOptionGroup
   productOptionGroups(
     """Limit or page results."""
-    paging: CursorPaging = {first: 10}
+    paging: OffsetPaging = {limit: 10}
 
     """Specify to filter the records returned."""
     filter: ProductOptionGroupFilter = {}
 
     """Specify to sort results."""
     sorting: [ProductOptionGroupSort!] = []
-  ): ProductOptionGroupConnection!
+  ): [ProductOptionGroup!]!
+  productOptionGroupAggregate(
+    """Filter to find records to aggregate on"""
+    filter: ProductOptionGroupAggregateFilter
+  ): ProductOptionGroupAggregateResponse!
   productVariantPrice(id: ID!): ProductVariantPrice
   productVariantPrices(
     """Limit or page results."""
-    paging: CursorPaging = {first: 10}
+    paging: OffsetPaging = {limit: 10}
 
     """Specify to filter the records returned."""
     filter: ProductVariantPriceFilter = {}
 
     """Specify to sort results."""
     sorting: [ProductVariantPriceSort!] = []
-  ): ProductVariantPriceConnection!
+  ): [ProductVariantPrice!]!
+  productVariantPriceAggregate(
+    """Filter to find records to aggregate on"""
+    filter: ProductVariantPriceAggregateFilter
+  ): ProductVariantPriceAggregateResponse!
   productVariantAsset(id: ID!): ProductVariantAsset
   productVariantAssets(
     """Limit or page results."""
-    paging: CursorPaging = {first: 10}
+    paging: OffsetPaging = {limit: 10}
 
     """Specify to filter the records returned."""
     filter: ProductVariantAssetFilter = {}
 
     """Specify to sort results."""
     sorting: [ProductVariantAssetSort!] = []
-  ): ProductVariantAssetConnection!
+  ): [ProductVariantAsset!]!
+  productVariantAssetAggregate(
+    """Filter to find records to aggregate on"""
+    filter: ProductVariantAssetAggregateFilter
+  ): ProductVariantAssetAggregateResponse!
   productAsset(id: ID!): ProductAsset
   productAssets(
     """Limit or page results."""
-    paging: CursorPaging = {first: 10}
+    paging: OffsetPaging = {limit: 10}
 
     """Specify to filter the records returned."""
     filter: ProductAssetFilter = {}
 
     """Specify to sort results."""
     sorting: [ProductAssetSort!] = []
-  ): ProductAssetConnection!
+  ): [ProductAsset!]!
+  productAssetAggregate(
+    """Filter to find records to aggregate on"""
+    filter: ProductAssetAggregateFilter
+  ): ProductAssetAggregateResponse!
   vendorPlans(
     """Limit or page results."""
-    paging: CursorPaging = {first: 10}
+    paging: OffsetPaging = {limit: 10}
 
     """Specify to filter the records returned."""
     filter: VendorPlansFilter = {}
 
     """Specify to sort results."""
     sorting: [VendorPlansSort!] = []
-  ): VendorPlansConnection!
+  ): [VendorPlans!]!
+  vendorPlansAggregate(
+    """Filter to find records to aggregate on"""
+    filter: VendorPlansAggregateFilter
+  ): VendorPlansAggregateResponse!
   FindAllVendorPlans: [VendorPlans!]!
   GetVendorPlansForRegistration: [VendorPlans!]!
   vendorLicense(id: ID!): VendorLicense
   vendorLicenses(
     """Limit or page results."""
-    paging: CursorPaging = {first: 10}
+    paging: OffsetPaging = {limit: 10}
 
     """Specify to filter the records returned."""
     filter: VendorLicenseFilter = {}
 
     """Specify to sort results."""
     sorting: [VendorLicenseSort!] = []
-  ): VendorLicenseConnection!
+  ): [VendorLicense!]!
+  vendorLicenseAggregate(
+    """Filter to find records to aggregate on"""
+    filter: VendorLicenseAggregateFilter
+  ): VendorLicenseAggregateResponse!
   GetBillingAgreementByVendor: [BillingAgreement!]!
   GetBillingAgreement(id: ID!): BillingAgreement!
   GetBillingRequestForAgreement(id: String!): [BillingAgreementRequest!]!
   stockKeeping(id: ID!): StockKeeping
   stockKeepings(
     """Limit or page results."""
-    paging: CursorPaging = {first: 10}
+    paging: OffsetPaging = {limit: 10}
 
     """Specify to filter the records returned."""
     filter: StockKeepingFilter = {}
 
     """Specify to sort results."""
     sorting: [StockKeepingSort!] = []
-  ): StockKeepingConnection!
+  ): [StockKeeping!]!
+  stockKeepingAggregate(
+    """Filter to find records to aggregate on"""
+    filter: StockKeepingAggregateFilter
+  ): StockKeepingAggregateResponse!
   getStockKeepingVendor(vendorId: ID, variantId: ID!): StockKeeping
   getStockKeepingByStore: [StockKeeping!]!
   sale(id: ID!): Sale
   sales(
     """Limit or page results."""
-    paging: CursorPaging = {first: 10}
+    paging: OffsetPaging = {limit: 10}
 
     """Specify to filter the records returned."""
     filter: SaleFilter = {}
 
     """Specify to sort results."""
     sorting: [SaleSort!] = []
-  ): SaleConnection!
+  ): [Sale!]!
+  saleAggregate(
+    """Filter to find records to aggregate on"""
+    filter: SaleAggregateFilter
+  ): SaleAggregateResponse!
   stockMovement(id: ID!): StockMovement
   stockMovements(
     """Limit or page results."""
-    paging: CursorPaging = {first: 10}
+    paging: OffsetPaging = {limit: 10}
 
     """Specify to filter the records returned."""
     filter: StockMovementFilter = {}
 
     """Specify to sort results."""
     sorting: [StockMovementSort!] = []
-  ): StockMovementConnection!
+  ): [StockMovement!]!
+  stockMovementAggregate(
+    """Filter to find records to aggregate on"""
+    filter: StockMovementAggregateFilter
+  ): StockMovementAggregateResponse!
   cancellation(id: ID!): Cancellation
   cancellations(
     """Limit or page results."""
-    paging: CursorPaging = {first: 10}
+    paging: OffsetPaging = {limit: 10}
 
     """Specify to filter the records returned."""
     filter: CancellationFilter = {}
 
     """Specify to sort results."""
     sorting: [CancellationSort!] = []
-  ): CancellationConnection!
+  ): [Cancellation!]!
+  cancellationAggregate(
+    """Filter to find records to aggregate on"""
+    filter: CancellationAggregateFilter
+  ): CancellationAggregateResponse!
   order(id: ID!): Order
   orders(
     """Limit or page results."""
-    paging: CursorPaging = {first: 10}
+    paging: OffsetPaging = {limit: 10}
 
     """Specify to filter the records returned."""
     filter: OrderFilter = {}
 
     """Specify to sort results."""
     sorting: [OrderSort!] = []
-  ): OrderConnection!
+  ): [Order!]!
+  orderAggregate(
+    """Filter to find records to aggregate on"""
+    filter: OrderAggregateFilter
+  ): OrderAggregateResponse!
   zip(id: ID!): Zip
   zips(
     """Limit or page results."""
-    paging: CursorPaging = {first: 10}
+    paging: OffsetPaging = {limit: 10}
 
     """Specify to filter the records returned."""
     filter: ZipFilter = {}
 
     """Specify to sort results."""
     sorting: [ZipSort!] = []
-  ): ZipConnection!
+  ): [Zip!]!
+  zipAggregate(
+    """Filter to find records to aggregate on"""
+    filter: ZipAggregateFilter
+  ): ZipAggregateResponse!
   findAllZip: [Zip!]!
   menu(id: ID!): Menu
   menus(
     """Limit or page results."""
-    paging: CursorPaging = {first: 10}
+    paging: OffsetPaging = {limit: 10}
 
     """Specify to filter the records returned."""
     filter: MenuFilter = {}
 
     """Specify to sort results."""
     sorting: [MenuSort!] = []
-  ): MenuConnection!
+  ): [Menu!]!
+  menuAggregate(
+    """Filter to find records to aggregate on"""
+    filter: MenuAggregateFilter
+  ): MenuAggregateResponse!
   GetMenuTree: MenuResponseTypes!
 }
 
@@ -2420,6 +4528,22 @@ enum AssetSortFields {
   preview
 }
 
+input AssetAggregateFilter {
+  and: [AssetAggregateFilter!]
+  or: [AssetAggregateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  name: StringFieldComparison
+  type: StringFieldComparison
+  mimeType: StringFieldComparison
+  width: NumberFieldComparison
+  height: NumberFieldComparison
+  fileSize: NumberFieldComparison
+  source: StringFieldComparison
+  preview: StringFieldComparison
+}
+
 input RoleFilter {
   and: [RoleFilter!]
   or: [RoleFilter!]
@@ -2442,6 +4566,16 @@ enum RoleSortFields {
   updatedAt
   code
   description
+}
+
+input RoleAggregateFilter {
+  and: [RoleAggregateFilter!]
+  or: [RoleAggregateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  code: StringFieldComparison
+  description: StringFieldComparison
 }
 
 input ChannelFilter {
@@ -2474,6 +4608,19 @@ enum ChannelSortFields {
   pricesIncludeTax
 }
 
+input ChannelAggregateFilter {
+  and: [ChannelAggregateFilter!]
+  or: [ChannelAggregateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  code: StringFieldComparison
+  token: StringFieldComparison
+  defaultLanguageCode: StringFieldComparison
+  currencyCode: StringFieldComparison
+  pricesIncludeTax: BooleanFieldComparison
+}
+
 input TaxCategoryFilter {
   and: [TaxCategoryFilter!]
   or: [TaxCategoryFilter!]
@@ -2494,6 +4641,15 @@ enum TaxCategorySortFields {
   createdAt
   updatedAt
   name
+}
+
+input TaxCategoryAggregateFilter {
+  and: [TaxCategoryAggregateFilter!]
+  or: [TaxCategoryAggregateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  name: StringFieldComparison
 }
 
 input VendorFilter {
@@ -2522,6 +4678,17 @@ enum VendorSortFields {
   email
 }
 
+input VendorAggregateFilter {
+  and: [VendorAggregateFilter!]
+  or: [VendorAggregateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  vendorName: StringFieldComparison
+  phoneNumber: StringFieldComparison
+  email: StringFieldComparison
+}
+
 input SeoFilter {
   and: [SeoFilter!]
   or: [SeoFilter!]
@@ -2546,6 +4713,17 @@ enum SeoSortFields {
   deletedAt
   urlKey
   metatitle
+}
+
+input SeoAggregateFilter {
+  and: [SeoAggregateFilter!]
+  or: [SeoAggregateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
+  urlKey: StringFieldComparison
+  metatitle: StringFieldComparison
 }
 
 input FacetFilter {
@@ -2574,6 +4752,17 @@ enum FacetSortFields {
   code
 }
 
+input FacetAggregateFilter {
+  and: [FacetAggregateFilter!]
+  or: [FacetAggregateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  name: StringFieldComparison
+  isPrivate: BooleanFieldComparison
+  code: StringFieldComparison
+}
+
 input ProductVariantAssetFilter {
   and: [ProductVariantAssetFilter!]
   or: [ProductVariantAssetFilter!]
@@ -2592,6 +4781,14 @@ enum ProductVariantAssetSortFields {
   id
   createdAt
   updatedAt
+}
+
+input ProductVariantAssetAggregateFilter {
+  and: [ProductVariantAssetAggregateFilter!]
+  or: [ProductVariantAssetAggregateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
 }
 
 input VendorPlansFilter {
@@ -2620,6 +4817,17 @@ enum VendorPlansSortFields {
   planValue
 }
 
+input VendorPlansAggregateFilter {
+  and: [VendorPlansAggregateFilter!]
+  or: [VendorPlansAggregateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  isActive: BooleanFieldComparison
+  name: StringFieldComparison
+  planValue: NumberFieldComparison
+}
+
 input OrderFilter {
   and: [OrderFilter!]
   or: [OrderFilter!]
@@ -2644,6 +4852,17 @@ enum OrderSortFields {
   orderPlacedAt
   totalPrice
   address
+}
+
+input OrderAggregateFilter {
+  and: [OrderAggregateFilter!]
+  or: [OrderAggregateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  orderPlacedAt: DateFieldComparison
+  totalPrice: NumberFieldComparison
+  address: StringFieldComparison
 }
 
 input ZipFilter {
@@ -2672,6 +4891,17 @@ enum ZipSortFields {
   code
 }
 
+input ZipAggregateFilter {
+  and: [ZipAggregateFilter!]
+  or: [ZipAggregateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  name: StringFieldComparison
+  slug: StringFieldComparison
+  code: NumberFieldComparison
+}
+
 type Mutation {
   administratorLogin(password: String!, email: String!): AdministratorDto!
   createAdministrator(type: AdministratorEnum!, phone: String!, email: String!, lname: String!, fname: String!): Administrator!
@@ -2692,13 +4922,13 @@ type Mutation {
   removeChildrenFromCollection(input: RelationsInput!): Collection!
   removeProductsFromCollection(input: RelationsInput!): Collection!
   removeAgreementsFromCollection(input: RelationsInput!): Collection!
-  removeParentFromCollection(input: RelationInput!): Collection!
   removeSeoFromCollection(input: RelationInput!): Collection!
+  removeParentFromCollection(input: RelationInput!): Collection!
   addChildrenToCollection(input: RelationsInput!): Collection!
   addProductsToCollection(input: RelationsInput!): Collection!
   addAgreementsToCollection(input: RelationsInput!): Collection!
-  setParentOnCollection(input: RelationInput!): Collection!
   setSeoOnCollection(input: RelationInput!): Collection!
+  setParentOnCollection(input: RelationInput!): Collection!
   AddParentToChildCollection(childId: String!, parentId: String!): Collection!
   deleteOneChannel(input: DeleteOneInput!): ChannelDeleteResponse!
   deleteManyChannels(input: DeleteManyChannelsInput!): DeleteManyResponse!
@@ -2713,10 +4943,9 @@ type Mutation {
   createOneStore(input: CreateOneStoreInput!): Store!
   createManyStores(input: CreateManyStoresInput!): [Store!]!
   removeSkusFromStore(input: RelationsInput!): Store!
-  removeRegionFromStore(input: RelationInput!): Store!
+  removeCountryFromStore(input: RelationInput!): Store!
   addSkusToStore(input: RelationsInput!): Store!
   setCountryOnStore(input: RelationInput!): Store!
-  setRegionOnStore(input: RelationInput!): Store!
   CreateDefaultStore(countryId: String!, zipcode: String!, streetAddress2: String!, streetAddress1: String!, GSTIN: String!, officialemail: String!, phoneNumber: String!, storeName: String!): Store!
   deleteOneTaxCategory(input: DeleteOneInput!): TaxCategoryDeleteResponse!
   deleteManyTaxCategories(input: DeleteManyTaxCategoriesInput!): DeleteManyResponse!
@@ -2765,7 +4994,9 @@ type Mutation {
   updateManyCountries(input: UpdateManyCountriesInput!): UpdateManyResponse!
   createOneCountry(input: CreateOneCountryInput!): Country!
   createManyCountries(input: CreateManyCountriesInput!): [Country!]!
+  removeStoresFromCountry(input: RelationsInput!): Country!
   removeZonesFromCountry(input: RelationsInput!): Country!
+  addStoresToCountry(input: RelationsInput!): Country!
   addZonesToCountry(input: RelationsInput!): Country!
   deleteOneSeo(input: DeleteOneInput!): SeoDeleteResponse!
   deleteManySeos(input: DeleteManySeosInput!): DeleteManyResponse!
@@ -2773,10 +5004,10 @@ type Mutation {
   updateManySeos(input: UpdateManySeosInput!): UpdateManyResponse!
   createOneSeo(input: CreateOneSeoInput!): Seo!
   createManySeos(input: CreateManySeosInput!): [Seo!]!
-  removeCollectionFromSeo(input: RelationInput!): Seo!
   removeVariantFromSeo(input: RelationInput!): Seo!
-  setCollectionOnSeo(input: RelationInput!): Seo!
+  removeCollectionFromSeo(input: RelationInput!): Seo!
   setVariantOnSeo(input: RelationInput!): Seo!
+  setCollectionOnSeo(input: RelationInput!): Seo!
   createProductSeo(metadesc: String!, metakeywords: [String!]!, metatitle: String!, urlKey: String!, variantId: ID!): Seo!
   updateProductSeo(metadesc: String!, metakeywords: [String!]!, metatitle: String!, urlKey: String!, seoId: ID!): Seo!
   deleteOneFacet(input: DeleteOneInput!): FacetDeleteResponse!
@@ -2980,7 +5211,21 @@ input DeleteOneInput {
 
 input DeleteManyCollectionsInput {
   """Filter to find records to delete"""
-  filter: CollectionFilter!
+  filter: CollectionDeleteFilter!
+}
+
+input CollectionDeleteFilter {
+  and: [CollectionDeleteFilter!]
+  or: [CollectionDeleteFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  isRoot: BooleanFieldComparison
+  inMenu: BooleanFieldComparison
+  position: NumberFieldComparison
+  isPrivate: BooleanFieldComparison
+  name: StringFieldComparison
+  description: StringFieldComparison
 }
 
 input UpdateOneCollectionInput {
@@ -3005,10 +5250,24 @@ input UpdateCollection {
 
 input UpdateManyCollectionsInput {
   """Filter used to find fields to update"""
-  filter: CollectionFilter!
+  filter: CollectionUpdateFilter!
 
   """The update to apply to all records found using the filter"""
   update: UpdateCollection!
+}
+
+input CollectionUpdateFilter {
+  and: [CollectionUpdateFilter!]
+  or: [CollectionUpdateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  isRoot: BooleanFieldComparison
+  inMenu: BooleanFieldComparison
+  position: NumberFieldComparison
+  isPrivate: BooleanFieldComparison
+  name: StringFieldComparison
+  description: StringFieldComparison
 }
 
 input CreateOneCollectionInput {
@@ -3043,7 +5302,20 @@ input RelationInput {
 
 input DeleteManyChannelsInput {
   """Filter to find records to delete"""
-  filter: ChannelFilter!
+  filter: ChannelDeleteFilter!
+}
+
+input ChannelDeleteFilter {
+  and: [ChannelDeleteFilter!]
+  or: [ChannelDeleteFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  code: StringFieldComparison
+  token: StringFieldComparison
+  defaultLanguageCode: StringFieldComparison
+  currencyCode: StringFieldComparison
+  pricesIncludeTax: BooleanFieldComparison
 }
 
 input UpdateOneChannelInput {
@@ -3067,10 +5339,23 @@ input UpdateChannel {
 
 input UpdateManyChannelsInput {
   """Filter used to find fields to update"""
-  filter: ChannelFilter!
+  filter: ChannelUpdateFilter!
 
   """The update to apply to all records found using the filter"""
   update: UpdateChannel!
+}
+
+input ChannelUpdateFilter {
+  and: [ChannelUpdateFilter!]
+  or: [ChannelUpdateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  code: StringFieldComparison
+  token: StringFieldComparison
+  defaultLanguageCode: StringFieldComparison
+  currencyCode: StringFieldComparison
+  pricesIncludeTax: BooleanFieldComparison
 }
 
 input CreateOneChannelInput {
@@ -3096,7 +5381,25 @@ input CreateManyChannelsInput {
 
 input DeleteManyStoresInput {
   """Filter to find records to delete"""
-  filter: StoreFilter!
+  filter: StoreDeleteFilter!
+}
+
+input StoreDeleteFilter {
+  and: [StoreDeleteFilter!]
+  or: [StoreDeleteFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  storeName: StringFieldComparison
+  phoneNumber: StringFieldComparison
+  officialemail: StringFieldComparison
+  zipcode: StringFieldComparison
+  streetAddress1: StringFieldComparison
+  streetAddress2: StringFieldComparison
+  GSTIN: StringFieldComparison
+  singleStore: BooleanFieldComparison
+  rentalStore: BooleanFieldComparison
+  channelMarkets: BooleanFieldComparison
 }
 
 input UpdateOneStoreInput {
@@ -3126,10 +5429,28 @@ input UpdateStore {
 
 input UpdateManyStoresInput {
   """Filter used to find fields to update"""
-  filter: StoreFilter!
+  filter: StoreUpdateFilter!
 
   """The update to apply to all records found using the filter"""
   update: UpdateStore!
+}
+
+input StoreUpdateFilter {
+  and: [StoreUpdateFilter!]
+  or: [StoreUpdateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  storeName: StringFieldComparison
+  phoneNumber: StringFieldComparison
+  officialemail: StringFieldComparison
+  zipcode: StringFieldComparison
+  streetAddress1: StringFieldComparison
+  streetAddress2: StringFieldComparison
+  GSTIN: StringFieldComparison
+  singleStore: BooleanFieldComparison
+  rentalStore: BooleanFieldComparison
+  channelMarkets: BooleanFieldComparison
 }
 
 input CreateOneStoreInput {
@@ -3161,7 +5482,16 @@ input CreateManyStoresInput {
 
 input DeleteManyTaxCategoriesInput {
   """Filter to find records to delete"""
-  filter: TaxCategoryFilter!
+  filter: TaxCategoryDeleteFilter!
+}
+
+input TaxCategoryDeleteFilter {
+  and: [TaxCategoryDeleteFilter!]
+  or: [TaxCategoryDeleteFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  name: StringFieldComparison
 }
 
 input UpdateOneTaxCategoryInput {
@@ -3181,10 +5511,19 @@ input UpdateTaxCategory {
 
 input UpdateManyTaxCategoriesInput {
   """Filter used to find fields to update"""
-  filter: TaxCategoryFilter!
+  filter: TaxCategoryUpdateFilter!
 
   """The update to apply to all records found using the filter"""
   update: UpdateTaxCategory!
+}
+
+input TaxCategoryUpdateFilter {
+  and: [TaxCategoryUpdateFilter!]
+  or: [TaxCategoryUpdateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  name: StringFieldComparison
 }
 
 input CreateOneTaxCategoryInput {
@@ -3206,7 +5545,18 @@ input CreateManyTaxCategoriesInput {
 
 input DeleteManyTaxRatesInput {
   """Filter to find records to delete"""
-  filter: TaxRateFilter!
+  filter: TaxRateDeleteFilter!
+}
+
+input TaxRateDeleteFilter {
+  and: [TaxRateDeleteFilter!]
+  or: [TaxRateDeleteFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  name: StringFieldComparison
+  value: NumberFieldComparison
+  enabled: BooleanFieldComparison
 }
 
 input UpdateOneTaxRateInput {
@@ -3228,10 +5578,21 @@ input UpdateTaxRate {
 
 input UpdateManyTaxRatesInput {
   """Filter used to find fields to update"""
-  filter: TaxRateFilter!
+  filter: TaxRateUpdateFilter!
 
   """The update to apply to all records found using the filter"""
   update: UpdateTaxRate!
+}
+
+input TaxRateUpdateFilter {
+  and: [TaxRateUpdateFilter!]
+  or: [TaxRateUpdateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  name: StringFieldComparison
+  value: NumberFieldComparison
+  enabled: BooleanFieldComparison
 }
 
 input CreateOneTaxRateInput {
@@ -3255,7 +5616,16 @@ input CreateManyTaxRatesInput {
 
 input DeleteManyZonesInput {
   """Filter to find records to delete"""
-  filter: ZoneFilter!
+  filter: ZoneDeleteFilter!
+}
+
+input ZoneDeleteFilter {
+  and: [ZoneDeleteFilter!]
+  or: [ZoneDeleteFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  name: StringFieldComparison
 }
 
 input UpdateOneZoneInput {
@@ -3275,10 +5645,19 @@ input UpdateZone {
 
 input UpdateManyZonesInput {
   """Filter used to find fields to update"""
-  filter: ZoneFilter!
+  filter: ZoneUpdateFilter!
 
   """The update to apply to all records found using the filter"""
   update: UpdateZone!
+}
+
+input ZoneUpdateFilter {
+  and: [ZoneUpdateFilter!]
+  or: [ZoneUpdateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  name: StringFieldComparison
 }
 
 input CreateOneZoneInput {
@@ -3300,7 +5679,18 @@ input CreateManyZonesInput {
 
 input DeleteManyCountriesInput {
   """Filter to find records to delete"""
-  filter: CountryFilter!
+  filter: CountryDeleteFilter!
+}
+
+input CountryDeleteFilter {
+  and: [CountryDeleteFilter!]
+  or: [CountryDeleteFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  code: StringFieldComparison
+  name: StringFieldComparison
+  enabled: BooleanFieldComparison
 }
 
 input UpdateOneCountryInput {
@@ -3322,10 +5712,21 @@ input UpdateCountry {
 
 input UpdateManyCountriesInput {
   """Filter used to find fields to update"""
-  filter: CountryFilter!
+  filter: CountryUpdateFilter!
 
   """The update to apply to all records found using the filter"""
   update: UpdateCountry!
+}
+
+input CountryUpdateFilter {
+  and: [CountryUpdateFilter!]
+  or: [CountryUpdateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  code: StringFieldComparison
+  name: StringFieldComparison
+  enabled: BooleanFieldComparison
 }
 
 input CreateOneCountryInput {
@@ -3349,7 +5750,18 @@ input CreateManyCountriesInput {
 
 input DeleteManySeosInput {
   """Filter to find records to delete"""
-  filter: SeoFilter!
+  filter: SeoDeleteFilter!
+}
+
+input SeoDeleteFilter {
+  and: [SeoDeleteFilter!]
+  or: [SeoDeleteFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
+  urlKey: StringFieldComparison
+  metatitle: StringFieldComparison
 }
 
 input UpdateOneSeoInput {
@@ -3373,10 +5785,21 @@ input UpdateSeo {
 
 input UpdateManySeosInput {
   """Filter used to find fields to update"""
-  filter: SeoFilter!
+  filter: SeoUpdateFilter!
 
   """The update to apply to all records found using the filter"""
   update: UpdateSeo!
+}
+
+input SeoUpdateFilter {
+  and: [SeoUpdateFilter!]
+  or: [SeoUpdateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
+  urlKey: StringFieldComparison
+  metatitle: StringFieldComparison
 }
 
 input CreateOneSeoInput {
@@ -3402,7 +5825,18 @@ input CreateManySeosInput {
 
 input DeleteManyFacetsInput {
   """Filter to find records to delete"""
-  filter: FacetFilter!
+  filter: FacetDeleteFilter!
+}
+
+input FacetDeleteFilter {
+  and: [FacetDeleteFilter!]
+  or: [FacetDeleteFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  name: StringFieldComparison
+  isPrivate: BooleanFieldComparison
+  code: StringFieldComparison
 }
 
 input UpdateOneFacetInput {
@@ -3424,10 +5858,21 @@ input UpdateFacet {
 
 input UpdateManyFacetsInput {
   """Filter used to find fields to update"""
-  filter: FacetFilter!
+  filter: FacetUpdateFilter!
 
   """The update to apply to all records found using the filter"""
   update: UpdateFacet!
+}
+
+input FacetUpdateFilter {
+  and: [FacetUpdateFilter!]
+  or: [FacetUpdateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  name: StringFieldComparison
+  isPrivate: BooleanFieldComparison
+  code: StringFieldComparison
 }
 
 input CreateOneFacetInput {
@@ -3451,7 +5896,16 @@ input CreateManyFacetsInput {
 
 input DeleteManyFacetValuesInput {
   """Filter to find records to delete"""
-  filter: FacetValueFilter!
+  filter: FacetValueDeleteFilter!
+}
+
+input FacetValueDeleteFilter {
+  and: [FacetValueDeleteFilter!]
+  or: [FacetValueDeleteFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  code: StringFieldComparison
 }
 
 input UpdateOneFacetValueInput {
@@ -3471,10 +5925,19 @@ input UpdateFacetValue {
 
 input UpdateManyFacetValuesInput {
   """Filter used to find fields to update"""
-  filter: FacetValueFilter!
+  filter: FacetValueUpdateFilter!
 
   """The update to apply to all records found using the filter"""
   update: UpdateFacetValue!
+}
+
+input FacetValueUpdateFilter {
+  and: [FacetValueUpdateFilter!]
+  or: [FacetValueUpdateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  code: StringFieldComparison
 }
 
 input CreateOneFacetValueInput {
@@ -3496,7 +5959,18 @@ input CreateManyFacetValuesInput {
 
 input DeleteManyProductsInput {
   """Filter to find records to delete"""
-  filter: ProductFilter!
+  filter: ProductDeleteFilter!
+}
+
+input ProductDeleteFilter {
+  and: [ProductDeleteFilter!]
+  or: [ProductDeleteFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  productName: StringFieldComparison
+  slug: StringFieldComparison
+  description: StringFieldComparison
 }
 
 input UpdateOneProductInput {
@@ -3518,10 +5992,21 @@ input UpdateProduct {
 
 input UpdateManyProductsInput {
   """Filter used to find fields to update"""
-  filter: ProductFilter!
+  filter: ProductUpdateFilter!
 
   """The update to apply to all records found using the filter"""
   update: UpdateProduct!
+}
+
+input ProductUpdateFilter {
+  and: [ProductUpdateFilter!]
+  or: [ProductUpdateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  productName: StringFieldComparison
+  slug: StringFieldComparison
+  description: StringFieldComparison
 }
 
 input CreateOneProductInput {
@@ -3545,7 +6030,21 @@ input CreateManyProductsInput {
 
 input DeleteManyProductVariantsInput {
   """Filter to find records to delete"""
-  filter: ProductVariantFilter!
+  filter: ProductVariantDeleteFilter!
+}
+
+input ProductVariantDeleteFilter {
+  and: [ProductVariantDeleteFilter!]
+  or: [ProductVariantDeleteFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
+  dum_price: NumberFieldComparison
+  enabled: BooleanFieldComparison
+  sku: StringFieldComparison
+  name: StringFieldComparison
+  trackInventory: BooleanFieldComparison
 }
 
 input UpdateOneProductVariantInput {
@@ -3570,10 +6069,24 @@ input UpdateProductVariant {
 
 input UpdateManyProductVariantsInput {
   """Filter used to find fields to update"""
-  filter: ProductVariantFilter!
+  filter: ProductVariantUpdateFilter!
 
   """The update to apply to all records found using the filter"""
   update: UpdateProductVariant!
+}
+
+input ProductVariantUpdateFilter {
+  and: [ProductVariantUpdateFilter!]
+  or: [ProductVariantUpdateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
+  dum_price: NumberFieldComparison
+  enabled: BooleanFieldComparison
+  sku: StringFieldComparison
+  name: StringFieldComparison
+  trackInventory: BooleanFieldComparison
 }
 
 input CreateOneProductVariantInput {
@@ -3600,7 +6113,17 @@ input CreateManyProductVariantsInput {
 
 input DeleteManyProductOptionsInput {
   """Filter to find records to delete"""
-  filter: ProductOptionFilter!
+  filter: ProductOptionDeleteFilter!
+}
+
+input ProductOptionDeleteFilter {
+  and: [ProductOptionDeleteFilter!]
+  or: [ProductOptionDeleteFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  name: StringFieldComparison
+  code: StringFieldComparison
 }
 
 input UpdateOneProductOptionInput {
@@ -3621,10 +6144,20 @@ input UpdateProductOption {
 
 input UpdateManyProductOptionsInput {
   """Filter used to find fields to update"""
-  filter: ProductOptionFilter!
+  filter: ProductOptionUpdateFilter!
 
   """The update to apply to all records found using the filter"""
   update: UpdateProductOption!
+}
+
+input ProductOptionUpdateFilter {
+  and: [ProductOptionUpdateFilter!]
+  or: [ProductOptionUpdateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  name: StringFieldComparison
+  code: StringFieldComparison
 }
 
 input CreateOneProductOptionInput {
@@ -3647,7 +6180,17 @@ input CreateManyProductOptionsInput {
 
 input DeleteManyProductOptionGroupsInput {
   """Filter to find records to delete"""
-  filter: ProductOptionGroupFilter!
+  filter: ProductOptionGroupDeleteFilter!
+}
+
+input ProductOptionGroupDeleteFilter {
+  and: [ProductOptionGroupDeleteFilter!]
+  or: [ProductOptionGroupDeleteFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  name: StringFieldComparison
+  code: StringFieldComparison
 }
 
 input UpdateOneProductOptionGroupInput {
@@ -3668,10 +6211,20 @@ input UpdateProductOptionGroup {
 
 input UpdateManyProductOptionGroupsInput {
   """Filter used to find fields to update"""
-  filter: ProductOptionGroupFilter!
+  filter: ProductOptionGroupUpdateFilter!
 
   """The update to apply to all records found using the filter"""
   update: UpdateProductOptionGroup!
+}
+
+input ProductOptionGroupUpdateFilter {
+  and: [ProductOptionGroupUpdateFilter!]
+  or: [ProductOptionGroupUpdateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  name: StringFieldComparison
+  code: StringFieldComparison
 }
 
 input CreateOneProductOptionGroupInput {
@@ -3694,7 +6247,17 @@ input CreateManyProductOptionGroupsInput {
 
 input DeleteManyProductVariantPricesInput {
   """Filter to find records to delete"""
-  filter: ProductVariantPriceFilter!
+  filter: ProductVariantPriceDeleteFilter!
+}
+
+input ProductVariantPriceDeleteFilter {
+  and: [ProductVariantPriceDeleteFilter!]
+  or: [ProductVariantPriceDeleteFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  price: NumberFieldComparison
+  taxIncluded: BooleanFieldComparison
 }
 
 input UpdateOneProductVariantPriceInput {
@@ -3715,10 +6278,20 @@ input UpdateProductVariantPrice {
 
 input UpdateManyProductVariantPricesInput {
   """Filter used to find fields to update"""
-  filter: ProductVariantPriceFilter!
+  filter: ProductVariantPriceUpdateFilter!
 
   """The update to apply to all records found using the filter"""
   update: UpdateProductVariantPrice!
+}
+
+input ProductVariantPriceUpdateFilter {
+  and: [ProductVariantPriceUpdateFilter!]
+  or: [ProductVariantPriceUpdateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  price: NumberFieldComparison
+  taxIncluded: BooleanFieldComparison
 }
 
 input CreateOneProductVariantPriceInput {
@@ -3741,7 +6314,15 @@ input CreateManyProductVariantPricesInput {
 
 input DeleteManyProductAssetsInput {
   """Filter to find records to delete"""
-  filter: ProductAssetFilter!
+  filter: ProductAssetDeleteFilter!
+}
+
+input ProductAssetDeleteFilter {
+  and: [ProductAssetDeleteFilter!]
+  or: [ProductAssetDeleteFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
 }
 
 input UpdateOneProductAssetInput {
@@ -3760,10 +6341,18 @@ input UpdateProductAsset {
 
 input UpdateManyProductAssetsInput {
   """Filter used to find fields to update"""
-  filter: ProductAssetFilter!
+  filter: ProductAssetUpdateFilter!
 
   """The update to apply to all records found using the filter"""
   update: UpdateProductAsset!
+}
+
+input ProductAssetUpdateFilter {
+  and: [ProductAssetUpdateFilter!]
+  or: [ProductAssetUpdateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
 }
 
 input CreateOneProductAssetInput {
@@ -3790,7 +6379,23 @@ enum VendorPlanPrice {
 
 input DeleteManyStockKeepingsInput {
   """Filter to find records to delete"""
-  filter: StockKeepingFilter!
+  filter: StockKeepingDeleteFilter!
+}
+
+input StockKeepingDeleteFilter {
+  and: [StockKeepingDeleteFilter!]
+  or: [StockKeepingDeleteFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  quantity: NumberFieldComparison
+  available_quantity: NumberFieldComparison
+  threshold: NumberFieldComparison
+  multiple: BooleanFieldComparison
+  backorder: BooleanFieldComparison
+  stockstatus: BooleanFieldComparison
+  sku: StringFieldComparison
+  type: StringFieldComparison
 }
 
 input UpdateOneStockKeepingInput {
@@ -3817,10 +6422,26 @@ input UpdateStockKeeping {
 
 input UpdateManyStockKeepingsInput {
   """Filter used to find fields to update"""
-  filter: StockKeepingFilter!
+  filter: StockKeepingUpdateFilter!
 
   """The update to apply to all records found using the filter"""
   update: UpdateStockKeeping!
+}
+
+input StockKeepingUpdateFilter {
+  and: [StockKeepingUpdateFilter!]
+  or: [StockKeepingUpdateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  quantity: NumberFieldComparison
+  available_quantity: NumberFieldComparison
+  threshold: NumberFieldComparison
+  multiple: BooleanFieldComparison
+  backorder: BooleanFieldComparison
+  stockstatus: BooleanFieldComparison
+  sku: StringFieldComparison
+  type: StringFieldComparison
 }
 
 enum StockKeepingType {
@@ -3830,7 +6451,16 @@ enum StockKeepingType {
 
 input DeleteManySalesInput {
   """Filter to find records to delete"""
-  filter: SaleFilter!
+  filter: SaleDeleteFilter!
+}
+
+input SaleDeleteFilter {
+  and: [SaleDeleteFilter!]
+  or: [SaleDeleteFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  quantity: NumberFieldComparison
 }
 
 input UpdateOneSaleInput {
@@ -3850,10 +6480,19 @@ input UpdateSale {
 
 input UpdateManySalesInput {
   """Filter used to find fields to update"""
-  filter: SaleFilter!
+  filter: SaleUpdateFilter!
 
   """The update to apply to all records found using the filter"""
   update: UpdateSale!
+}
+
+input SaleUpdateFilter {
+  and: [SaleUpdateFilter!]
+  or: [SaleUpdateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  quantity: NumberFieldComparison
 }
 
 input CreateOneSaleInput {
@@ -3875,7 +6514,16 @@ input CreateManySalesInput {
 
 input DeleteManyStockMovementsInput {
   """Filter to find records to delete"""
-  filter: StockMovementFilter!
+  filter: StockMovementDeleteFilter!
+}
+
+input StockMovementDeleteFilter {
+  and: [StockMovementDeleteFilter!]
+  or: [StockMovementDeleteFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  quantity: NumberFieldComparison
 }
 
 input UpdateOneStockMovementInput {
@@ -3895,10 +6543,19 @@ input UpdateStockMovement {
 
 input UpdateManyStockMovementsInput {
   """Filter used to find fields to update"""
-  filter: StockMovementFilter!
+  filter: StockMovementUpdateFilter!
 
   """The update to apply to all records found using the filter"""
   update: UpdateStockMovement!
+}
+
+input StockMovementUpdateFilter {
+  and: [StockMovementUpdateFilter!]
+  or: [StockMovementUpdateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  quantity: NumberFieldComparison
 }
 
 input CreateOneStockMovementInput {
@@ -3920,7 +6577,16 @@ input CreateManyStockMovementsInput {
 
 input DeleteManyCancellationsInput {
   """Filter to find records to delete"""
-  filter: CancellationFilter!
+  filter: CancellationDeleteFilter!
+}
+
+input CancellationDeleteFilter {
+  and: [CancellationDeleteFilter!]
+  or: [CancellationDeleteFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  quantity: NumberFieldComparison
 }
 
 input UpdateOneCancellationInput {
@@ -3940,10 +6606,19 @@ input UpdateCancellation {
 
 input UpdateManyCancellationsInput {
   """Filter used to find fields to update"""
-  filter: CancellationFilter!
+  filter: CancellationUpdateFilter!
 
   """The update to apply to all records found using the filter"""
   update: UpdateCancellation!
+}
+
+input CancellationUpdateFilter {
+  and: [CancellationUpdateFilter!]
+  or: [CancellationUpdateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  quantity: NumberFieldComparison
 }
 
 input CreateOneCancellationInput {
@@ -3965,7 +6640,18 @@ input CreateManyCancellationsInput {
 
 input DeleteManyOrdersInput {
   """Filter to find records to delete"""
-  filter: OrderFilter!
+  filter: OrderDeleteFilter!
+}
+
+input OrderDeleteFilter {
+  and: [OrderDeleteFilter!]
+  or: [OrderDeleteFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  orderPlacedAt: DateFieldComparison
+  totalPrice: NumberFieldComparison
+  address: StringFieldComparison
 }
 
 input UpdateOneOrderInput {
@@ -3987,10 +6673,21 @@ input UpdateOrder {
 
 input UpdateManyOrdersInput {
   """Filter used to find fields to update"""
-  filter: OrderFilter!
+  filter: OrderUpdateFilter!
 
   """The update to apply to all records found using the filter"""
   update: UpdateOrder!
+}
+
+input OrderUpdateFilter {
+  and: [OrderUpdateFilter!]
+  or: [OrderUpdateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  orderPlacedAt: DateFieldComparison
+  totalPrice: NumberFieldComparison
+  address: StringFieldComparison
 }
 
 input CreateOneOrderInput {
@@ -4014,7 +6711,18 @@ input CreateManyOrdersInput {
 
 input DeleteManyZipsInput {
   """Filter to find records to delete"""
-  filter: ZipFilter!
+  filter: ZipDeleteFilter!
+}
+
+input ZipDeleteFilter {
+  and: [ZipDeleteFilter!]
+  or: [ZipDeleteFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  name: StringFieldComparison
+  slug: StringFieldComparison
+  code: NumberFieldComparison
 }
 
 input UpdateOneZipInput {
@@ -4036,10 +6744,21 @@ input UpdateZip {
 
 input UpdateManyZipsInput {
   """Filter used to find fields to update"""
-  filter: ZipFilter!
+  filter: ZipUpdateFilter!
 
   """The update to apply to all records found using the filter"""
   update: UpdateZip!
+}
+
+input ZipUpdateFilter {
+  and: [ZipUpdateFilter!]
+  or: [ZipUpdateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  name: StringFieldComparison
+  slug: StringFieldComparison
+  code: NumberFieldComparison
 }
 
 input CreateOneZipInput {
@@ -4063,7 +6782,18 @@ input CreateManyZipsInput {
 
 input DeleteManyMenusInput {
   """Filter to find records to delete"""
-  filter: MenuFilter!
+  filter: MenuDeleteFilter!
+}
+
+input MenuDeleteFilter {
+  and: [MenuDeleteFilter!]
+  or: [MenuDeleteFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  title: StringFieldComparison
+  targetId: StringFieldComparison
+  target: StringFieldComparison
 }
 
 input UpdateOneMenuInput {
@@ -4085,10 +6815,21 @@ input UpdateMenu {
 
 input UpdateManyMenusInput {
   """Filter used to find fields to update"""
-  filter: MenuFilter!
+  filter: MenuUpdateFilter!
 
   """The update to apply to all records found using the filter"""
   update: UpdateMenu!
+}
+
+input MenuUpdateFilter {
+  and: [MenuUpdateFilter!]
+  or: [MenuUpdateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  title: StringFieldComparison
+  targetId: StringFieldComparison
+  target: StringFieldComparison
 }
 
 input CreateOneMenuInput {
@@ -4108,4 +6849,906 @@ input CreateMenu {
 input CreateManyMenusInput {
   """Array of records to create"""
   menus: [CreateMenu!]!
+}
+
+type Subscription {
+  deletedOneAsset(input: DeleteOneAssetSubscriptionFilterInput): AssetDeleteResponse!
+  deletedManyAssets: DeleteManyResponse!
+  updatedOneAsset(input: UpdateOneAssetSubscriptionFilterInput): Asset!
+  updatedManyAssets: UpdateManyResponse!
+  createdAsset(input: CreateAssetSubscriptionFilterInput): Asset!
+  deletedOneRole(input: DeleteOneRoleSubscriptionFilterInput): RoleDeleteResponse!
+  deletedManyRoles: DeleteManyResponse!
+  updatedOneRole(input: UpdateOneRoleSubscriptionFilterInput): Role!
+  updatedManyRoles: UpdateManyResponse!
+  createdRole(input: CreateRoleSubscriptionFilterInput): Role!
+  deletedOneCollection(input: DeleteOneCollectionSubscriptionFilterInput): CollectionDeleteResponse!
+  deletedManyCollections: DeleteManyResponse!
+  updatedOneCollection(input: UpdateOneCollectionSubscriptionFilterInput): Collection!
+  updatedManyCollections: UpdateManyResponse!
+  createdCollection(input: CreateCollectionSubscriptionFilterInput): Collection!
+  deletedOneChannel(input: DeleteOneChannelSubscriptionFilterInput): ChannelDeleteResponse!
+  deletedManyChannels: DeleteManyResponse!
+  updatedOneChannel(input: UpdateOneChannelSubscriptionFilterInput): Channel!
+  updatedManyChannels: UpdateManyResponse!
+  createdChannel(input: CreateChannelSubscriptionFilterInput): Channel!
+  deletedOneStore(input: DeleteOneStoreSubscriptionFilterInput): StoreDeleteResponse!
+  deletedManyStores: DeleteManyResponse!
+  updatedOneStore(input: UpdateOneStoreSubscriptionFilterInput): Store!
+  updatedManyStores: UpdateManyResponse!
+  createdStore(input: CreateStoreSubscriptionFilterInput): Store!
+  deletedOneTaxCategory(input: DeleteOneTaxCategorySubscriptionFilterInput): TaxCategoryDeleteResponse!
+  deletedManyTaxCategories: DeleteManyResponse!
+  updatedOneTaxCategory(input: UpdateOneTaxCategorySubscriptionFilterInput): TaxCategory!
+  updatedManyTaxCategories: UpdateManyResponse!
+  createdTaxCategory(input: CreateTaxCategorySubscriptionFilterInput): TaxCategory!
+  deletedOneTaxRate(input: DeleteOneTaxRateSubscriptionFilterInput): TaxRateDeleteResponse!
+  deletedManyTaxRates: DeleteManyResponse!
+  updatedOneTaxRate(input: UpdateOneTaxRateSubscriptionFilterInput): TaxRate!
+  updatedManyTaxRates: UpdateManyResponse!
+  createdTaxRate(input: CreateTaxRateSubscriptionFilterInput): TaxRate!
+  deletedOneVendor(input: DeleteOneVendorSubscriptionFilterInput): VendorDeleteResponse!
+  deletedManyVendors: DeleteManyResponse!
+  updatedOneVendor(input: UpdateOneVendorSubscriptionFilterInput): Vendor!
+  updatedManyVendors: UpdateManyResponse!
+  createdVendor(input: CreateVendorSubscriptionFilterInput): Vendor!
+  deletedOneZone(input: DeleteOneZoneSubscriptionFilterInput): ZoneDeleteResponse!
+  deletedManyZones: DeleteManyResponse!
+  updatedOneZone(input: UpdateOneZoneSubscriptionFilterInput): Zone!
+  updatedManyZones: UpdateManyResponse!
+  createdZone(input: CreateZoneSubscriptionFilterInput): Zone!
+  deletedOneCountry(input: DeleteOneCountrySubscriptionFilterInput): CountryDeleteResponse!
+  deletedManyCountries: DeleteManyResponse!
+  updatedOneCountry(input: UpdateOneCountrySubscriptionFilterInput): Country!
+  updatedManyCountries: UpdateManyResponse!
+  createdCountry(input: CreateCountrySubscriptionFilterInput): Country!
+  deletedOneSeo(input: DeleteOneSeoSubscriptionFilterInput): SeoDeleteResponse!
+  deletedManySeos: DeleteManyResponse!
+  updatedOneSeo(input: UpdateOneSeoSubscriptionFilterInput): Seo!
+  updatedManySeos: UpdateManyResponse!
+  createdSeo(input: CreateSeoSubscriptionFilterInput): Seo!
+  deletedOneFacet(input: DeleteOneFacetSubscriptionFilterInput): FacetDeleteResponse!
+  deletedManyFacets: DeleteManyResponse!
+  updatedOneFacet(input: UpdateOneFacetSubscriptionFilterInput): Facet!
+  updatedManyFacets: UpdateManyResponse!
+  createdFacet(input: CreateFacetSubscriptionFilterInput): Facet!
+  deletedOneFacetValue(input: DeleteOneFacetValueSubscriptionFilterInput): FacetValueDeleteResponse!
+  deletedManyFacetValues: DeleteManyResponse!
+  updatedOneFacetValue(input: UpdateOneFacetValueSubscriptionFilterInput): FacetValue!
+  updatedManyFacetValues: UpdateManyResponse!
+  createdFacetValue(input: CreateFacetValueSubscriptionFilterInput): FacetValue!
+  deletedOneProduct(input: DeleteOneProductSubscriptionFilterInput): ProductDeleteResponse!
+  deletedManyProducts: DeleteManyResponse!
+  updatedOneProduct(input: UpdateOneProductSubscriptionFilterInput): Product!
+  updatedManyProducts: UpdateManyResponse!
+  createdProduct(input: CreateProductSubscriptionFilterInput): Product!
+  deletedOneProductVariant(input: DeleteOneProductVariantSubscriptionFilterInput): ProductVariantDeleteResponse!
+  deletedManyProductVariants: DeleteManyResponse!
+  updatedOneProductVariant(input: UpdateOneProductVariantSubscriptionFilterInput): ProductVariant!
+  updatedManyProductVariants: UpdateManyResponse!
+  createdProductVariant(input: CreateProductVariantSubscriptionFilterInput): ProductVariant!
+  deletedOneProductOption(input: DeleteOneProductOptionSubscriptionFilterInput): ProductOptionDeleteResponse!
+  deletedManyProductOptions: DeleteManyResponse!
+  updatedOneProductOption(input: UpdateOneProductOptionSubscriptionFilterInput): ProductOption!
+  updatedManyProductOptions: UpdateManyResponse!
+  createdProductOption(input: CreateProductOptionSubscriptionFilterInput): ProductOption!
+  deletedOneProductOptionGroup(input: DeleteOneProductOptionGroupSubscriptionFilterInput): ProductOptionGroupDeleteResponse!
+  deletedManyProductOptionGroups: DeleteManyResponse!
+  updatedOneProductOptionGroup(input: UpdateOneProductOptionGroupSubscriptionFilterInput): ProductOptionGroup!
+  updatedManyProductOptionGroups: UpdateManyResponse!
+  createdProductOptionGroup(input: CreateProductOptionGroupSubscriptionFilterInput): ProductOptionGroup!
+  deletedOneProductVariantPrice(input: DeleteOneProductVariantPriceSubscriptionFilterInput): ProductVariantPriceDeleteResponse!
+  deletedManyProductVariantPrices: DeleteManyResponse!
+  updatedOneProductVariantPrice(input: UpdateOneProductVariantPriceSubscriptionFilterInput): ProductVariantPrice!
+  updatedManyProductVariantPrices: UpdateManyResponse!
+  createdProductVariantPrice(input: CreateProductVariantPriceSubscriptionFilterInput): ProductVariantPrice!
+  deletedOneProductVariantAsset(input: DeleteOneProductVariantAssetSubscriptionFilterInput): ProductVariantAssetDeleteResponse!
+  deletedManyProductVariantAssets: DeleteManyResponse!
+  updatedOneProductVariantAsset(input: UpdateOneProductVariantAssetSubscriptionFilterInput): ProductVariantAsset!
+  updatedManyProductVariantAssets: UpdateManyResponse!
+  createdProductVariantAsset(input: CreateProductVariantAssetSubscriptionFilterInput): ProductVariantAsset!
+  deletedOneProductAsset(input: DeleteOneProductAssetSubscriptionFilterInput): ProductAssetDeleteResponse!
+  deletedManyProductAssets: DeleteManyResponse!
+  updatedOneProductAsset(input: UpdateOneProductAssetSubscriptionFilterInput): ProductAsset!
+  updatedManyProductAssets: UpdateManyResponse!
+  createdProductAsset(input: CreateProductAssetSubscriptionFilterInput): ProductAsset!
+  deletedOneVendorPlans(input: DeleteOneVendorPlansSubscriptionFilterInput): VendorPlansDeleteResponse!
+  deletedManyVendorPlans: DeleteManyResponse!
+  updatedOneVendorPlans(input: UpdateOneVendorPlansSubscriptionFilterInput): VendorPlans!
+  updatedManyVendorPlans: UpdateManyResponse!
+  createdVendorPlans(input: CreateVendorPlansSubscriptionFilterInput): VendorPlans!
+  deletedOneVendorLicense(input: DeleteOneVendorLicenseSubscriptionFilterInput): VendorLicenseDeleteResponse!
+  deletedManyVendorLicenses: DeleteManyResponse!
+  updatedOneVendorLicense(input: UpdateOneVendorLicenseSubscriptionFilterInput): VendorLicense!
+  updatedManyVendorLicenses: UpdateManyResponse!
+  createdVendorLicense(input: CreateVendorLicenseSubscriptionFilterInput): VendorLicense!
+  deletedOneStockKeeping(input: DeleteOneStockKeepingSubscriptionFilterInput): StockKeepingDeleteResponse!
+  deletedManyStockKeepings: DeleteManyResponse!
+  updatedOneStockKeeping(input: UpdateOneStockKeepingSubscriptionFilterInput): StockKeeping!
+  updatedManyStockKeepings: UpdateManyResponse!
+  createdStockKeeping(input: CreateStockKeepingSubscriptionFilterInput): StockKeeping!
+  deletedOneSale(input: DeleteOneSaleSubscriptionFilterInput): SaleDeleteResponse!
+  deletedManySales: DeleteManyResponse!
+  updatedOneSale(input: UpdateOneSaleSubscriptionFilterInput): Sale!
+  updatedManySales: UpdateManyResponse!
+  createdSale(input: CreateSaleSubscriptionFilterInput): Sale!
+  deletedOneStockMovement(input: DeleteOneStockMovementSubscriptionFilterInput): StockMovementDeleteResponse!
+  deletedManyStockMovements: DeleteManyResponse!
+  updatedOneStockMovement(input: UpdateOneStockMovementSubscriptionFilterInput): StockMovement!
+  updatedManyStockMovements: UpdateManyResponse!
+  createdStockMovement(input: CreateStockMovementSubscriptionFilterInput): StockMovement!
+  deletedOneCancellation(input: DeleteOneCancellationSubscriptionFilterInput): CancellationDeleteResponse!
+  deletedManyCancellations: DeleteManyResponse!
+  updatedOneCancellation(input: UpdateOneCancellationSubscriptionFilterInput): Cancellation!
+  updatedManyCancellations: UpdateManyResponse!
+  createdCancellation(input: CreateCancellationSubscriptionFilterInput): Cancellation!
+  deletedOneOrder(input: DeleteOneOrderSubscriptionFilterInput): OrderDeleteResponse!
+  deletedManyOrders: DeleteManyResponse!
+  updatedOneOrder(input: UpdateOneOrderSubscriptionFilterInput): Order!
+  updatedManyOrders: UpdateManyResponse!
+  createdOrder(input: CreateOrderSubscriptionFilterInput): Order!
+  deletedOneZip(input: DeleteOneZipSubscriptionFilterInput): ZipDeleteResponse!
+  deletedManyZips: DeleteManyResponse!
+  updatedOneZip(input: UpdateOneZipSubscriptionFilterInput): Zip!
+  updatedManyZips: UpdateManyResponse!
+  createdZip(input: CreateZipSubscriptionFilterInput): Zip!
+  deletedOneMenu(input: DeleteOneMenuSubscriptionFilterInput): MenuDeleteResponse!
+  deletedManyMenus: DeleteManyResponse!
+  updatedOneMenu(input: UpdateOneMenuSubscriptionFilterInput): Menu!
+  updatedManyMenus: UpdateManyResponse!
+  createdMenu(input: CreateMenuSubscriptionFilterInput): Menu!
+}
+
+input DeleteOneAssetSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: AssetSubscriptionFilter!
+}
+
+input AssetSubscriptionFilter {
+  and: [AssetSubscriptionFilter!]
+  or: [AssetSubscriptionFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  name: StringFieldComparison
+  type: StringFieldComparison
+  mimeType: StringFieldComparison
+  width: NumberFieldComparison
+  height: NumberFieldComparison
+  fileSize: NumberFieldComparison
+  source: StringFieldComparison
+  preview: StringFieldComparison
+}
+
+input UpdateOneAssetSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: AssetSubscriptionFilter!
+}
+
+input CreateAssetSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: AssetSubscriptionFilter!
+}
+
+input DeleteOneRoleSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: RoleSubscriptionFilter!
+}
+
+input RoleSubscriptionFilter {
+  and: [RoleSubscriptionFilter!]
+  or: [RoleSubscriptionFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  code: StringFieldComparison
+  description: StringFieldComparison
+}
+
+input UpdateOneRoleSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: RoleSubscriptionFilter!
+}
+
+input CreateRoleSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: RoleSubscriptionFilter!
+}
+
+input DeleteOneCollectionSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: CollectionSubscriptionFilter!
+}
+
+input CollectionSubscriptionFilter {
+  and: [CollectionSubscriptionFilter!]
+  or: [CollectionSubscriptionFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  isRoot: BooleanFieldComparison
+  inMenu: BooleanFieldComparison
+  position: NumberFieldComparison
+  isPrivate: BooleanFieldComparison
+  name: StringFieldComparison
+  description: StringFieldComparison
+}
+
+input UpdateOneCollectionSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: CollectionSubscriptionFilter!
+}
+
+input CreateCollectionSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: CollectionSubscriptionFilter!
+}
+
+input DeleteOneChannelSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: ChannelSubscriptionFilter!
+}
+
+input ChannelSubscriptionFilter {
+  and: [ChannelSubscriptionFilter!]
+  or: [ChannelSubscriptionFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  code: StringFieldComparison
+  token: StringFieldComparison
+  defaultLanguageCode: StringFieldComparison
+  currencyCode: StringFieldComparison
+  pricesIncludeTax: BooleanFieldComparison
+}
+
+input UpdateOneChannelSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: ChannelSubscriptionFilter!
+}
+
+input CreateChannelSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: ChannelSubscriptionFilter!
+}
+
+input DeleteOneStoreSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: StoreSubscriptionFilter!
+}
+
+input StoreSubscriptionFilter {
+  and: [StoreSubscriptionFilter!]
+  or: [StoreSubscriptionFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  storeName: StringFieldComparison
+  phoneNumber: StringFieldComparison
+  officialemail: StringFieldComparison
+  zipcode: StringFieldComparison
+  streetAddress1: StringFieldComparison
+  streetAddress2: StringFieldComparison
+  GSTIN: StringFieldComparison
+  singleStore: BooleanFieldComparison
+  rentalStore: BooleanFieldComparison
+  channelMarkets: BooleanFieldComparison
+}
+
+input UpdateOneStoreSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: StoreSubscriptionFilter!
+}
+
+input CreateStoreSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: StoreSubscriptionFilter!
+}
+
+input DeleteOneTaxCategorySubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: TaxCategorySubscriptionFilter!
+}
+
+input TaxCategorySubscriptionFilter {
+  and: [TaxCategorySubscriptionFilter!]
+  or: [TaxCategorySubscriptionFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  name: StringFieldComparison
+}
+
+input UpdateOneTaxCategorySubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: TaxCategorySubscriptionFilter!
+}
+
+input CreateTaxCategorySubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: TaxCategorySubscriptionFilter!
+}
+
+input DeleteOneTaxRateSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: TaxRateSubscriptionFilter!
+}
+
+input TaxRateSubscriptionFilter {
+  and: [TaxRateSubscriptionFilter!]
+  or: [TaxRateSubscriptionFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  name: StringFieldComparison
+  value: NumberFieldComparison
+  enabled: BooleanFieldComparison
+}
+
+input UpdateOneTaxRateSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: TaxRateSubscriptionFilter!
+}
+
+input CreateTaxRateSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: TaxRateSubscriptionFilter!
+}
+
+input DeleteOneVendorSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: VendorSubscriptionFilter!
+}
+
+input VendorSubscriptionFilter {
+  and: [VendorSubscriptionFilter!]
+  or: [VendorSubscriptionFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  vendorName: StringFieldComparison
+  phoneNumber: StringFieldComparison
+  email: StringFieldComparison
+}
+
+input UpdateOneVendorSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: VendorSubscriptionFilter!
+}
+
+input CreateVendorSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: VendorSubscriptionFilter!
+}
+
+input DeleteOneZoneSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: ZoneSubscriptionFilter!
+}
+
+input ZoneSubscriptionFilter {
+  and: [ZoneSubscriptionFilter!]
+  or: [ZoneSubscriptionFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  name: StringFieldComparison
+}
+
+input UpdateOneZoneSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: ZoneSubscriptionFilter!
+}
+
+input CreateZoneSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: ZoneSubscriptionFilter!
+}
+
+input DeleteOneCountrySubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: CountrySubscriptionFilter!
+}
+
+input CountrySubscriptionFilter {
+  and: [CountrySubscriptionFilter!]
+  or: [CountrySubscriptionFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  code: StringFieldComparison
+  name: StringFieldComparison
+  enabled: BooleanFieldComparison
+}
+
+input UpdateOneCountrySubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: CountrySubscriptionFilter!
+}
+
+input CreateCountrySubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: CountrySubscriptionFilter!
+}
+
+input DeleteOneSeoSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: SeoSubscriptionFilter!
+}
+
+input SeoSubscriptionFilter {
+  and: [SeoSubscriptionFilter!]
+  or: [SeoSubscriptionFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
+  urlKey: StringFieldComparison
+  metatitle: StringFieldComparison
+}
+
+input UpdateOneSeoSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: SeoSubscriptionFilter!
+}
+
+input CreateSeoSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: SeoSubscriptionFilter!
+}
+
+input DeleteOneFacetSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: FacetSubscriptionFilter!
+}
+
+input FacetSubscriptionFilter {
+  and: [FacetSubscriptionFilter!]
+  or: [FacetSubscriptionFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  name: StringFieldComparison
+  isPrivate: BooleanFieldComparison
+  code: StringFieldComparison
+}
+
+input UpdateOneFacetSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: FacetSubscriptionFilter!
+}
+
+input CreateFacetSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: FacetSubscriptionFilter!
+}
+
+input DeleteOneFacetValueSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: FacetValueSubscriptionFilter!
+}
+
+input FacetValueSubscriptionFilter {
+  and: [FacetValueSubscriptionFilter!]
+  or: [FacetValueSubscriptionFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  code: StringFieldComparison
+}
+
+input UpdateOneFacetValueSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: FacetValueSubscriptionFilter!
+}
+
+input CreateFacetValueSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: FacetValueSubscriptionFilter!
+}
+
+input DeleteOneProductSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: ProductSubscriptionFilter!
+}
+
+input ProductSubscriptionFilter {
+  and: [ProductSubscriptionFilter!]
+  or: [ProductSubscriptionFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  productName: StringFieldComparison
+  slug: StringFieldComparison
+  description: StringFieldComparison
+}
+
+input UpdateOneProductSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: ProductSubscriptionFilter!
+}
+
+input CreateProductSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: ProductSubscriptionFilter!
+}
+
+input DeleteOneProductVariantSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: ProductVariantSubscriptionFilter!
+}
+
+input ProductVariantSubscriptionFilter {
+  and: [ProductVariantSubscriptionFilter!]
+  or: [ProductVariantSubscriptionFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
+  dum_price: NumberFieldComparison
+  enabled: BooleanFieldComparison
+  sku: StringFieldComparison
+  name: StringFieldComparison
+  trackInventory: BooleanFieldComparison
+}
+
+input UpdateOneProductVariantSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: ProductVariantSubscriptionFilter!
+}
+
+input CreateProductVariantSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: ProductVariantSubscriptionFilter!
+}
+
+input DeleteOneProductOptionSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: ProductOptionSubscriptionFilter!
+}
+
+input ProductOptionSubscriptionFilter {
+  and: [ProductOptionSubscriptionFilter!]
+  or: [ProductOptionSubscriptionFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  name: StringFieldComparison
+  code: StringFieldComparison
+}
+
+input UpdateOneProductOptionSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: ProductOptionSubscriptionFilter!
+}
+
+input CreateProductOptionSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: ProductOptionSubscriptionFilter!
+}
+
+input DeleteOneProductOptionGroupSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: ProductOptionGroupSubscriptionFilter!
+}
+
+input ProductOptionGroupSubscriptionFilter {
+  and: [ProductOptionGroupSubscriptionFilter!]
+  or: [ProductOptionGroupSubscriptionFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  name: StringFieldComparison
+  code: StringFieldComparison
+}
+
+input UpdateOneProductOptionGroupSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: ProductOptionGroupSubscriptionFilter!
+}
+
+input CreateProductOptionGroupSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: ProductOptionGroupSubscriptionFilter!
+}
+
+input DeleteOneProductVariantPriceSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: ProductVariantPriceSubscriptionFilter!
+}
+
+input ProductVariantPriceSubscriptionFilter {
+  and: [ProductVariantPriceSubscriptionFilter!]
+  or: [ProductVariantPriceSubscriptionFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  price: NumberFieldComparison
+  taxIncluded: BooleanFieldComparison
+}
+
+input UpdateOneProductVariantPriceSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: ProductVariantPriceSubscriptionFilter!
+}
+
+input CreateProductVariantPriceSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: ProductVariantPriceSubscriptionFilter!
+}
+
+input DeleteOneProductVariantAssetSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: ProductVariantAssetSubscriptionFilter!
+}
+
+input ProductVariantAssetSubscriptionFilter {
+  and: [ProductVariantAssetSubscriptionFilter!]
+  or: [ProductVariantAssetSubscriptionFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+}
+
+input UpdateOneProductVariantAssetSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: ProductVariantAssetSubscriptionFilter!
+}
+
+input CreateProductVariantAssetSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: ProductVariantAssetSubscriptionFilter!
+}
+
+input DeleteOneProductAssetSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: ProductAssetSubscriptionFilter!
+}
+
+input ProductAssetSubscriptionFilter {
+  and: [ProductAssetSubscriptionFilter!]
+  or: [ProductAssetSubscriptionFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+}
+
+input UpdateOneProductAssetSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: ProductAssetSubscriptionFilter!
+}
+
+input CreateProductAssetSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: ProductAssetSubscriptionFilter!
+}
+
+input DeleteOneVendorPlansSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: VendorPlansSubscriptionFilter!
+}
+
+input VendorPlansSubscriptionFilter {
+  and: [VendorPlansSubscriptionFilter!]
+  or: [VendorPlansSubscriptionFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  isActive: BooleanFieldComparison
+  name: StringFieldComparison
+  planValue: NumberFieldComparison
+}
+
+input UpdateOneVendorPlansSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: VendorPlansSubscriptionFilter!
+}
+
+input CreateVendorPlansSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: VendorPlansSubscriptionFilter!
+}
+
+input DeleteOneVendorLicenseSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: VendorLicenseSubscriptionFilter!
+}
+
+input VendorLicenseSubscriptionFilter {
+  and: [VendorLicenseSubscriptionFilter!]
+  or: [VendorLicenseSubscriptionFilter!]
+  id: IDFilterComparison
+  tenureStart: DateFieldComparison
+  tenureEnd: DateFieldComparison
+}
+
+input UpdateOneVendorLicenseSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: VendorLicenseSubscriptionFilter!
+}
+
+input CreateVendorLicenseSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: VendorLicenseSubscriptionFilter!
+}
+
+input DeleteOneStockKeepingSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: StockKeepingSubscriptionFilter!
+}
+
+input StockKeepingSubscriptionFilter {
+  and: [StockKeepingSubscriptionFilter!]
+  or: [StockKeepingSubscriptionFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  quantity: NumberFieldComparison
+  available_quantity: NumberFieldComparison
+  threshold: NumberFieldComparison
+  multiple: BooleanFieldComparison
+  backorder: BooleanFieldComparison
+  stockstatus: BooleanFieldComparison
+  sku: StringFieldComparison
+  type: StringFieldComparison
+}
+
+input UpdateOneStockKeepingSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: StockKeepingSubscriptionFilter!
+}
+
+input CreateStockKeepingSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: StockKeepingSubscriptionFilter!
+}
+
+input DeleteOneSaleSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: SaleSubscriptionFilter!
+}
+
+input SaleSubscriptionFilter {
+  and: [SaleSubscriptionFilter!]
+  or: [SaleSubscriptionFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  quantity: NumberFieldComparison
+}
+
+input UpdateOneSaleSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: SaleSubscriptionFilter!
+}
+
+input CreateSaleSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: SaleSubscriptionFilter!
+}
+
+input DeleteOneStockMovementSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: StockMovementSubscriptionFilter!
+}
+
+input StockMovementSubscriptionFilter {
+  and: [StockMovementSubscriptionFilter!]
+  or: [StockMovementSubscriptionFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  quantity: NumberFieldComparison
+}
+
+input UpdateOneStockMovementSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: StockMovementSubscriptionFilter!
+}
+
+input CreateStockMovementSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: StockMovementSubscriptionFilter!
+}
+
+input DeleteOneCancellationSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: CancellationSubscriptionFilter!
+}
+
+input CancellationSubscriptionFilter {
+  and: [CancellationSubscriptionFilter!]
+  or: [CancellationSubscriptionFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  quantity: NumberFieldComparison
+}
+
+input UpdateOneCancellationSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: CancellationSubscriptionFilter!
+}
+
+input CreateCancellationSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: CancellationSubscriptionFilter!
+}
+
+input DeleteOneOrderSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: OrderSubscriptionFilter!
+}
+
+input OrderSubscriptionFilter {
+  and: [OrderSubscriptionFilter!]
+  or: [OrderSubscriptionFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  orderPlacedAt: DateFieldComparison
+  totalPrice: NumberFieldComparison
+  address: StringFieldComparison
+}
+
+input UpdateOneOrderSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: OrderSubscriptionFilter!
+}
+
+input CreateOrderSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: OrderSubscriptionFilter!
+}
+
+input DeleteOneZipSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: ZipSubscriptionFilter!
+}
+
+input ZipSubscriptionFilter {
+  and: [ZipSubscriptionFilter!]
+  or: [ZipSubscriptionFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  name: StringFieldComparison
+  slug: StringFieldComparison
+  code: NumberFieldComparison
+}
+
+input UpdateOneZipSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: ZipSubscriptionFilter!
+}
+
+input CreateZipSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: ZipSubscriptionFilter!
+}
+
+input DeleteOneMenuSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: MenuSubscriptionFilter!
+}
+
+input MenuSubscriptionFilter {
+  and: [MenuSubscriptionFilter!]
+  or: [MenuSubscriptionFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  title: StringFieldComparison
+  targetId: StringFieldComparison
+  target: StringFieldComparison
+}
+
+input UpdateOneMenuSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: MenuSubscriptionFilter!
+}
+
+input CreateMenuSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: MenuSubscriptionFilter!
 }

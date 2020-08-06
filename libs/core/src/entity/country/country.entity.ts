@@ -1,6 +1,6 @@
 import {BaseEntity, Column, CreateDateColumn, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn} from 'typeorm';
 import {ID, ObjectType, registerEnumType} from '@nestjs/graphql';
-import {Connection, FilterableField} from '@nestjs-query/query-graphql';
+import {Connection, FilterableField, PagingStrategies} from '@nestjs-query/query-graphql';
 import {Store, Zone} from '..';
 
 export enum CountryZone {
@@ -17,7 +17,8 @@ registerEnumType(CountryZone, {
 
 @ObjectType('Country')
 @Entity({name: 'country'})
-@Connection('zone', () => Zone)
+@Connection('zone', () => Zone, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
+@Connection('stores', () => Store, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 export class Country extends BaseEntity {
     @FilterableField(() => ID)
     @PrimaryGeneratedColumn('uuid')

@@ -1,11 +1,18 @@
 import {Args, Float, ID, Mutation, Resolver} from '@nestjs/graphql';
 import {ProductVariantPrice} from '../../../entity';
-import {CRUDResolver} from '@nestjs-query/query-graphql';
+import {CRUDResolver, PagingStrategies} from '@nestjs-query/query-graphql';
 import {InjectQueryService, QueryService} from '@nestjs-query/core';
 import {ProductVariantsService} from '../../../service/services/admin/product-variants.service';
 
 @Resolver(of => ProductVariantPrice)
-export class ProductVariantPriceResolver extends CRUDResolver(ProductVariantPrice){
+export class ProductVariantPriceResolver extends CRUDResolver(ProductVariantPrice, {
+    pagingStrategy: PagingStrategies.OFFSET,
+    enableAggregate: true,
+    aggregate: {
+        enabled: true
+    },
+    enableSubscriptions: true
+}){
     constructor(
         @InjectQueryService(ProductVariantPrice) readonly service: QueryService<ProductVariantPrice>,
         private readonly productVariantsService: ProductVariantsService

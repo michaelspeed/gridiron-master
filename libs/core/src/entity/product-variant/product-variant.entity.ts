@@ -11,18 +11,18 @@ import {
     UpdateDateColumn
 } from 'typeorm';
 import {ID, ObjectType} from '@nestjs/graphql';
-import {Connection, FilterableField, Relation} from '@nestjs-query/query-graphql';
+import {Connection, FilterableField, PagingStrategies, Relation} from '@nestjs-query/query-graphql';
 import {Product, ProductOption, ProductVariantAsset, ProductVariantPrice, ProductVariantSpecifications, Seo, View} from '../';
 import {StockKeeping} from '@gridiron/core/entity/stock-movement/stock-keeping.entity';
 
 @ObjectType('ProductVariant')
 @Entity({name: 'productVariant'})
-@Relation('product', () => Product)
-@Relation('asset', () => ProductVariantAsset, {nullable: true})
-@Relation('price', () => ProductVariantPrice, {nullable: true})
-@Relation('specs', () => ProductVariantSpecifications, {nullable: true})
-@Relation('seo', () => Seo, {nullable: true})
-@Connection('stock', () => StockKeeping)
+@Relation('product', () => Product, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
+@Relation('asset', () => ProductVariantAsset, {nullable: true, pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
+@Relation('price', () => ProductVariantPrice, {nullable: true, pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
+@Relation('specs', () => ProductVariantSpecifications, {nullable: true, pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
+@Relation('seo', () => Seo, {nullable: true, pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
+@Connection('stock', () => StockKeeping, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 export class ProductVariant extends BaseEntity {
     @FilterableField(() => ID)
     @PrimaryGeneratedColumn('uuid')

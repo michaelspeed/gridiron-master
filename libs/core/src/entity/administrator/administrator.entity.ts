@@ -1,6 +1,6 @@
 import {BaseEntity, Column, CreateDateColumn, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn} from 'typeorm';
 import {User} from '..';
-import {FilterableField, Relation} from '@nestjs-query/query-graphql';
+import {FilterableField, PagingStrategies, Relation} from '@nestjs-query/query-graphql';
 import {Field, ID, ObjectType, registerEnumType} from '@nestjs/graphql';
 import {AdministratorEnum} from '../../enums';
 
@@ -9,7 +9,7 @@ registerEnumType(AdministratorEnum, {
 })
 
 @ObjectType('Administrator')
-@Relation('user', () => User)
+@Relation('user', () => User, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @Entity({name: 'administrator'})
 export class Administrator extends BaseEntity {
 

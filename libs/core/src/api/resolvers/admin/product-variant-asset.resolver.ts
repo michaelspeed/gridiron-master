@@ -1,6 +1,6 @@
 import {Args, ID, Mutation, Resolver} from '@nestjs/graphql';
 import {ProductVariantAsset} from '../../../entity';
-import {CRUDResolver} from '@nestjs-query/query-graphql';
+import {CRUDResolver, PagingStrategies} from '@nestjs-query/query-graphql';
 import {InjectQueryService, QueryService} from '@nestjs-query/core';
 import {ProductVariantsService} from '@gridiron/core/service/services/admin/product-variants.service';
 
@@ -14,7 +14,13 @@ export class ProductVariantAssetResolver extends CRUDResolver(ProductVariantAsse
     },
     delete: {
         disabled: true
-    }
+    },
+    pagingStrategy: PagingStrategies.OFFSET,
+    enableAggregate: true,
+    aggregate: {
+        enabled: true
+    },
+    enableSubscriptions: true
 }){
     constructor(
         @InjectQueryService(ProductVariantAsset) readonly service: QueryService<ProductVariantAsset>,

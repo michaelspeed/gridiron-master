@@ -1,13 +1,13 @@
 import {BaseEntity, Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn} from 'typeorm';
 import {ID, ObjectType} from '@nestjs/graphql';
-import {Connection, FilterableField, Relation} from '@nestjs-query/query-graphql';
+import {Connection, FilterableField, PagingStrategies, Relation} from '@nestjs-query/query-graphql';
 import {ProductVariantPrice, TaxCategory, Zone} from '..';
 import {DecimalTransformer} from '../utils/ValueTransformers';
 
 @ObjectType('TaxRate')
-@Relation('category', () => TaxCategory)
-@Relation('zone', () => Zone)
-@Connection('variants', () => ProductVariantPrice)
+@Relation('category', () => TaxCategory, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
+@Relation('zone', () => Zone, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
+@Connection('variants', () => ProductVariantPrice, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @Entity({name: 'taxRate'})
 export class TaxRate extends BaseEntity {
     @FilterableField(() => ID)

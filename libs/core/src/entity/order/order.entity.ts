@@ -1,11 +1,11 @@
 import {BaseEntity, Column, CreateDateColumn, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn} from 'typeorm';
 import {ID, ObjectType} from '@nestjs/graphql';
-import {FilterableField, Relation} from '@nestjs-query/query-graphql';
+import {FilterableField, PagingStrategies, Relation} from '@nestjs-query/query-graphql';
 import {OrderItem, OrderLine} from '..';
 
 @ObjectType('Order')
 @Entity({name: 'order'})
-@Relation('item', () => OrderLine)
+@Relation('item', () => OrderLine, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 export class Order extends BaseEntity {
     @FilterableField(() => ID)
     @PrimaryGeneratedColumn('uuid')

@@ -1,12 +1,12 @@
 import {BaseEntity, Column, CreateDateColumn, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn} from 'typeorm';
-import {FilterableField, Relation} from '@nestjs-query/query-graphql';
+import {FilterableField, PagingStrategies, Relation} from '@nestjs-query/query-graphql';
 import {Field, ID, ObjectType} from '@nestjs/graphql';
 import {Collection, ProductVariant} from '..';
 
 @ObjectType('Seo')
 @Entity({name: 'seo'})
-@Relation('collection', () => Collection, {nullable: true})
-@Relation('variant', () => ProductVariant, {nullable: true})
+@Relation('collection', () => Collection, {nullable: true, pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
+@Relation('variant', () => ProductVariant, {nullable: true, pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 export class Seo extends BaseEntity {
 
     @FilterableField(() => ID)

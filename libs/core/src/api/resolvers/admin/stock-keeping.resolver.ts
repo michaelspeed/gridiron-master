@@ -1,6 +1,6 @@
 import {StockKeeping} from '../../../entity';
 import {Args, Context, ID, Mutation, Query, Resolver} from '@nestjs/graphql';
-import {CRUDResolver} from '@nestjs-query/query-graphql';
+import {CRUDResolver, PagingStrategies} from '@nestjs-query/query-graphql';
 import {InjectQueryService, QueryService} from '@nestjs-query/core';
 import {StockKeepingType} from '../../../enums/StockKeepingType';
 import {StocksService, VendorService} from '../../../service';
@@ -10,7 +10,13 @@ import {JwtService} from '@nestjs/jwt';
 export class StockKeepingResolver extends CRUDResolver(StockKeeping, {
     create: {
         disabled: true
-    }
+    },
+    pagingStrategy: PagingStrategies.OFFSET,
+    enableAggregate: true,
+    aggregate: {
+        enabled: true
+    },
+    enableSubscriptions: true
 }){
     constructor(
         @InjectQueryService(StockKeeping) readonly service: QueryService<StockKeeping>,
