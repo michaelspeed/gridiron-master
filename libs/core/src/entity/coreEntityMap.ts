@@ -50,6 +50,7 @@ import {StockMovement} from './stock-movement/stock-movement.entity';
 import {Sale} from './stock-movement/sale.entity';
 import {Zip} from './Zip/zip.entity';
 import {Menu} from './menu/menu.entity';
+import {Page} from "./pages/page.entity";
 
 export const coreEntityMap = {
     Address,
@@ -103,5 +104,6 @@ export const coreEntityMap = {
     Role,
     View,
     Zip,
-    Menu
+    Menu,
+    Page
 }

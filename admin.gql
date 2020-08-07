@@ -1594,6 +1594,30 @@ input MenuAggregateFilter {
   target: StringFieldComparison
 }
 
+type Page {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  title: String!
+  targetId: String!
+  single: String
+  list: [String!]
+  pageType: PageType!
+  pageCategory: PageCategory!
+}
+
+enum PageType {
+  LIST
+  SINGLE
+}
+
+enum PageCategory {
+  HOME
+  CATEGORY
+  SINGLEPROD
+  PRODVARIANT
+}
+
 type Country {
   id: ID!
   createdAt: DateTime!
@@ -4035,6 +4059,54 @@ type MenuChildrenAggregateResponse {
   max: MenuChildrenMaxAggregate
 }
 
+type PageDeleteResponse {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  title: String
+  targetId: String
+  single: String
+  list: [String!]
+  pageType: PageType
+  pageCategory: PageCategory
+}
+
+type PageCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  title: Int
+  targetId: Int
+  pageType: Int
+  pageCategory: Int
+}
+
+type PageMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  title: String
+  targetId: String
+  pageType: PageType
+  pageCategory: PageCategory
+}
+
+type PageMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  title: String
+  targetId: String
+  pageType: PageType
+  pageCategory: PageCategory
+}
+
+type PageAggregateResponse {
+  count: PageCountAggregate
+  min: PageMinAggregate
+  max: PageMaxAggregate
+}
+
 type Query {
   GetAdministratorData: Administrator!
   GetAllAdministrator(search: String): [Administrator!]!
@@ -4490,6 +4562,21 @@ type Query {
     filter: MenuAggregateFilter
   ): MenuAggregateResponse!
   GetMenuTree: MenuResponseTypes!
+  page(id: ID!): Page
+  pages(
+    """Limit or page results."""
+    paging: OffsetPaging = {limit: 10}
+
+    """Specify to filter the records returned."""
+    filter: PageFilter = {}
+
+    """Specify to sort results."""
+    sorting: [PageSort!] = []
+  ): [Page!]!
+  pageAggregate(
+    """Filter to find records to aggregate on"""
+    filter: PageAggregateFilter
+  ): PageAggregateResponse!
 }
 
 input AssetFilter {
@@ -4902,6 +4989,80 @@ input ZipAggregateFilter {
   code: NumberFieldComparison
 }
 
+input PageFilter {
+  and: [PageFilter!]
+  or: [PageFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  title: StringFieldComparison
+  targetId: StringFieldComparison
+  pageType: PageTypeFilterComparison
+  pageCategory: PageCategoryFilterComparison
+}
+
+input PageTypeFilterComparison {
+  is: Boolean
+  isNot: Boolean
+  eq: PageType
+  neq: PageType
+  gt: PageType
+  gte: PageType
+  lt: PageType
+  lte: PageType
+  like: PageType
+  notLike: PageType
+  iLike: PageType
+  notILike: PageType
+  in: [PageType!]
+  notIn: [PageType!]
+}
+
+input PageCategoryFilterComparison {
+  is: Boolean
+  isNot: Boolean
+  eq: PageCategory
+  neq: PageCategory
+  gt: PageCategory
+  gte: PageCategory
+  lt: PageCategory
+  lte: PageCategory
+  like: PageCategory
+  notLike: PageCategory
+  iLike: PageCategory
+  notILike: PageCategory
+  in: [PageCategory!]
+  notIn: [PageCategory!]
+}
+
+input PageSort {
+  field: PageSortFields!
+  direction: SortDirection!
+  nulls: SortNulls
+}
+
+enum PageSortFields {
+  id
+  createdAt
+  updatedAt
+  title
+  targetId
+  pageType
+  pageCategory
+}
+
+input PageAggregateFilter {
+  and: [PageAggregateFilter!]
+  or: [PageAggregateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  title: StringFieldComparison
+  targetId: StringFieldComparison
+  pageType: PageTypeFilterComparison
+  pageCategory: PageCategoryFilterComparison
+}
+
 type Mutation {
   administratorLogin(password: String!, email: String!): AdministratorDto!
   createAdministrator(type: AdministratorEnum!, phone: String!, email: String!, lname: String!, fname: String!): Administrator!
@@ -5191,6 +5352,12 @@ type Mutation {
   addChildrenToMenu(input: RelationsInput!): Menu!
   setParentOnMenu(input: RelationInput!): Menu!
   CreateMenuChildNode(target: String!, targetId: String!, title: String!, nodeId: ID!): Menu!
+  deleteOnePage(input: DeleteOneInput!): PageDeleteResponse!
+  deleteManyPages(input: DeleteManyPagesInput!): DeleteManyResponse!
+  updateOnePage(input: UpdateOnePageInput!): Page!
+  updateManyPages(input: UpdateManyPagesInput!): UpdateManyResponse!
+  createOnePage(input: CreateOnePageInput!): Page!
+  createManyPages(input: CreateManyPagesInput!): [Page!]!
 }
 
 input RelationsInput {
@@ -6851,6 +7018,85 @@ input CreateManyMenusInput {
   menus: [CreateMenu!]!
 }
 
+input DeleteManyPagesInput {
+  """Filter to find records to delete"""
+  filter: PageDeleteFilter!
+}
+
+input PageDeleteFilter {
+  and: [PageDeleteFilter!]
+  or: [PageDeleteFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  title: StringFieldComparison
+  targetId: StringFieldComparison
+  pageType: PageTypeFilterComparison
+  pageCategory: PageCategoryFilterComparison
+}
+
+input UpdateOnePageInput {
+  """The id of the record to update"""
+  id: ID!
+
+  """The update to apply."""
+  update: UpdatePage!
+}
+
+input UpdatePage {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  title: String
+  targetId: String
+  single: String
+  list: [String!]
+  pageType: PageType
+  pageCategory: PageCategory
+}
+
+input UpdateManyPagesInput {
+  """Filter used to find fields to update"""
+  filter: PageUpdateFilter!
+
+  """The update to apply to all records found using the filter"""
+  update: UpdatePage!
+}
+
+input PageUpdateFilter {
+  and: [PageUpdateFilter!]
+  or: [PageUpdateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  title: StringFieldComparison
+  targetId: StringFieldComparison
+  pageType: PageTypeFilterComparison
+  pageCategory: PageCategoryFilterComparison
+}
+
+input CreateOnePageInput {
+  """The record to create"""
+  page: CreatePage!
+}
+
+input CreatePage {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  title: String
+  targetId: String
+  single: String
+  list: [String!]
+  pageType: PageType
+  pageCategory: PageCategory
+}
+
+input CreateManyPagesInput {
+  """Array of records to create"""
+  pages: [CreatePage!]!
+}
+
 type Subscription {
   deletedOneAsset(input: DeleteOneAssetSubscriptionFilterInput): AssetDeleteResponse!
   deletedManyAssets: DeleteManyResponse!
@@ -6997,6 +7243,11 @@ type Subscription {
   updatedOneMenu(input: UpdateOneMenuSubscriptionFilterInput): Menu!
   updatedManyMenus: UpdateManyResponse!
   createdMenu(input: CreateMenuSubscriptionFilterInput): Menu!
+  deletedOnePage(input: DeleteOnePageSubscriptionFilterInput): PageDeleteResponse!
+  deletedManyPages: DeleteManyResponse!
+  updatedOnePage(input: UpdateOnePageSubscriptionFilterInput): Page!
+  updatedManyPages: UpdateManyResponse!
+  createdPage(input: CreatePageSubscriptionFilterInput): Page!
 }
 
 input DeleteOneAssetSubscriptionFilterInput {
@@ -7751,4 +8002,31 @@ input UpdateOneMenuSubscriptionFilterInput {
 input CreateMenuSubscriptionFilterInput {
   """Specify to filter the records returned."""
   filter: MenuSubscriptionFilter!
+}
+
+input DeleteOnePageSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: PageSubscriptionFilter!
+}
+
+input PageSubscriptionFilter {
+  and: [PageSubscriptionFilter!]
+  or: [PageSubscriptionFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  title: StringFieldComparison
+  targetId: StringFieldComparison
+  pageType: PageTypeFilterComparison
+  pageCategory: PageCategoryFilterComparison
+}
+
+input UpdateOnePageSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: PageSubscriptionFilter!
+}
+
+input CreatePageSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: PageSubscriptionFilter!
 }

@@ -57,12 +57,18 @@ export class AdministratorResolver {
     ): Promise<Administrator> {
         return new Promise(async (resolve, reject) => {
             const auth = context.req.headers.authorization;
-            const token = auth.split(' ')[1];
-            const admin: any = this.jwtService.decode(token)
-            const master = await this.administratorService.getAdministratorById(admin.adminId)
-            console.log(master)
-            if (master) {
-                resolve(master)
+            if (auth) {
+                const token = auth.split(' ')[1];
+                const admin: any = this.jwtService.decode(token)
+                const master = await this.administratorService.getAdministratorById(admin.adminId)
+                console.log(master)
+                if (master) {
+                    resolve(master)
+                } else {
+                    reject('Unauthorized!')
+                }
+            } else {
+                reject('Unauthorized!')
             }
         })
     }

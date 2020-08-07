@@ -42,6 +42,7 @@ import {CancellationResolver} from './resolvers/admin/cancellation.resolver';
 import {OrderResolver} from './resolvers/admin/order.resolver';
 import {ZipResolver} from './resolvers/admin/zip.resolver';
 import {AdminMenuResolver} from './resolvers/admin/menu.resolver';
+import {PageResolver} from "./resolvers/admin/page.resolver";
 
 const adminResolvers = [
     AdministratorResolver,
@@ -75,7 +76,8 @@ const adminResolvers = [
     CancellationResolver,
     OrderResolver,
     ZipResolver,
-    AdminMenuResolver
+    AdminMenuResolver,
+    PageResolver
 ]
 
 const shopResolvers = [

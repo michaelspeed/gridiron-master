@@ -37,9 +37,13 @@ export class VendorResolver extends CRUDResolver(Vendor, {
         @Context() context
     ): Promise<Vendor | null> {
         const auth = context.req.headers.authorization;
-        const token = auth.split(' ')[1];
-        const admin: any = this.jwtService.decode(token)
-        return this.vendorService.findOneVendor(admin.userId)
+        if (auth) {
+            const token = auth.split(' ')[1];
+            const admin: any = this.jwtService.decode(token)
+            return this.vendorService.findOneVendor(admin.userId)
+        } else {
+            return new Promise((resolve, reject) => {reject('Unauthorized')})
+        }
     }
 
     @Mutation(() => VendorDto)

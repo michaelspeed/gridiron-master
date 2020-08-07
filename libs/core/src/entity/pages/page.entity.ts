@@ -1,0 +1,54 @@
+import {BaseEntity, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn} from "typeorm";
+import {FilterableField} from "@nestjs-query/query-graphql";
+import {Field, ID, ObjectType, registerEnumType} from "@nestjs/graphql";
+import {PageCategory, PageType} from "../../enums";
+
+registerEnumType(PageType, {
+    name: 'PageType'
+})
+
+registerEnumType(PageCategory, {
+    name: 'PageCategory'
+})
+
+@ObjectType('Page')
+@Entity('page')
+export class Page extends BaseEntity {
+
+    @FilterableField(() => ID)
+    @PrimaryGeneratedColumn('uuid')
+    id: string;
+
+    @FilterableField()
+    @CreateDateColumn()
+    createdAt: Date;
+
+    @FilterableField()
+    @UpdateDateColumn()
+    updatedAt: Date;
+
+    @FilterableField()
+    @Column()
+    title: string
+
+    @FilterableField()
+    @Column()
+    targetId: string
+
+    @Field({nullable: true})
+    @Column({nullable: true})
+    single: string
+
+    @Field(() => [String],{nullable: true})
+    @Column({nullable: true, type: "simple-array"})
+    list: string[]
+
+    @FilterableField(type => PageType)
+    @Column({enum: PageType, type: "enum", default: PageType.LIST})
+    pageType: PageType
+
+    @FilterableField(type => PageCategory)
+    @Column({enum: PageCategory, type: "enum", default: PageCategory.HOME})
+    pageCategory: PageCategory
+
+}
