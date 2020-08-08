@@ -1,11 +1,12 @@
 import {BaseEntity, Column, CreateDateColumn, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn} from 'typeorm';
 import {Field, ID, ObjectType} from '@nestjs/graphql';
 import {FilterableField, PagingStrategies, Relation} from '@nestjs-query/query-graphql';
-import {Administrator, Cart, Vendor, View} from '..';
+import {Address, Administrator, Cart, Vendor, View} from '..';
 
 @ObjectType('User')
-@Relation('administrator', () => Administrator, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
-@Relation('vendor', () => Vendor, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
+@Relation('administrator', () => Administrator, {nullable: true})
+@Relation('vendor', () => Vendor, {nullable: true})
+@Relation('address', () => Address, {nullable: true})
 @Entity({name: 'user'})
 export class User extends BaseEntity {
 
@@ -33,21 +34,21 @@ export class User extends BaseEntity {
     @Column({ default: false })
     verified: boolean;
 
-    @FilterableField()
+    @FilterableField({nullable: true})
     @Column({ type: 'varchar', nullable: true })
-    verificationToken: string | null;
-
-    @FilterableField()
-    @Column({ type: 'varchar', nullable: true })
-    passwordResetToken: string | null;
-
-    @FilterableField()
-    @Column({ type: 'varchar', nullable: true })
-    identifierChangeToken: string | null;
+    verificationToken: string;
 
     @FilterableField({nullable: true})
     @Column({ type: 'varchar', nullable: true })
-    pendingIdentifier: string | null;
+    passwordResetToken: string;
+
+    @FilterableField({nullable: true})
+    @Column({ type: 'varchar', nullable: true })
+    identifierChangeToken: string;
+
+    @FilterableField({nullable: true})
+    @Column({ type: 'varchar', nullable: true })
+    pendingIdentifier: string;
 
     @FilterableField({nullable: true})
     @Column({ nullable: true })
@@ -55,19 +56,15 @@ export class User extends BaseEntity {
 
     @FilterableField({nullable: true})
     @Column({nullable: true})
-    firstName: string | null;
+    firstName: string;
 
     @FilterableField({nullable: true})
     @Column({nullable: true})
-    lastName: string | null;
+    lastName: string;
 
     @FilterableField()
     @Column()
     phoneNumber: string;
-
-    @FilterableField({nullable: true})
-    @Column({nullable: true})
-    address?: string;
 
     @Field(() => Administrator)
     @OneToOne(type => Administrator, ad => ad.user)
@@ -82,4 +79,7 @@ export class User extends BaseEntity {
 
     @OneToMany(() => View, view => view.user)
     view: View[]
+
+    @OneToMany(() => Address, add => add.user)
+    address: Address[]
 }

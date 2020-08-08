@@ -77,7 +77,7 @@ export class BillingAgreementService implements OnModuleInit {
     }
 
     findAgreementById(id: string): Promise<BillingAgreement> {
-        return this.connection.getRepository(BillingAgreement).findOne({where:{id}})
+        return this.connection.getRepository(BillingAgreement).findOne({where:{id}, relations: ['collection', 'collection.parent', 'request']})
     }
 
     findAgreementByVendor(vendorId: string) : Promise<BillingAgreement[]> {
@@ -128,7 +128,7 @@ export class BillingAgreementService implements OnModuleInit {
 
     updateBillingAgreementRequest(id, value): Promise<BillingAgreementRequest> {
         return new Promise<BillingAgreementRequest>(async (resolve, reject) => {
-            const billRequest = await this.connection.getRepository(BillingAgreementRequest).findOne({where:{id}})
+            const billRequest = await this.connection.getRepository(BillingAgreementRequest).findOne({where:{id}, relations: ['agreement']})
             billRequest.state = value
             if (value === BillingAgreementState.APPROVED) {
                 const billargee = await this.connection.getRepository(BillingAgreement).findOne({where:{id: billRequest.agreement.id}})

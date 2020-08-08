@@ -1,10 +1,17 @@
 import {BaseEntity, Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn} from 'typeorm';
 import {Country} from '../country/country.entity';
-import {ID, ObjectType} from '@nestjs/graphql';
-import {FilterableField} from '@nestjs-query/query-graphql';
+import {ID, ObjectType, registerEnumType} from '@nestjs/graphql';
+import {Connection, FilterableField, Relation} from '@nestjs-query/query-graphql';
+import {AddressType} from "../../enums/AddressType";
+import {User} from "@gridiron/core/entity";
+
+registerEnumType(AddressType, {
+    name: 'AddressType'
+})
 
 @ObjectType('Address')
 @Entity({name: 'address'})
+@Connection('user', () => User, {nullable: true})
 export class Address extends BaseEntity {
 
     @FilterableField(() => ID)
@@ -24,16 +31,8 @@ export class Address extends BaseEntity {
     fullName: string;
 
     @FilterableField()
-    @Column({ default: '' })
-    company: string;
-
-    @FilterableField()
-    @Column()
-    streetLine1: string;
-
-    @FilterableField()
-    @Column({ default: '' })
-    streetLine2: string;
+    @Column({type: "text"})
+    addressLine: string;
 
     @FilterableField()
     @Column({ default: '' })
@@ -41,7 +40,11 @@ export class Address extends BaseEntity {
 
     @FilterableField()
     @Column({ default: '' })
-    province: string;
+    state: string;
+
+    @FilterableField()
+    @Column({ default: '' })
+    landmark: string;
 
     @FilterableField()
     @Column({ default: '' })
@@ -55,11 +58,22 @@ export class Address extends BaseEntity {
     phoneNumber: string;
 
     @FilterableField()
+    @Column({ default: '' })
+    alternatePhoneNumber: string;
+
+    @FilterableField()
     @Column({ default: false })
     defaultShippingAddress: boolean;
 
     @FilterableField()
     @Column({ default: false })
     defaultBillingAddress: boolean;
+
+    @FilterableField(() => AddressType)
+    @Column({type: "enum", enum: AddressType, default: AddressType.HOME})
+    addressType: AddressType
+
+    @ManyToOne(() => User, use => use.address)
+    user: User
 
 }

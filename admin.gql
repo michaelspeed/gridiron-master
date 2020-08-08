@@ -658,17 +658,17 @@ type User {
   email: String!
   password: String!
   verified: Boolean!
-  verificationToken: String!
-  passwordResetToken: String!
-  identifierChangeToken: String!
+  verificationToken: String
+  passwordResetToken: String
+  identifierChangeToken: String
   pendingIdentifier: String
   lastLogin: String
   firstName: String
   lastName: String
   phoneNumber: String!
-  address: String
-  administrator: Administrator!
-  vendor: Vendor!
+  administrator: Administrator
+  vendor: Vendor
+  address: Address
 }
 
 type Vendor {
@@ -1686,6 +1686,117 @@ input ZoneAggregateFilter {
   name: StringFieldComparison
 }
 
+type Address {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  fullName: String!
+  addressLine: String!
+  city: String!
+  state: String!
+  landmark: String!
+  postalCode: String!
+  phoneNumber: String!
+  alternatePhoneNumber: String!
+  defaultShippingAddress: Boolean!
+  defaultBillingAddress: Boolean!
+  addressType: AddressType!
+  users(
+    """Limit or page results."""
+    paging: CursorPaging = {first: 10}
+
+    """Specify to filter the records returned."""
+    filter: UserFilter = {}
+
+    """Specify to sort results."""
+    sorting: [UserSort!] = []
+  ): AddressUsersConnection
+  usersAggregate(
+    """Filter to find records to aggregate on"""
+    filter: UserAggregateFilter
+  ): AddressUsersAggregateResponse!
+}
+
+enum AddressType {
+  HOME
+  WORK
+}
+
+input CursorPaging {
+  """Paginate before opaque cursor"""
+  before: ConnectionCursor
+
+  """Paginate after opaque cursor"""
+  after: ConnectionCursor
+
+  """Paginate first"""
+  first: Int
+
+  """Paginate last"""
+  last: Int
+}
+
+"""Cursor for paging through collections"""
+scalar ConnectionCursor
+
+input UserFilter {
+  and: [UserFilter!]
+  or: [UserFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  email: StringFieldComparison
+  verified: BooleanFieldComparison
+  verificationToken: StringFieldComparison
+  passwordResetToken: StringFieldComparison
+  identifierChangeToken: StringFieldComparison
+  pendingIdentifier: StringFieldComparison
+  lastLogin: StringFieldComparison
+  firstName: StringFieldComparison
+  lastName: StringFieldComparison
+  phoneNumber: StringFieldComparison
+}
+
+input UserSort {
+  field: UserSortFields!
+  direction: SortDirection!
+  nulls: SortNulls
+}
+
+enum UserSortFields {
+  id
+  createdAt
+  updatedAt
+  email
+  verified
+  verificationToken
+  passwordResetToken
+  identifierChangeToken
+  pendingIdentifier
+  lastLogin
+  firstName
+  lastName
+  phoneNumber
+}
+
+input UserAggregateFilter {
+  and: [UserAggregateFilter!]
+  or: [UserAggregateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  email: StringFieldComparison
+  verified: BooleanFieldComparison
+  verificationToken: StringFieldComparison
+  passwordResetToken: StringFieldComparison
+  identifierChangeToken: StringFieldComparison
+  pendingIdentifier: StringFieldComparison
+  lastLogin: StringFieldComparison
+  firstName: StringFieldComparison
+  lastName: StringFieldComparison
+  phoneNumber: StringFieldComparison
+}
+
 type AdministratorDto {
   user: User!
   token: String!
@@ -2380,6 +2491,77 @@ type TaxRateVariantsAggregateResponse {
   avg: TaxRateVariantsAvgAggregate
   min: TaxRateVariantsMinAggregate
   max: TaxRateVariantsMaxAggregate
+}
+
+type UserDeleteResponse {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  email: String
+  password: String
+  verified: Boolean
+  verificationToken: String
+  passwordResetToken: String
+  identifierChangeToken: String
+  pendingIdentifier: String
+  lastLogin: String
+  firstName: String
+  lastName: String
+  phoneNumber: String
+  administrator: Administrator
+  vendor: Vendor
+}
+
+type UserCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  email: Int
+  verified: Int
+  verificationToken: Int
+  passwordResetToken: Int
+  identifierChangeToken: Int
+  pendingIdentifier: Int
+  lastLogin: Int
+  firstName: Int
+  lastName: Int
+  phoneNumber: Int
+}
+
+type UserMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  email: String
+  verificationToken: String
+  passwordResetToken: String
+  identifierChangeToken: String
+  pendingIdentifier: String
+  lastLogin: String
+  firstName: String
+  lastName: String
+  phoneNumber: String
+}
+
+type UserMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  email: String
+  verificationToken: String
+  passwordResetToken: String
+  identifierChangeToken: String
+  pendingIdentifier: String
+  lastLogin: String
+  firstName: String
+  lastName: String
+  phoneNumber: String
+}
+
+type UserAggregateResponse {
+  count: UserCountAggregate
+  min: UserMinAggregate
+  max: UserMaxAggregate
 }
 
 type VendorDto {
@@ -4107,6 +4289,158 @@ type PageAggregateResponse {
   max: PageMaxAggregate
 }
 
+type AddressDeleteResponse {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  fullName: String
+  addressLine: String
+  city: String
+  state: String
+  landmark: String
+  postalCode: String
+  phoneNumber: String
+  alternatePhoneNumber: String
+  defaultShippingAddress: Boolean
+  defaultBillingAddress: Boolean
+  addressType: AddressType
+}
+
+type AddressCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  fullName: Int
+  addressLine: Int
+  city: Int
+  state: Int
+  landmark: Int
+  postalCode: Int
+  phoneNumber: Int
+  alternatePhoneNumber: Int
+  defaultShippingAddress: Int
+  defaultBillingAddress: Int
+  addressType: Int
+}
+
+type AddressMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  fullName: String
+  addressLine: String
+  city: String
+  state: String
+  landmark: String
+  postalCode: String
+  phoneNumber: String
+  alternatePhoneNumber: String
+  addressType: AddressType
+}
+
+type AddressMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  fullName: String
+  addressLine: String
+  city: String
+  state: String
+  landmark: String
+  postalCode: String
+  phoneNumber: String
+  alternatePhoneNumber: String
+  addressType: AddressType
+}
+
+type AddressAggregateResponse {
+  count: AddressCountAggregate
+  min: AddressMinAggregate
+  max: AddressMaxAggregate
+}
+
+type UserEdge {
+  """The node containing the User"""
+  node: User!
+
+  """Cursor for this node."""
+  cursor: ConnectionCursor!
+}
+
+type PageInfo {
+  """true if paging forward and there are more records."""
+  hasNextPage: Boolean
+
+  """true if paging backwards and there are more records."""
+  hasPreviousPage: Boolean
+
+  """The cursor of the first returned record."""
+  startCursor: ConnectionCursor
+
+  """The cursor of the last returned record."""
+  endCursor: ConnectionCursor
+}
+
+type AddressUsersConnection {
+  """Paging information"""
+  pageInfo: PageInfo!
+
+  """Array of edges."""
+  edges: [UserEdge!]!
+}
+
+type AddressUsersCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  email: Int
+  verified: Int
+  verificationToken: Int
+  passwordResetToken: Int
+  identifierChangeToken: Int
+  pendingIdentifier: Int
+  lastLogin: Int
+  firstName: Int
+  lastName: Int
+  phoneNumber: Int
+}
+
+type AddressUsersMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  email: String
+  verificationToken: String
+  passwordResetToken: String
+  identifierChangeToken: String
+  pendingIdentifier: String
+  lastLogin: String
+  firstName: String
+  lastName: String
+  phoneNumber: String
+}
+
+type AddressUsersMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  email: String
+  verificationToken: String
+  passwordResetToken: String
+  identifierChangeToken: String
+  pendingIdentifier: String
+  lastLogin: String
+  firstName: String
+  lastName: String
+  phoneNumber: String
+}
+
+type AddressUsersAggregateResponse {
+  count: AddressUsersCountAggregate
+  min: AddressUsersMinAggregate
+  max: AddressUsersMaxAggregate
+}
+
 type Query {
   GetAdministratorData: Administrator!
   GetAllAdministrator(search: String): [Administrator!]!
@@ -4219,6 +4553,21 @@ type Query {
   ): TaxRateAggregateResponse!
   GetAllTaxRates: [TaxRate!]!
   GetAllTaxCategory: [TaxCategory!]!
+  user(id: ID!): User
+  users(
+    """Limit or page results."""
+    paging: OffsetPaging = {limit: 10}
+
+    """Specify to filter the records returned."""
+    filter: UserFilter = {}
+
+    """Specify to sort results."""
+    sorting: [UserSort!] = []
+  ): [User!]!
+  userAggregate(
+    """Filter to find records to aggregate on"""
+    filter: UserAggregateFilter
+  ): UserAggregateResponse!
   GetCurrentUser: User!
   vendor(id: ID!): Vendor
   vendors(
@@ -4577,6 +4926,21 @@ type Query {
     """Filter to find records to aggregate on"""
     filter: PageAggregateFilter
   ): PageAggregateResponse!
+  address(id: ID!): Address
+  addresses(
+    """Limit or page results."""
+    paging: OffsetPaging = {limit: 10}
+
+    """Specify to filter the records returned."""
+    filter: AddressFilter = {}
+
+    """Specify to sort results."""
+    sorting: [AddressSort!] = []
+  ): [Address!]!
+  addressAggregate(
+    """Filter to find records to aggregate on"""
+    filter: AddressAggregateFilter
+  ): AddressAggregateResponse!
 }
 
 input AssetFilter {
@@ -5063,6 +5427,84 @@ input PageAggregateFilter {
   pageCategory: PageCategoryFilterComparison
 }
 
+input AddressFilter {
+  and: [AddressFilter!]
+  or: [AddressFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  fullName: StringFieldComparison
+  addressLine: StringFieldComparison
+  city: StringFieldComparison
+  state: StringFieldComparison
+  landmark: StringFieldComparison
+  postalCode: StringFieldComparison
+  phoneNumber: StringFieldComparison
+  alternatePhoneNumber: StringFieldComparison
+  defaultShippingAddress: BooleanFieldComparison
+  defaultBillingAddress: BooleanFieldComparison
+  addressType: AddressTypeFilterComparison
+}
+
+input AddressTypeFilterComparison {
+  is: Boolean
+  isNot: Boolean
+  eq: AddressType
+  neq: AddressType
+  gt: AddressType
+  gte: AddressType
+  lt: AddressType
+  lte: AddressType
+  like: AddressType
+  notLike: AddressType
+  iLike: AddressType
+  notILike: AddressType
+  in: [AddressType!]
+  notIn: [AddressType!]
+}
+
+input AddressSort {
+  field: AddressSortFields!
+  direction: SortDirection!
+  nulls: SortNulls
+}
+
+enum AddressSortFields {
+  id
+  createdAt
+  updatedAt
+  fullName
+  addressLine
+  city
+  state
+  landmark
+  postalCode
+  phoneNumber
+  alternatePhoneNumber
+  defaultShippingAddress
+  defaultBillingAddress
+  addressType
+}
+
+input AddressAggregateFilter {
+  and: [AddressAggregateFilter!]
+  or: [AddressAggregateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  fullName: StringFieldComparison
+  addressLine: StringFieldComparison
+  city: StringFieldComparison
+  state: StringFieldComparison
+  landmark: StringFieldComparison
+  postalCode: StringFieldComparison
+  phoneNumber: StringFieldComparison
+  alternatePhoneNumber: StringFieldComparison
+  defaultShippingAddress: BooleanFieldComparison
+  defaultBillingAddress: BooleanFieldComparison
+  addressType: AddressTypeFilterComparison
+}
+
 type Mutation {
   administratorLogin(password: String!, email: String!): AdministratorDto!
   createAdministrator(type: AdministratorEnum!, phone: String!, email: String!, lname: String!, fname: String!): Administrator!
@@ -5128,6 +5570,14 @@ type Mutation {
   addVariantsToTaxRate(input: RelationsInput!): TaxRate!
   setZoneOnTaxRate(input: RelationInput!): TaxRate!
   setCategoryOnTaxRate(input: RelationInput!): TaxRate!
+  deleteOneUser(input: DeleteOneInput!): UserDeleteResponse!
+  deleteManyUsers(input: DeleteManyUsersInput!): DeleteManyResponse!
+  removeAddressFromUser(input: RelationInput!): User!
+  removeVendorFromUser(input: RelationInput!): User!
+  removeAdministratorFromUser(input: RelationInput!): User!
+  setAddressOnUser(input: RelationInput!): User!
+  setVendorOnUser(input: RelationInput!): User!
+  setAdministratorOnUser(input: RelationInput!): User!
   removeStoreFromVendor(input: RelationInput!): Vendor!
   removeLicenseFromVendor(input: RelationInput!): Vendor!
   removeUserFromVendor(input: RelationInput!): Vendor!
@@ -5358,6 +5808,14 @@ type Mutation {
   updateManyPages(input: UpdateManyPagesInput!): UpdateManyResponse!
   createOnePage(input: CreateOnePageInput!): Page!
   createManyPages(input: CreateManyPagesInput!): [Page!]!
+  deleteOneAddress(input: DeleteOneInput!): AddressDeleteResponse!
+  deleteManyAddresses(input: DeleteManyAddressesInput!): DeleteManyResponse!
+  updateOneAddress(input: UpdateOneAddressInput!): Address!
+  updateManyAddresses(input: UpdateManyAddressesInput!): UpdateManyResponse!
+  createOneAddress(input: CreateOneAddressInput!): Address!
+  createManyAddresses(input: CreateManyAddressesInput!): [Address!]!
+  removeUsersFromAddress(input: RelationsInput!): Address!
+  addUsersToAddress(input: RelationsInput!): Address!
 }
 
 input RelationsInput {
@@ -5779,6 +6237,29 @@ input CreateTaxRate {
 input CreateManyTaxRatesInput {
   """Array of records to create"""
   taxRates: [CreateTaxRate!]!
+}
+
+input DeleteManyUsersInput {
+  """Filter to find records to delete"""
+  filter: UserDeleteFilter!
+}
+
+input UserDeleteFilter {
+  and: [UserDeleteFilter!]
+  or: [UserDeleteFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  email: StringFieldComparison
+  verified: BooleanFieldComparison
+  verificationToken: StringFieldComparison
+  passwordResetToken: StringFieldComparison
+  identifierChangeToken: StringFieldComparison
+  pendingIdentifier: StringFieldComparison
+  lastLogin: StringFieldComparison
+  firstName: StringFieldComparison
+  lastName: StringFieldComparison
+  phoneNumber: StringFieldComparison
 }
 
 input DeleteManyZonesInput {
@@ -7097,6 +7578,109 @@ input CreateManyPagesInput {
   pages: [CreatePage!]!
 }
 
+input DeleteManyAddressesInput {
+  """Filter to find records to delete"""
+  filter: AddressDeleteFilter!
+}
+
+input AddressDeleteFilter {
+  and: [AddressDeleteFilter!]
+  or: [AddressDeleteFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  fullName: StringFieldComparison
+  addressLine: StringFieldComparison
+  city: StringFieldComparison
+  state: StringFieldComparison
+  landmark: StringFieldComparison
+  postalCode: StringFieldComparison
+  phoneNumber: StringFieldComparison
+  alternatePhoneNumber: StringFieldComparison
+  defaultShippingAddress: BooleanFieldComparison
+  defaultBillingAddress: BooleanFieldComparison
+  addressType: AddressTypeFilterComparison
+}
+
+input UpdateOneAddressInput {
+  """The id of the record to update"""
+  id: ID!
+
+  """The update to apply."""
+  update: UpdateAddress!
+}
+
+input UpdateAddress {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  fullName: String
+  addressLine: String
+  city: String
+  state: String
+  landmark: String
+  postalCode: String
+  phoneNumber: String
+  alternatePhoneNumber: String
+  defaultShippingAddress: Boolean
+  defaultBillingAddress: Boolean
+  addressType: AddressType
+}
+
+input UpdateManyAddressesInput {
+  """Filter used to find fields to update"""
+  filter: AddressUpdateFilter!
+
+  """The update to apply to all records found using the filter"""
+  update: UpdateAddress!
+}
+
+input AddressUpdateFilter {
+  and: [AddressUpdateFilter!]
+  or: [AddressUpdateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  fullName: StringFieldComparison
+  addressLine: StringFieldComparison
+  city: StringFieldComparison
+  state: StringFieldComparison
+  landmark: StringFieldComparison
+  postalCode: StringFieldComparison
+  phoneNumber: StringFieldComparison
+  alternatePhoneNumber: StringFieldComparison
+  defaultShippingAddress: BooleanFieldComparison
+  defaultBillingAddress: BooleanFieldComparison
+  addressType: AddressTypeFilterComparison
+}
+
+input CreateOneAddressInput {
+  """The record to create"""
+  address: CreateAddress!
+}
+
+input CreateAddress {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  fullName: String
+  addressLine: String
+  city: String
+  state: String
+  landmark: String
+  postalCode: String
+  phoneNumber: String
+  alternatePhoneNumber: String
+  defaultShippingAddress: Boolean
+  defaultBillingAddress: Boolean
+  addressType: AddressType
+}
+
+input CreateManyAddressesInput {
+  """Array of records to create"""
+  addresses: [CreateAddress!]!
+}
+
 type Subscription {
   deletedOneAsset(input: DeleteOneAssetSubscriptionFilterInput): AssetDeleteResponse!
   deletedManyAssets: DeleteManyResponse!
@@ -7133,6 +7717,11 @@ type Subscription {
   updatedOneTaxRate(input: UpdateOneTaxRateSubscriptionFilterInput): TaxRate!
   updatedManyTaxRates: UpdateManyResponse!
   createdTaxRate(input: CreateTaxRateSubscriptionFilterInput): TaxRate!
+  deletedOneUser(input: DeleteOneUserSubscriptionFilterInput): UserDeleteResponse!
+  deletedManyUsers: DeleteManyResponse!
+  updatedOneUser(input: UpdateOneUserSubscriptionFilterInput): User!
+  updatedManyUsers: UpdateManyResponse!
+  createdUser(input: CreateUserSubscriptionFilterInput): User!
   deletedOneVendor(input: DeleteOneVendorSubscriptionFilterInput): VendorDeleteResponse!
   deletedManyVendors: DeleteManyResponse!
   updatedOneVendor(input: UpdateOneVendorSubscriptionFilterInput): Vendor!
@@ -7248,6 +7837,11 @@ type Subscription {
   updatedOnePage(input: UpdateOnePageSubscriptionFilterInput): Page!
   updatedManyPages: UpdateManyResponse!
   createdPage(input: CreatePageSubscriptionFilterInput): Page!
+  deletedOneAddress(input: DeleteOneAddressSubscriptionFilterInput): AddressDeleteResponse!
+  deletedManyAddresses: DeleteManyResponse!
+  updatedOneAddress(input: UpdateOneAddressSubscriptionFilterInput): Address!
+  updatedManyAddresses: UpdateManyResponse!
+  createdAddress(input: CreateAddressSubscriptionFilterInput): Address!
 }
 
 input DeleteOneAssetSubscriptionFilterInput {
@@ -7444,6 +8038,39 @@ input UpdateOneTaxRateSubscriptionFilterInput {
 input CreateTaxRateSubscriptionFilterInput {
   """Specify to filter the records returned."""
   filter: TaxRateSubscriptionFilter!
+}
+
+input DeleteOneUserSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: UserSubscriptionFilter!
+}
+
+input UserSubscriptionFilter {
+  and: [UserSubscriptionFilter!]
+  or: [UserSubscriptionFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  email: StringFieldComparison
+  verified: BooleanFieldComparison
+  verificationToken: StringFieldComparison
+  passwordResetToken: StringFieldComparison
+  identifierChangeToken: StringFieldComparison
+  pendingIdentifier: StringFieldComparison
+  lastLogin: StringFieldComparison
+  firstName: StringFieldComparison
+  lastName: StringFieldComparison
+  phoneNumber: StringFieldComparison
+}
+
+input UpdateOneUserSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: UserSubscriptionFilter!
+}
+
+input CreateUserSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: UserSubscriptionFilter!
 }
 
 input DeleteOneVendorSubscriptionFilterInput {
@@ -8029,4 +8656,38 @@ input UpdateOnePageSubscriptionFilterInput {
 input CreatePageSubscriptionFilterInput {
   """Specify to filter the records returned."""
   filter: PageSubscriptionFilter!
+}
+
+input DeleteOneAddressSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: AddressSubscriptionFilter!
+}
+
+input AddressSubscriptionFilter {
+  and: [AddressSubscriptionFilter!]
+  or: [AddressSubscriptionFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  fullName: StringFieldComparison
+  addressLine: StringFieldComparison
+  city: StringFieldComparison
+  state: StringFieldComparison
+  landmark: StringFieldComparison
+  postalCode: StringFieldComparison
+  phoneNumber: StringFieldComparison
+  alternatePhoneNumber: StringFieldComparison
+  defaultShippingAddress: BooleanFieldComparison
+  defaultBillingAddress: BooleanFieldComparison
+  addressType: AddressTypeFilterComparison
+}
+
+input UpdateOneAddressSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: AddressSubscriptionFilter!
+}
+
+input CreateAddressSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: AddressSubscriptionFilter!
 }
