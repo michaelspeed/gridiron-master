@@ -13,7 +13,13 @@ export class ProductVariantResolver extends CRUDResolver(ProductVariant, {
     aggregate: {
         enabled: true
     },
-    enableSubscriptions: true
+    enableSubscriptions: true,
+    create: {
+        disabled: true
+    },
+    update: {
+        disabled: true
+    }
 }){
     constructor(
         @InjectQueryService(ProductVariant) readonly service: QueryService<ProductVariant>,

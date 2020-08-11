@@ -1,12 +1,23 @@
-import {BaseEntity, Column, CreateDateColumn, Entity, ManyToOne, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn} from 'typeorm';
+import {
+    BaseEntity,
+    Column,
+    CreateDateColumn,
+    Entity,
+    ManyToOne,
+    OneToMany,
+    OneToOne,
+    PrimaryGeneratedColumn,
+    UpdateDateColumn
+} from 'typeorm';
 import {ID, ObjectType} from '@nestjs/graphql';
-import {FilterableField, PagingStrategies, Relation} from '@nestjs-query/query-graphql';
-import {ProductVariant, TaxRate} from '../';
+import {FilterableField, FilterableRelation, PagingStrategies, Relation} from '@nestjs-query/query-graphql';
+import {ProductVariant, Store, TaxRate} from '../';
 
 @ObjectType('ProductVariantPrice')
 @Entity({name: 'productVariantPrice'})
-@Relation('variant', () => ProductVariant, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
+@FilterableRelation('variant', () => ProductVariant, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @Relation('tax', () => TaxRate, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
+@Relation('store', () => TaxRate, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 export class ProductVariantPrice extends BaseEntity {
 
     @FilterableField(() => ID)
@@ -32,7 +43,10 @@ export class ProductVariantPrice extends BaseEntity {
     @ManyToOne(type => TaxRate, tax => tax.variants)
     tax: TaxRate
 
-    @OneToOne(type => ProductVariant, variant => variant.price)
+    @ManyToOne(type => ProductVariant, variant => variant.price)
     variant: ProductVariant
+
+    @ManyToOne(type => Store, store => store.prices)
+    store: Store
     
 }

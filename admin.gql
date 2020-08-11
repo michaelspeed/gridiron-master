@@ -668,6 +668,7 @@ type User {
   phoneNumber: String!
   administrator: Administrator
   vendor: Vendor
+  delivery: Delivery!
   address: Address
 }
 
@@ -774,6 +775,21 @@ input ProductVariantPriceFilter {
   updatedAt: DateFieldComparison
   price: NumberFieldComparison
   taxIncluded: BooleanFieldComparison
+  variant: ProductVariantPriceFilterProductVariantFilter
+}
+
+input ProductVariantPriceFilterProductVariantFilter {
+  and: [ProductVariantPriceFilterProductVariantFilter!]
+  or: [ProductVariantPriceFilterProductVariantFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
+  dum_price: NumberFieldComparison
+  enabled: BooleanFieldComparison
+  sku: StringFieldComparison
+  name: StringFieldComparison
+  trackInventory: BooleanFieldComparison
 }
 
 input ProductVariantPriceSort {
@@ -944,6 +960,31 @@ input StoreAggregateFilter {
   channelMarkets: BooleanFieldComparison
 }
 
+type StoreBalance {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  balance: Float!
+}
+
+type Settlements {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  amount: Float!
+  taxamount: Float!
+  finalamount: Float!
+  transactionID: String!
+  remarks: String!
+  type: SettlementType!
+  store: Store!
+}
+
+enum SettlementType {
+  PROCESSING
+  PROCESSED
+}
+
 type Store {
   id: ID!
   createdAt: DateTime!
@@ -959,6 +1000,26 @@ type Store {
   rentalStore: Boolean!
   channelMarkets: Boolean!
   type: StoreTypeEnum!
+  prices(
+    """Limit or page results."""
+    paging: OffsetPaging = {limit: 10}
+
+    """Specify to filter the records returned."""
+    filter: SettlementsFilter = {}
+
+    """Specify to sort results."""
+    sorting: [SettlementsSort!] = []
+  ): [Settlements!]!
+  settlements(
+    """Limit or page results."""
+    paging: OffsetPaging = {limit: 10}
+
+    """Specify to filter the records returned."""
+    filter: SettlementsFilter = {}
+
+    """Specify to sort results."""
+    sorting: [SettlementsSort!] = []
+  ): [Settlements!]!
   skus(
     """Limit or page results."""
     paging: OffsetPaging = {limit: 10}
@@ -969,7 +1030,16 @@ type Store {
     """Specify to sort results."""
     sorting: [StockKeepingSort!] = []
   ): [StockKeeping!]!
+  balance: StoreBalance!
   country: Country!
+  pricesAggregate(
+    """Filter to find records to aggregate on"""
+    filter: SettlementsAggregateFilter
+  ): StorePricesAggregateResponse!
+  settlementsAggregate(
+    """Filter to find records to aggregate on"""
+    filter: SettlementsAggregateFilter
+  ): StoreSettlementsAggregateResponse!
   skusAggregate(
     """Filter to find records to aggregate on"""
     filter: StockKeepingAggregateFilter
@@ -979,6 +1049,55 @@ type Store {
 enum StoreTypeEnum {
   DEFAULT
   VENDOR
+}
+
+input SettlementsFilter {
+  and: [SettlementsFilter!]
+  or: [SettlementsFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  amount: NumberFieldComparison
+  taxamount: NumberFieldComparison
+  finalamount: NumberFieldComparison
+  transactionID: StringFieldComparison
+  remarks: StringFieldComparison
+  type: SettlementTypeFilterComparison
+}
+
+input SettlementTypeFilterComparison {
+  is: Boolean
+  isNot: Boolean
+  eq: SettlementType
+  neq: SettlementType
+  gt: SettlementType
+  gte: SettlementType
+  lt: SettlementType
+  lte: SettlementType
+  like: SettlementType
+  notLike: SettlementType
+  iLike: SettlementType
+  notILike: SettlementType
+  in: [SettlementType!]
+  notIn: [SettlementType!]
+}
+
+input SettlementsSort {
+  field: SettlementsSortFields!
+  direction: SortDirection!
+  nulls: SortNulls
+}
+
+enum SettlementsSortFields {
+  id
+  createdAt
+  updatedAt
+  amount
+  taxamount
+  finalamount
+  transactionID
+  remarks
+  type
 }
 
 input StockKeepingFilter {
@@ -1015,6 +1134,20 @@ enum StockKeepingSortFields {
   stockstatus
   sku
   type
+}
+
+input SettlementsAggregateFilter {
+  and: [SettlementsAggregateFilter!]
+  or: [SettlementsAggregateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  amount: NumberFieldComparison
+  taxamount: NumberFieldComparison
+  finalamount: NumberFieldComparison
+  transactionID: StringFieldComparison
+  remarks: StringFieldComparison
+  type: SettlementTypeFilterComparison
 }
 
 input StockKeepingAggregateFilter {
@@ -1281,15 +1414,28 @@ type ProductVariant {
     """Specify to sort results."""
     sorting: [StockKeepingSort!] = []
   ): [StockKeeping!]!
+  prices(
+    """Limit or page results."""
+    paging: OffsetPaging = {limit: 10}
+
+    """Specify to filter the records returned."""
+    filter: ProductVariantPriceFilter = {}
+
+    """Specify to sort results."""
+    sorting: [ProductVariantPriceSort!] = []
+  ): [ProductVariantPrice!]
   seo: Seo
   specs: ProductVariantSpecs
-  price: ProductVariantPrice
   asset: ProductVariantAsset
   product: Product!
   stocksAggregate(
     """Filter to find records to aggregate on"""
     filter: StockKeepingAggregateFilter
   ): ProductVariantStocksAggregateResponse!
+  pricesAggregate(
+    """Filter to find records to aggregate on"""
+    filter: ProductVariantPriceAggregateFilter
+  ): ProductVariantPricesAggregateResponse!
 }
 
 type ProductVariantAsset {
@@ -1306,6 +1452,7 @@ type ProductVariantPrice {
   updatedAt: DateTime!
   price: Float!
   taxIncluded: Boolean!
+  store: TaxRate!
   tax: TaxRate!
   variant: ProductVariant!
 }
@@ -1600,7 +1747,7 @@ type Page {
   updatedAt: DateTime!
   title: String!
   targetId: String!
-  single: String
+  single: JSON
   list: [String!]
   pageType: PageType!
   pageCategory: PageCategory!
@@ -1616,6 +1763,13 @@ enum PageCategory {
   CATEGORY
   SINGLEPROD
   PRODVARIANT
+}
+
+type Delivery {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  user: User!
 }
 
 type Country {
@@ -2274,6 +2428,118 @@ type StoreAggregateResponse {
   max: StoreMaxAggregate
 }
 
+type StorePricesCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  amount: Int
+  taxamount: Int
+  finalamount: Int
+  transactionID: Int
+  remarks: Int
+  type: Int
+}
+
+type StorePricesSumAggregate {
+  amount: Float
+  taxamount: Float
+  finalamount: Float
+}
+
+type StorePricesAvgAggregate {
+  amount: Float
+  taxamount: Float
+  finalamount: Float
+}
+
+type StorePricesMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  amount: Float
+  taxamount: Float
+  finalamount: Float
+  transactionID: String
+  remarks: String
+  type: SettlementType
+}
+
+type StorePricesMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  amount: Float
+  taxamount: Float
+  finalamount: Float
+  transactionID: String
+  remarks: String
+  type: SettlementType
+}
+
+type StorePricesAggregateResponse {
+  count: StorePricesCountAggregate
+  sum: StorePricesSumAggregate
+  avg: StorePricesAvgAggregate
+  min: StorePricesMinAggregate
+  max: StorePricesMaxAggregate
+}
+
+type StoreSettlementsCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  amount: Int
+  taxamount: Int
+  finalamount: Int
+  transactionID: Int
+  remarks: Int
+  type: Int
+}
+
+type StoreSettlementsSumAggregate {
+  amount: Float
+  taxamount: Float
+  finalamount: Float
+}
+
+type StoreSettlementsAvgAggregate {
+  amount: Float
+  taxamount: Float
+  finalamount: Float
+}
+
+type StoreSettlementsMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  amount: Float
+  taxamount: Float
+  finalamount: Float
+  transactionID: String
+  remarks: String
+  type: SettlementType
+}
+
+type StoreSettlementsMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  amount: Float
+  taxamount: Float
+  finalamount: Float
+  transactionID: String
+  remarks: String
+  type: SettlementType
+}
+
+type StoreSettlementsAggregateResponse {
+  count: StoreSettlementsCountAggregate
+  sum: StoreSettlementsSumAggregate
+  avg: StoreSettlementsAvgAggregate
+  min: StoreSettlementsMinAggregate
+  max: StoreSettlementsMaxAggregate
+}
+
 type StoreSkusCountAggregate {
   id: Int
   createdAt: Int
@@ -2510,6 +2776,7 @@ type UserDeleteResponse {
   phoneNumber: String
   administrator: Administrator
   vendor: Vendor
+  delivery: Delivery
 }
 
 type UserCountAggregate {
@@ -3377,6 +3644,44 @@ type ProductVariantStocksAggregateResponse {
   avg: ProductVariantStocksAvgAggregate
   min: ProductVariantStocksMinAggregate
   max: ProductVariantStocksMaxAggregate
+}
+
+type ProductVariantPricesCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  price: Int
+  taxIncluded: Int
+}
+
+type ProductVariantPricesSumAggregate {
+  price: Float
+}
+
+type ProductVariantPricesAvgAggregate {
+  price: Float
+}
+
+type ProductVariantPricesMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  price: Float
+}
+
+type ProductVariantPricesMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  price: Float
+}
+
+type ProductVariantPricesAggregateResponse {
+  count: ProductVariantPricesCountAggregate
+  sum: ProductVariantPricesSumAggregate
+  avg: ProductVariantPricesAvgAggregate
+  min: ProductVariantPricesMinAggregate
+  max: ProductVariantPricesMaxAggregate
 }
 
 type ProductOptionDeleteResponse {
@@ -4247,7 +4552,7 @@ type PageDeleteResponse {
   updatedAt: DateTime
   title: String
   targetId: String
-  single: String
+  single: JSON
   list: [String!]
   pageType: PageType
   pageCategory: PageCategory
@@ -4439,6 +4744,74 @@ type AddressUsersAggregateResponse {
   count: AddressUsersCountAggregate
   min: AddressUsersMinAggregate
   max: AddressUsersMaxAggregate
+}
+
+type SettlementsDeleteResponse {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  amount: Float
+  taxamount: Float
+  finalamount: Float
+  transactionID: String
+  remarks: String
+  type: SettlementType
+}
+
+type SettlementsCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  amount: Int
+  taxamount: Int
+  finalamount: Int
+  transactionID: Int
+  remarks: Int
+  type: Int
+}
+
+type SettlementsSumAggregate {
+  amount: Float
+  taxamount: Float
+  finalamount: Float
+}
+
+type SettlementsAvgAggregate {
+  amount: Float
+  taxamount: Float
+  finalamount: Float
+}
+
+type SettlementsMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  amount: Float
+  taxamount: Float
+  finalamount: Float
+  transactionID: String
+  remarks: String
+  type: SettlementType
+}
+
+type SettlementsMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  amount: Float
+  taxamount: Float
+  finalamount: Float
+  transactionID: String
+  remarks: String
+  type: SettlementType
+}
+
+type SettlementsAggregateResponse {
+  count: SettlementsCountAggregate
+  sum: SettlementsSumAggregate
+  avg: SettlementsAvgAggregate
+  min: SettlementsMinAggregate
+  max: SettlementsMaxAggregate
 }
 
 type Query {
@@ -4738,6 +5111,7 @@ type Query {
     """Filter to find records to aggregate on"""
     filter: ProductVariantPriceAggregateFilter
   ): ProductVariantPriceAggregateResponse!
+  GetPriceForVariant(prodId: ID, storeId: ID): ProductVariantPrice
   productVariantAsset(id: ID!): ProductVariantAsset
   productVariantAssets(
     """Limit or page results."""
@@ -4926,6 +5300,7 @@ type Query {
     """Filter to find records to aggregate on"""
     filter: PageAggregateFilter
   ): PageAggregateResponse!
+  getHomePage: Page!
   address(id: ID!): Address
   addresses(
     """Limit or page results."""
@@ -4941,6 +5316,20 @@ type Query {
     """Filter to find records to aggregate on"""
     filter: AddressAggregateFilter
   ): AddressAggregateResponse!
+  settlements(
+    """Limit or page results."""
+    paging: OffsetPaging = {limit: 10}
+
+    """Specify to filter the records returned."""
+    filter: SettlementsFilter = {}
+
+    """Specify to sort results."""
+    sorting: [SettlementsSort!] = []
+  ): [Settlements!]!
+  settlementsAggregate(
+    """Filter to find records to aggregate on"""
+    filter: SettlementsAggregateFilter
+  ): SettlementsAggregateResponse!
 }
 
 input AssetFilter {
@@ -5545,9 +5934,15 @@ type Mutation {
   updateManyStores(input: UpdateManyStoresInput!): UpdateManyResponse!
   createOneStore(input: CreateOneStoreInput!): Store!
   createManyStores(input: CreateManyStoresInput!): [Store!]!
+  removePricesFromStore(input: RelationsInput!): Store!
+  removeSettlementsFromStore(input: RelationsInput!): Store!
   removeSkusFromStore(input: RelationsInput!): Store!
+  removeBalanceFromStore(input: RelationInput!): Store!
   removeCountryFromStore(input: RelationInput!): Store!
+  addPricesToStore(input: RelationsInput!): Store!
+  addSettlementsToStore(input: RelationsInput!): Store!
   addSkusToStore(input: RelationsInput!): Store!
+  setBalanceOnStore(input: RelationInput!): Store!
   setCountryOnStore(input: RelationInput!): Store!
   CreateDefaultStore(countryId: String!, zipcode: String!, streetAddress2: String!, streetAddress1: String!, GSTIN: String!, officialemail: String!, phoneNumber: String!, storeName: String!): Store!
   deleteOneTaxCategory(input: DeleteOneInput!): TaxCategoryDeleteResponse!
@@ -5664,20 +6059,16 @@ type Mutation {
   updateProduct(facet: [String!]!, asset: [String!]!, featured: String!, id: ID!, desc: String!, name: String!): Product!
   deleteOneProductVariant(input: DeleteOneInput!): ProductVariantDeleteResponse!
   deleteManyProductVariants(input: DeleteManyProductVariantsInput!): DeleteManyResponse!
-  updateOneProductVariant(input: UpdateOneProductVariantInput!): ProductVariant!
-  updateManyProductVariants(input: UpdateManyProductVariantsInput!): UpdateManyResponse!
-  createOneProductVariant(input: CreateOneProductVariantInput!): ProductVariant!
-  createManyProductVariants(input: CreateManyProductVariantsInput!): [ProductVariant!]!
   removeStocksFromProductVariant(input: RelationsInput!): ProductVariant!
+  removePricesFromProductVariant(input: RelationsInput!): ProductVariant!
   removeSeoFromProductVariant(input: RelationInput!): ProductVariant!
   removeSpecsFromProductVariant(input: RelationInput!): ProductVariant!
-  removePriceFromProductVariant(input: RelationInput!): ProductVariant!
   removeAssetFromProductVariant(input: RelationInput!): ProductVariant!
   removeProductFromProductVariant(input: RelationInput!): ProductVariant!
   addStocksToProductVariant(input: RelationsInput!): ProductVariant!
+  addPricesToProductVariant(input: RelationsInput!): ProductVariant!
   setSeoOnProductVariant(input: RelationInput!): ProductVariant!
   setSpecsOnProductVariant(input: RelationInput!): ProductVariant!
-  setPriceOnProductVariant(input: RelationInput!): ProductVariant!
   setAssetOnProductVariant(input: RelationInput!): ProductVariant!
   setProductOnProductVariant(input: RelationInput!): ProductVariant!
   CreateProductVariants(options: String!, prodId: ID!): [ProductVariant!]!
@@ -5709,11 +6100,13 @@ type Mutation {
   updateManyProductVariantPrices(input: UpdateManyProductVariantPricesInput!): UpdateManyResponse!
   createOneProductVariantPrice(input: CreateOneProductVariantPriceInput!): ProductVariantPrice!
   createManyProductVariantPrices(input: CreateManyProductVariantPricesInput!): [ProductVariantPrice!]!
+  removeStoreFromProductVariantPrice(input: RelationInput!): ProductVariantPrice!
   removeTaxFromProductVariantPrice(input: RelationInput!): ProductVariantPrice!
   removeVariantFromProductVariantPrice(input: RelationInput!): ProductVariantPrice!
+  setStoreOnProductVariantPrice(input: RelationInput!): ProductVariantPrice!
   setTaxOnProductVariantPrice(input: RelationInput!): ProductVariantPrice!
   setVariantOnProductVariantPrice(input: RelationInput!): ProductVariantPrice!
-  CreateVariantPrice(taxIncluded: Boolean!, taxId: ID!, price: Float!, variantId: ID!): ProductVariantPrice!
+  CreateVariantPrice(storeId: ID, taxIncluded: Boolean!, taxId: ID!, price: Float!, variantId: ID!): ProductVariantPrice!
   UpdateVariantPrice(taxIncluded: Boolean!, taxId: ID!, price: Float!, variantPriceId: ID!): ProductVariantPrice!
   removeAssetFromProductVariantAsset(input: RelationInput!): ProductVariantAsset!
   removeVariantFromProductVariantAsset(input: RelationInput!): ProductVariantAsset!
@@ -5816,6 +6209,8 @@ type Mutation {
   createManyAddresses(input: CreateManyAddressesInput!): [Address!]!
   removeUsersFromAddress(input: RelationsInput!): Address!
   addUsersToAddress(input: RelationsInput!): Address!
+  removeStoreFromSettlements(input: RelationInput!): Settlements!
+  setStoreOnSettlements(input: RelationInput!): Settlements!
 }
 
 input RelationsInput {
@@ -6695,70 +7090,6 @@ input ProductVariantDeleteFilter {
   trackInventory: BooleanFieldComparison
 }
 
-input UpdateOneProductVariantInput {
-  """The id of the record to update"""
-  id: ID!
-
-  """The update to apply."""
-  update: UpdateProductVariant!
-}
-
-input UpdateProductVariant {
-  id: ID
-  createdAt: DateTime
-  updatedAt: DateTime
-  deletedAt: DateTime
-  dum_price: Float
-  enabled: Boolean
-  sku: String
-  name: String
-  trackInventory: Boolean
-}
-
-input UpdateManyProductVariantsInput {
-  """Filter used to find fields to update"""
-  filter: ProductVariantUpdateFilter!
-
-  """The update to apply to all records found using the filter"""
-  update: UpdateProductVariant!
-}
-
-input ProductVariantUpdateFilter {
-  and: [ProductVariantUpdateFilter!]
-  or: [ProductVariantUpdateFilter!]
-  id: IDFilterComparison
-  createdAt: DateFieldComparison
-  updatedAt: DateFieldComparison
-  deletedAt: DateFieldComparison
-  dum_price: NumberFieldComparison
-  enabled: BooleanFieldComparison
-  sku: StringFieldComparison
-  name: StringFieldComparison
-  trackInventory: BooleanFieldComparison
-}
-
-input CreateOneProductVariantInput {
-  """The record to create"""
-  productVariant: CreateProductVariant!
-}
-
-input CreateProductVariant {
-  id: ID
-  createdAt: DateTime
-  updatedAt: DateTime
-  deletedAt: DateTime
-  dum_price: Float
-  enabled: Boolean
-  sku: String
-  name: String
-  trackInventory: Boolean
-}
-
-input CreateManyProductVariantsInput {
-  """Array of records to create"""
-  productVariants: [CreateProductVariant!]!
-}
-
 input DeleteManyProductOptionsInput {
   """Filter to find records to delete"""
   filter: ProductOptionDeleteFilter!
@@ -7530,7 +7861,7 @@ input UpdatePage {
   updatedAt: DateTime
   title: String
   targetId: String
-  single: String
+  single: JSON
   list: [String!]
   pageType: PageType
   pageCategory: PageCategory
@@ -7567,7 +7898,7 @@ input CreatePage {
   updatedAt: DateTime
   title: String
   targetId: String
-  single: String
+  single: JSON
   list: [String!]
   pageType: PageType
   pageCategory: PageCategory
@@ -7842,6 +8173,11 @@ type Subscription {
   updatedOneAddress(input: UpdateOneAddressSubscriptionFilterInput): Address!
   updatedManyAddresses: UpdateManyResponse!
   createdAddress(input: CreateAddressSubscriptionFilterInput): Address!
+  deletedOneSettlements(input: DeleteOneSettlementsSubscriptionFilterInput): SettlementsDeleteResponse!
+  deletedManySettlements: DeleteManyResponse!
+  updatedOneSettlements(input: UpdateOneSettlementsSubscriptionFilterInput): Settlements!
+  updatedManySettlements: UpdateManyResponse!
+  createdSettlements(input: CreateSettlementsSubscriptionFilterInput): Settlements!
 }
 
 input DeleteOneAssetSubscriptionFilterInput {
@@ -8690,4 +9026,33 @@ input UpdateOneAddressSubscriptionFilterInput {
 input CreateAddressSubscriptionFilterInput {
   """Specify to filter the records returned."""
   filter: AddressSubscriptionFilter!
+}
+
+input DeleteOneSettlementsSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: SettlementsSubscriptionFilter!
+}
+
+input SettlementsSubscriptionFilter {
+  and: [SettlementsSubscriptionFilter!]
+  or: [SettlementsSubscriptionFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  amount: NumberFieldComparison
+  taxamount: NumberFieldComparison
+  finalamount: NumberFieldComparison
+  transactionID: StringFieldComparison
+  remarks: StringFieldComparison
+  type: SettlementTypeFilterComparison
+}
+
+input UpdateOneSettlementsSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: SettlementsSubscriptionFilter!
+}
+
+input CreateSettlementsSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: SettlementsSubscriptionFilter!
 }

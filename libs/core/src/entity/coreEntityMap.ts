@@ -51,6 +51,10 @@ import {Sale} from './stock-movement/sale.entity';
 import {Zip} from './Zip/zip.entity';
 import {Menu} from './menu/menu.entity';
 import {Page} from "./pages/page.entity";
+import {StoreBalance} from "./Store/storeBalance.entity";
+import {Settlements} from "./settlement/settlement.entity";
+import {Delivery} from "./delivery/delivery.entity";
+import {DeliveryPool} from "./delivery/delivery-pool.entity";
 
 export const coreEntityMap = {
     Address,
@@ -105,5 +109,9 @@ export const coreEntityMap = {
     View,
     Zip,
     Menu,
-    Page
+    Page,
+    StoreBalance,
+    Settlements,
+    Delivery,
+    DeliveryPool
 }

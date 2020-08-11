@@ -1,6 +1,11 @@
 import {BaseEntity, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn} from 'typeorm';
-import {ID, ObjectType} from '@nestjs/graphql';
+import {ID, ObjectType, registerEnumType} from '@nestjs/graphql';
 import {FilterableField} from '@nestjs-query/query-graphql';
+import {ShippingMethodsEnum} from "../../enums/ShippingMethods";
+
+registerEnumType(ShippingMethodsEnum, {
+    name: 'ShippingMethodsEnum'
+})
 
 @ObjectType('ShippingMethod')
 @Entity({name: 'shippingMethod'})
@@ -22,8 +27,8 @@ export class ShippingMethod extends BaseEntity {
     deletedAt: Date | null;
 
     @FilterableField()
-    @Column() 
-    code: string;
+    @Column({type: "enum", enum: ShippingMethodsEnum, default: ShippingMethodsEnum.DEFAULT})
+    code: ShippingMethodsEnum;
 
     @FilterableField()
     @Column() 

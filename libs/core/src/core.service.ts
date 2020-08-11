@@ -1,5 +1,5 @@
 import {Injectable, OnModuleInit} from '@nestjs/common';
-import {Administrator, Country, Role, User} from './entity';
+import {Administrator, Country, Role, Store, StoreBalance, User} from './entity';
 import {CountryCode, Permission, RoleType} from './enums';
 import * as bcrypt from 'bcrypt';
 
@@ -10,6 +10,7 @@ export class CoreService implements OnModuleInit {
     }
 
     async onMasterInit() {
+        // await this.startStoreBalance()
         await this.startInitialSetup()
         await this.startCountryData()
         await this.startRolesData()
@@ -92,6 +93,22 @@ export class CoreService implements OnModuleInit {
                 role.description = 'User Role'
                 await role.save()
             }
+        })
+    }
+
+    async startStoreBalance(): Promise<any> {
+        return new Promise(async (resolve, reject) => {
+            const allStore = await Store.find({relations: ['balance']})
+            console.log(allStore)
+            for (let store of allStore) {
+                if (!store.balance) {
+                    const bal = new StoreBalance()
+                    bal.balance = 0
+                    bal.store = store
+                    await bal.save()
+                }
+            }
+            resolve()
         })
     }
 }

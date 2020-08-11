@@ -29,6 +29,7 @@ import {StocksService} from './services/admin/stocks.service';
 import {ZipService} from './services/admin/zip.service';
 import {ZipSubscriber} from './services/subscribers/ZipSubscriber';
 import {AdminMenuService} from './services/admin/menu.service';
+import {PageService} from "./services/admin/page.service";
 
 export const adminServices = [
     AdministratorService,
@@ -50,7 +51,8 @@ export const adminServices = [
     SeoService,
     StocksService,
     ZipService,
-    AdminMenuService
+    AdminMenuService,
+    PageService
 ]
 
 export const globalServices = [

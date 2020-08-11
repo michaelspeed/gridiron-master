@@ -1,4 +1,4 @@
-import {Args, Float, ID, Mutation, Resolver} from '@nestjs/graphql';
+import {Args, Float, ID, Mutation, Query, Resolver} from '@nestjs/graphql';
 import {ProductVariantPrice} from '../../../entity';
 import {CRUDResolver, PagingStrategies} from '@nestjs-query/query-graphql';
 import {InjectQueryService, QueryService} from '@nestjs-query/core';
@@ -26,8 +26,9 @@ export class ProductVariantPriceResolver extends CRUDResolver(ProductVariantPric
         @Args('price', {type: () => Float}) price: number,
         @Args('taxId', {type: () => ID}) taxId: string,
         @Args('taxIncluded', {type: () => Boolean}) included: boolean,
+        @Args('storeId', {type: () => ID, nullable: true}) storeId: string,
     ): Promise<ProductVariantPrice> {
-        return this.productVariantsService.createProductVariantPrice(variantId, price, taxId, included)
+        return this.productVariantsService.createProductVariantPrice(variantId, price, taxId, included, storeId)
     }
 
     @Mutation(() => ProductVariantPrice)
@@ -38,5 +39,13 @@ export class ProductVariantPriceResolver extends CRUDResolver(ProductVariantPric
         @Args('taxIncluded', {type: () => Boolean}) included: boolean,
     ): Promise<ProductVariantPrice> {
         return this.productVariantsService.updateProductVariantPrice(variantPriceId, price, taxId, included)
+    }
+
+    @Query(() => ProductVariantPrice, {nullable: true})
+    async GetPriceForVariant(
+        @Args('storeId', {type: () => ID, nullable: true}) storeId: string,
+        @Args('prodId', {type: () => ID, nullable: true}) prodId: string,
+    ): Promise<ProductVariantPrice> {
+        return this.productVariantsService.getProductVariantPrice(prodId, storeId)
     }
 }

@@ -2,6 +2,7 @@ import {BaseEntity, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, Up
 import {FilterableField} from "@nestjs-query/query-graphql";
 import {Field, ID, ObjectType, registerEnumType} from "@nestjs/graphql";
 import {PageCategory, PageType} from "../../enums";
+import GraphQLJSON from "graphql-type-json";
 
 registerEnumType(PageType, {
     name: 'PageType'
@@ -28,15 +29,15 @@ export class Page extends BaseEntity {
     updatedAt: Date;
 
     @FilterableField()
-    @Column()
+    @Column({default: ''})
     title: string
 
     @FilterableField()
-    @Column()
+    @Column({default: ''})
     targetId: string
 
-    @Field({nullable: true})
-    @Column({nullable: true})
+    @Field(() => GraphQLJSON, {nullable: true})
+    @Column({nullable: true, type: "simple-json"})
     single: string
 
     @Field(() => [String],{nullable: true})

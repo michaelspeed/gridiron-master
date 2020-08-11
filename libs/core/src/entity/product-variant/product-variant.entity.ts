@@ -11,7 +11,13 @@ import {
     UpdateDateColumn
 } from 'typeorm';
 import {ID, ObjectType} from '@nestjs/graphql';
-import {Connection, FilterableField, PagingStrategies, Relation} from '@nestjs-query/query-graphql';
+import {
+    Connection,
+    FilterableConnection,
+    FilterableField,
+    PagingStrategies,
+    Relation
+} from '@nestjs-query/query-graphql';
 import {Product, ProductOption, ProductVariantAsset, ProductVariantPrice, ProductVariantSpecifications, Seo, View} from '../';
 import {StockKeeping} from '@gridiron/core/entity/stock-movement/stock-keeping.entity';
 
@@ -19,7 +25,7 @@ import {StockKeeping} from '@gridiron/core/entity/stock-movement/stock-keeping.e
 @Entity({name: 'productVariant'})
 @Relation('product', () => Product, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @Relation('asset', () => ProductVariantAsset, {nullable: true, pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
-@Relation('price', () => ProductVariantPrice, {nullable: true, pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
+@Connection('price', () => ProductVariantPrice, {nullable: true, pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true, allowFiltering: false})
 @Relation('specs', () => ProductVariantSpecifications, {nullable: true, pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @Relation('seo', () => Seo, {nullable: true, pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @Connection('stock', () => StockKeeping, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
@@ -66,9 +72,8 @@ export class ProductVariant extends BaseEntity {
     @OneToOne(type => ProductVariantAsset, prod => prod.variant)
     asset: ProductVariantAsset
 
-    @OneToOne(type => ProductVariantPrice, price => price.price)
-    @JoinColumn()
-    price: ProductVariantPrice
+    @OneToMany(type => ProductVariantPrice, price => price.price)
+    price: ProductVariantPrice[]
 
     @OneToOne(type => ProductVariantSpecifications, specs => specs.variant)
     @JoinColumn()

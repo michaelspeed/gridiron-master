@@ -45,5 +45,4 @@ export class Vendor extends BaseEntity {
     @OneToOne(type => VendorLicense)
     @JoinColumn()
     license: VendorLicense
-
 }

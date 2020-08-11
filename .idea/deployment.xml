@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PublishConfigData" serverName="oncall-linode">
+    <serverData>
+      <paths name="oncall-linode">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/root/gridadmin" local="$PROJECT_DIR$/../gridiron-admin-view" web="/" />
+            <mapping deploy="/root/airecommerce" local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+    </serverData>
+  </component>
+</project>

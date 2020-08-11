@@ -3,7 +3,7 @@ import {
     BaseEntity,
     Column,
     CreateDateColumn,
-    Entity,
+    Entity, JoinColumn,
     ManyToOne,
     OneToMany,
     OneToOne,
@@ -11,7 +11,9 @@ import {
     UpdateDateColumn
 } from 'typeorm';
 import {Connection, FilterableField, PagingStrategies, Relation} from '@nestjs-query/query-graphql';
-import {BillingAgreement, Country, StockKeeping, TaxCategory, Vendor, Zone} from '..';
+import {BillingAgreement, Country, ProductVariantPrice, StockKeeping, TaxCategory, Vendor, Zone} from '..';
+import {StoreBalance} from "./storeBalance.entity";
+import {Settlements} from "../settlement/settlement.entity";
 
 export enum StoreTypeEnum {
     DEFAULT = 'default',
@@ -24,7 +26,10 @@ registerEnumType(StoreTypeEnum, {
 
 @ObjectType('Store')
 @Relation('country', () => Country, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
+@Relation('balance', () => StoreBalance, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @Connection('sku', () => StockKeeping, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
+@Connection('settlement', () => Settlements, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
+@Connection('prices', () => Settlements, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @Entity({name: 'store'})
 export class Store extends BaseEntity {
     @FilterableField(() => ID)
@@ -95,9 +100,19 @@ export class Store extends BaseEntity {
     @OneToOne(type1 => Vendor, vendor => vendor.store)
     vendor: Vendor
 
+    @OneToOne(type1 => StoreBalance, balance => balance.store)
+    @JoinColumn()
+    balance: StoreBalance
+
     @OneToMany(type1 => BillingAgreement, agreement => agreement.store)
     agreement: BillingAgreement[]
 
     @OneToMany(() => StockKeeping, sku => sku.store)
     sku: StockKeeping[]
+
+    @OneToMany(() => Settlements, settle => settle.store)
+    settlement: Settlements[]
+
+    @OneToMany(() => ProductVariantPrice, price => price.store)
+    prices: ProductVariantPrice[]
 }

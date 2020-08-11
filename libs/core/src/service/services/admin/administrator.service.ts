@@ -70,14 +70,14 @@ export class AdministratorService {
 
     async getAllAdministrators(name?: string): Promise<Administrator[]> {
         return this.connection.getRepository(Administrator).find({
-            where: [
+            /*where: [
                 {
-                    firstName: Like(`%${name} %`)
+                    firstName: Like(`%${name !== undefined && name} %`)
                 },
                 {
-                    lastName: Like(`%${name} %`)
+                    lastName: Like(`%${name !== undefined && name} %`)
                 }
-            ]
+            ]*/
         })
     }
 

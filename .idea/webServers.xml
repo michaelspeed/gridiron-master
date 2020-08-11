@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="1ab647c7-6509-4837-8512-5f548e3b8b99" name="oncall-linode">
+        <fileTransfer accessType="SFTP" host="45.118.132.119" port="22" sshConfigId="68e60bb8-2ee5-407c-a384-f3f48b2bf782" sshConfig="root@45.118.132.119:22 password">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

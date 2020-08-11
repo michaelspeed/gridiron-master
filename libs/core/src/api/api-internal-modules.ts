@@ -44,6 +44,7 @@ import {ZipResolver} from './resolvers/admin/zip.resolver';
 import {AdminMenuResolver} from './resolvers/admin/menu.resolver';
 import {PageResolver} from "./resolvers/admin/page.resolver";
 import {AddressResolver} from "./resolvers/admin/address.resolver";
+import {SettlementsResolver} from "./resolvers/admin/settlements.resolver";
 
 const adminResolvers = [
     AdministratorResolver,
@@ -79,7 +80,8 @@ const adminResolvers = [
     ZipResolver,
     AdminMenuResolver,
     PageResolver,
-    AddressResolver
+    AddressResolver,
+    SettlementsResolver
 ]
 
 const shopResolvers = [

@@ -1,7 +1,7 @@
 import {BaseEntity, Column, CreateDateColumn, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn} from 'typeorm';
 import {Field, ID, ObjectType} from '@nestjs/graphql';
 import {FilterableField, PagingStrategies, Relation} from '@nestjs-query/query-graphql';
-import {Address, Administrator, Cart, Vendor, View} from '..';
+import {Address, Administrator, Cart, Delivery, Vendor, View} from '..';
 
 @ObjectType('User')
 @Relation('administrator', () => Administrator, {nullable: true})
@@ -73,6 +73,10 @@ export class User extends BaseEntity {
     @Field(() => Vendor)
     @OneToOne(type => Vendor, vendor => vendor.user)
     vendor: Vendor
+
+    @Field(() => Delivery)
+    @OneToOne(type => Delivery, delivery => delivery.user)
+    delivery: Delivery
 
     @OneToOne(() => Cart, cart => cart.user)
     cart: Cart
