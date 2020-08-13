@@ -30,6 +30,8 @@ import {ZipService} from './services/admin/zip.service';
 import {ZipSubscriber} from './services/subscribers/ZipSubscriber';
 import {AdminMenuService} from './services/admin/menu.service';
 import {PageService} from "./services/admin/page.service";
+import {ShopCollectionService} from "./services/shop/collection.service";
+import {ShopPagesService} from "./services/shop/pages.service";
 
 export const adminServices = [
     AdministratorService,
@@ -60,7 +62,9 @@ export const globalServices = [
 ]
 
 export const shopServices = [
-    MenuService
+    MenuService,
+    ShopCollectionService,
+    ShopPagesService
 ]
 
 let defaultTypeOrmModule: DynamicModule;
