@@ -1,5 +1,5 @@
 import {BaseEntity, Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn} from 'typeorm';
-import {ID, ObjectType} from '@nestjs/graphql';
+import {Field, ID, ObjectType} from '@nestjs/graphql';
 import {Connection, FilterableField, PagingStrategies, Relation} from '@nestjs-query/query-graphql';
 import {Product, ProductOption} from '../';
 
@@ -28,9 +28,11 @@ export class ProductOptionGroup extends BaseEntity {
     @Column()
     code: string;
 
+    @Field(() => Product)
     @ManyToOne(type => Product, prod => prod.options)
     product: Product
 
+    @Field(() => [ProductOption])
     @OneToMany(type => ProductOption, options => options.group)
     options: ProductOption[]
 }

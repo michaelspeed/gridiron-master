@@ -222,12 +222,22 @@ type ProductVariantPrice {
   store: Store!
 }
 
+type ProductOption {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  name: String!
+  code: String!
+}
+
 type ProductOptionGroup {
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
   name: String!
   code: String!
+  product: Product!
+  options: [ProductOption!]!
 }
 
 type ProductVariantSpecs {

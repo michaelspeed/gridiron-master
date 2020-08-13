@@ -14,6 +14,9 @@ export class ShopProductsService {
             {where: {id},
                 relations: [
                     'product',
+                    'product.options',
+                    'product.options.options',
+                    'product.variants',
                     'product.collection',
                     'product.collection.seo',
                     'product.featuredAsset',
@@ -25,7 +28,8 @@ export class ShopProductsService {
                     'asset.asset',
                     'specs',
                     'seo',
-                    'stock'
+                    'stock',
+                    'price'
                 ]}
             )
     }
