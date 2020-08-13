@@ -47,6 +47,7 @@ import {AddressResolver} from "./resolvers/admin/address.resolver";
 import {SettlementsResolver} from "./resolvers/admin/settlements.resolver";
 import {ShopCollectionResolver} from "./resolvers/shop/collection.resolver";
 import {ShopPageResolver} from "./resolvers/shop/page.resolver";
+import {ShopProductVariantResolver} from "./resolvers/shop/productVariant.resolver";
 
 const adminResolvers = [
     AdministratorResolver,
@@ -89,7 +90,8 @@ const adminResolvers = [
 const shopResolvers = [
     MenuResolver,
     ShopCollectionResolver,
-    ShopPageResolver
+    ShopPageResolver,
+    ShopProductVariantResolver
 ]
 
 @Module({

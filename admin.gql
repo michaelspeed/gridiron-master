@@ -23,6 +23,26 @@ enum AdministratorEnum {
   STAFF
 }
 
+type Asset {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  name: String!
+  type: String!
+  mimeType: String!
+  width: Float!
+  height: Float!
+  fileSize: Float!
+  source: String!
+  preview: String!
+  focalPoint: JSONObject!
+}
+
+"""
+The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSONObject @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
+
 type Collection {
   id: ID!
   createdAt: DateTime!
@@ -33,6 +53,42 @@ type Collection {
   isPrivate: Boolean!
   name: String!
   description: String!
+  children: [Collection!]!
+  products: [Product!]!
+  seo: Seo!
+}
+
+type Facet {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  name: String!
+  isPrivate: Boolean!
+  code: String!
+}
+
+type FacetValue {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  code: String!
+  product: [Product!]!
+  facet: Facet!
+}
+
+type Product {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  productName: String!
+  slug: String!
+  description: String!
+  collection: Collection
+  options: [ProductOptionGroup!]!
+  featuredAsset: Asset!
+  facets: [FacetValue!]!
+  assets: [ProductAsset!]
+  variants: [ProductVariant!]!
 }
 
 type User {
@@ -64,6 +120,15 @@ type Vendor {
   email: String!
 }
 
+type TaxRate {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  name: String!
+  value: Float!
+  enabled: Boolean!
+}
+
 type Store {
   id: ID!
   createdAt: DateTime!
@@ -85,6 +150,98 @@ enum StoreTypeEnum {
   DEFAULT
   VENDOR
 }
+
+type Seo {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  urlKey: String!
+  metatitle: String!
+  metakeywords: [String!]
+  metadesc: String!
+}
+
+type ProductAsset {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  product: Product!
+  asset: Asset!
+}
+
+type StockKeeping {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  quantity: Float!
+  available_quantity: Float!
+  threshold: Float!
+  multiple: Boolean!
+  backorder: Boolean!
+  stockstatus: Boolean!
+  sku: String!
+  type: String!
+  variant: ProductVariant!
+}
+
+type ProductVariant {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  dum_price: Float!
+  enabled: Boolean!
+  sku: String!
+  name: String!
+  product: Product!
+  trackInventory: Boolean!
+  asset: ProductVariantAsset!
+  price: [ProductVariantPrice!]
+  specs: ProductVariantSpecs!
+  seo: Seo
+  stock: [StockKeeping!]!
+}
+
+type ProductVariantAsset {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  asset: Asset!
+  variant: ProductVariant!
+}
+
+type ProductVariantPrice {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  price: Float!
+  taxIncluded: Boolean!
+  tax: TaxRate!
+  variant: ProductVariant!
+  store: Store!
+}
+
+type ProductOptionGroup {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  name: String!
+  code: String!
+}
+
+type ProductVariantSpecs {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  specs: JSON!
+  variant: ProductVariant!
+}
+
+"""
+The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
 
 type BillingAgreementRequest {
   id: ID!
@@ -111,11 +268,6 @@ type Page {
   pageType: PageType!
   pageCategory: PageCategory!
 }
-
-"""
-The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
-"""
-scalar JSON @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
 
 enum PageType {
   LIST
@@ -2210,4 +2362,5 @@ type Query {
   GetMenu: MenuResponseTypes!
   getAllCollection: [Collection!]!
   getHomePage: Page!
+  getSingleProductVariant(id: ID!): ProductVariant!
 }

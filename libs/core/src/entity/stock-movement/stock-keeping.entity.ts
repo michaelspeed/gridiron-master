@@ -1,4 +1,4 @@
-import {ID, ObjectType, registerEnumType} from '@nestjs/graphql';
+import {Field, ID, ObjectType, registerEnumType} from '@nestjs/graphql';
 import {BaseEntity, Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn} from 'typeorm';
 import {Connection, FilterableField, PagingStrategies, Relation} from '@nestjs-query/query-graphql';
 import {Cancellation, ProductVariant, Sale, StockMovement, Store,} from '..';
@@ -60,6 +60,7 @@ export class StockKeeping extends BaseEntity {
     @Column({enum: StockKeepingType, type: 'enum', default: StockKeepingType.VENDOR})
     type: StockKeepingType
 
+    @Field(() => ProductVariant)
     @ManyToOne(() => ProductVariant, variant => variant.stock)
     variant: ProductVariant
 

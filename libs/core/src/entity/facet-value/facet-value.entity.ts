@@ -1,5 +1,5 @@
 import {BaseEntity, Column, CreateDateColumn, Entity, ManyToMany, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn} from 'typeorm';
-import {ID, ObjectType} from '@nestjs/graphql';
+import {Field, ID, ObjectType} from '@nestjs/graphql';
 import {Connection, FilterableField, PagingStrategies, Relation} from '@nestjs-query/query-graphql';
 import {Facet} from '../facet/facet.entity';
 import {Product} from '../';
@@ -25,9 +25,11 @@ export class FacetValue extends BaseEntity {
     @Column() 
     code: string;
 
+    @Field(() => [Product])
     @ManyToMany(type => Product, prod => prod.facets)
     product: Product[]
 
+    @Field(() => Facet)
     @ManyToOne(type => Facet, fac => fac.values)
     facet: Facet
     

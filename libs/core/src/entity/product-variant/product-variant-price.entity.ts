@@ -9,7 +9,7 @@ import {
     PrimaryGeneratedColumn,
     UpdateDateColumn
 } from 'typeorm';
-import {ID, ObjectType} from '@nestjs/graphql';
+import {Field, ID, ObjectType} from '@nestjs/graphql';
 import {FilterableField, FilterableRelation, PagingStrategies, Relation} from '@nestjs-query/query-graphql';
 import {ProductVariant, Store, TaxRate} from '../';
 
@@ -40,12 +40,15 @@ export class ProductVariantPrice extends BaseEntity {
     @Column()
     taxIncluded: boolean;
 
+    @Field(() => TaxRate)
     @ManyToOne(type => TaxRate, tax => tax.variants)
     tax: TaxRate
 
+    @Field(() => ProductVariant)
     @ManyToOne(type => ProductVariant, variant => variant.price)
     variant: ProductVariant
 
+    @Field(() => Store)
     @ManyToOne(type => Store, store => store.prices)
     store: Store
     

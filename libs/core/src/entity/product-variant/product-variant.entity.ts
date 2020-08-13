@@ -10,7 +10,7 @@ import {
     PrimaryGeneratedColumn,
     UpdateDateColumn
 } from 'typeorm';
-import {ID, ObjectType} from '@nestjs/graphql';
+import {Field, ID, ObjectType} from '@nestjs/graphql';
 import {
     Connection,
     FilterableConnection,
@@ -62,6 +62,7 @@ export class ProductVariant extends BaseEntity {
     @Column()
     name: string;
 
+    @Field(() => Product)
     @ManyToOne(type => Product, prod => prod.variants)
     product: Product
 
@@ -69,12 +70,15 @@ export class ProductVariant extends BaseEntity {
     @Column({default: true})
     trackInventory: boolean;
 
+    @Field(() => ProductVariantAsset)
     @OneToOne(type => ProductVariantAsset, prod => prod.variant)
     asset: ProductVariantAsset
 
+    @Field(() => [ProductVariantPrice], {nullable: true})
     @OneToMany(type => ProductVariantPrice, price => price.price)
     price: ProductVariantPrice[]
 
+    @Field(() => ProductVariantSpecifications)
     @OneToOne(type => ProductVariantSpecifications, specs => specs.variant)
     @JoinColumn()
     specs: ProductVariantSpecifications
@@ -82,9 +86,11 @@ export class ProductVariant extends BaseEntity {
     @OneToMany(type => View, view => view.variant)
     view: View[]
 
+    @Field(() => Seo,{nullable: true})
     @OneToOne(type => Seo, seo => seo.variant)
     seo: Seo
 
+    @Field(() => [StockKeeping])
     @OneToMany(() => StockKeeping, keeping => keeping.variant)
     stock: StockKeeping[]
 }
