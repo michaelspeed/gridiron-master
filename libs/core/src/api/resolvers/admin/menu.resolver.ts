@@ -16,7 +16,7 @@ export class AdminMenuResolver extends CRUDResolver(Menu, {
 }){
     constructor(
         @InjectQueryService(Menu) readonly service: QueryService<Menu>,
-        private adminMenuService: AdminMenuService
+            private adminMenuService: AdminMenuService
     ) {
         super(service);
     }

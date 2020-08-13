@@ -1,6 +1,7 @@
 import {Query, Resolver} from '@nestjs/graphql';
 import {Collection} from '../../../entity';
 import {MenuService} from '../../../service';
+import {MenuResponseTypes} from "../../dto/admin/menu-response.types";
 
 @Resolver(of => Collection)
 export class MenuResolver {
@@ -9,8 +10,8 @@ export class MenuResolver {
     ) {
     }
 
-    @Query(() => [Collection])
-    async GetMenu(): Promise<Collection[]> {
-        return this.menuService.GetCollectionTree()
+    @Query(() => MenuResponseTypes)
+    async GetMenu(): Promise<MenuResponseTypes> {
+        return this.menuService.GetMenuTree()
     }
 }

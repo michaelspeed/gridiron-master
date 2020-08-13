@@ -1626,6 +1626,10 @@ type VendorLicenseMaxAggregate {
   tenureEnd: DateTime
 }
 
+type MenuResponseTypes {
+  menu: String!
+}
+
 type StockKeepingCountAggregate {
   id: Int
   createdAt: Int
@@ -2186,5 +2190,5 @@ type SettlementsMaxAggregate {
 }
 
 type Query {
-  GetMenu: [Collection!]!
+  GetMenu: MenuResponseTypes!
 }
