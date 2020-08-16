@@ -1,6 +1,6 @@
 import {BaseEntity, Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn} from 'typeorm';
 import {Country} from '../country/country.entity';
-import {ID, ObjectType, registerEnumType} from '@nestjs/graphql';
+import {Field, ID, ObjectType, registerEnumType} from '@nestjs/graphql';
 import {Connection, FilterableField, Relation} from '@nestjs-query/query-graphql';
 import {AddressType} from "../../enums/AddressType";
 import {User} from "@gridiron/core/entity";
@@ -73,6 +73,7 @@ export class Address extends BaseEntity {
     @Column({type: "enum", enum: AddressType, default: AddressType.HOME})
     addressType: AddressType
 
+    @Field(() => User)
     @ManyToOne(() => User, use => use.address)
     user: User
 

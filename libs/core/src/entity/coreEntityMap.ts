@@ -55,6 +55,7 @@ import {StoreBalance} from "./Store/storeBalance.entity";
 import {Settlements} from "./settlement/settlement.entity";
 import {Delivery} from "./delivery/delivery.entity";
 import {DeliveryPool} from "./delivery/delivery-pool.entity";
+import {Search} from "./search/search.entity";
 
 export const coreEntityMap = {
     Address,
@@ -113,5 +114,6 @@ export const coreEntityMap = {
     StoreBalance,
     Settlements,
     Delivery,
-    DeliveryPool
+    DeliveryPool,
+    Search
 }

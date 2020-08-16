@@ -44,7 +44,6 @@ export class ProductService {
         return new Promise<Product>(async (resolve, reject) => {
             const prod = await this.connection.getRepository(Product).findOne({where:{id}})
             prod.collection = await this.connection.getRepository(Collection).findOne({where: {id: collectionId}})
-            console.log(prod)
             this.connection.getRepository(Product).save(prod)
                 .then(value => resolve(value)).catch(error => reject(error))
         })
@@ -61,9 +60,21 @@ export class ProductService {
                 const face = await FacetValue.findOne({where: {id: facetId}})
                 await prodFacet.push(face)
             }
+            prod.assets = []
             prod.facets = prodFacet
-            this.connection.getRepository(Product).save(prod).then(value => {
+            this.connection.getRepository(Product).save(prod).then(async (value) => {
+                for (const assetId of assets) {
+                    const ass = await this.connection.getRepository(Asset).findOne({where:{id: assetId}})
+                    if (ass) {
+                        const prodAss = new ProductAsset()
+                        prodAss.asset = ass
+                        prodAss.product = value
+                        await this.connection.getRepository(ProductAsset).save(prodAss)
+                    }
+                }
                 resolve(value)
+            }).catch(error => {
+                reject(error)
             })
         })
     }

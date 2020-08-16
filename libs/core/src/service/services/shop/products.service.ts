@@ -1,7 +1,12 @@
 import {Injectable} from "@nestjs/common";
 import {InjectConnection} from "@nestjs/typeorm";
 import {Connection} from "typeorm";
-import {ProductVariant} from "../../../entity";
+import {Asset, Product, ProductVariant} from "../../../entity";
+
+interface GetProductAssetInterface {
+    variantId?: string
+    prodId?: string
+}
 
 @Injectable()
 export class ShopProductsService {
@@ -32,5 +37,19 @@ export class ShopProductsService {
                     'price'
                 ]}
             )
+    }
+
+    async getProdAsset({variantId, prodId}: GetProductAssetInterface): Promise<Asset> {
+        return new Promise(async (resolve, reject) => {
+            let asset
+            if (variantId) {
+                const variatn = await this.connection.getRepository(ProductVariant).findOne({where:{id: variantId}, relations: ['asset', 'asset.asset']})
+                asset = variatn.asset.asset
+            } else {
+                const prod = await this.connection.getRepository(Product).findOne({where:{id: prodId}, relations: ['featuredAsset']})
+                asset = prod.featuredAsset
+            }
+            resolve(asset)
+        })
     }
 }

@@ -47,7 +47,7 @@ export class Product extends BaseEntity {
     slug: string;
 
     @FilterableField()
-    @Column('text')
+    @Column("longtext")
     description: string;
 
     @Field(() => Collection, {nullable: true})

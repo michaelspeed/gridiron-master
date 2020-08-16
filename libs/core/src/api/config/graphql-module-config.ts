@@ -91,7 +91,7 @@ export function configureShopGraphQLModule(
             configService: ConfigService,
             typesLoader: GraphQLTypesLoader
         ) => {
-            return configureAdminGraphQLOptions(
+            return configureShopGraphQLOptions(
                 configService,
                 typesLoader,
                 getOptions(configService)

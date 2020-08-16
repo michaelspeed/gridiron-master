@@ -75,7 +75,7 @@ export class Collection extends BaseEntity {
     @JoinColumn()
     seo: Seo
 
-    // @Field(() => [BillingAgreement])
+    @Field(() => [BillingAgreement])
     @OneToMany(type => BillingAgreement, agreement => agreement.collection)
     agreements: BillingAgreement[]
 }

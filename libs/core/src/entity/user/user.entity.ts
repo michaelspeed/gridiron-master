@@ -1,4 +1,14 @@
-import {BaseEntity, Column, CreateDateColumn, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn} from 'typeorm';
+import {
+    BaseEntity,
+    Column,
+    CreateDateColumn,
+    Entity,
+    Index,
+    OneToMany,
+    OneToOne,
+    PrimaryGeneratedColumn,
+    UpdateDateColumn
+} from 'typeorm';
 import {Field, ID, ObjectType} from '@nestjs/graphql';
 import {FilterableField, PagingStrategies, Relation} from '@nestjs-query/query-graphql';
 import {Address, Administrator, Cart, Delivery, Vendor, View} from '..';
@@ -22,11 +32,11 @@ export class User extends BaseEntity {
     @UpdateDateColumn()
     updatedAt: Date;
 
+    @Index()
     @FilterableField()
     @Column({ unique: true })
     email: string;
 
-    @Field()
     @Column()
     password: string;
 
@@ -51,8 +61,8 @@ export class User extends BaseEntity {
     pendingIdentifier: string;
 
     @FilterableField({nullable: true})
-    @Column({ nullable: true })
-    lastLogin: string;
+    @Column({ nullable: true, type: "date" })
+    lastLogin: Date;
 
     @FilterableField({nullable: true})
     @Column({nullable: true})
@@ -62,6 +72,7 @@ export class User extends BaseEntity {
     @Column({nullable: true})
     lastName: string;
 
+    @Index()
     @FilterableField()
     @Column()
     phoneNumber: string;
@@ -78,12 +89,15 @@ export class User extends BaseEntity {
     @OneToOne(type => Delivery, delivery => delivery.user)
     delivery: Delivery
 
+    @Field(() => Cart)
     @OneToOne(() => Cart, cart => cart.user)
     cart: Cart
 
+    @Field(() => [View])
     @OneToMany(() => View, view => view.user)
     view: View[]
 
+    @Field(() => [Address])
     @OneToMany(() => Address, add => add.user)
     address: Address[]
 }

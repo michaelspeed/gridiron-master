@@ -33,6 +33,10 @@ import {PageService} from "./services/admin/page.service";
 import {ShopCollectionService} from "./services/shop/collection.service";
 import {ShopPagesService} from "./services/shop/pages.service";
 import {ShopProductsService} from "./services/shop/products.service";
+import {ShopStoreService} from "./services/shop/store.service";
+import {ShopUserService} from "./services/shop/user.service";
+import {ShopAddressService} from "./services/shop/address.service";
+import {ShopSearchService} from "./services/shop/search.service";
 
 export const adminServices = [
     AdministratorService,
@@ -66,7 +70,11 @@ export const shopServices = [
     MenuService,
     ShopCollectionService,
     ShopPagesService,
-    ShopProductsService
+    ShopProductsService,
+    ShopStoreService,
+    ShopUserService,
+    ShopAddressService,
+    ShopSearchService
 ]
 
 let defaultTypeOrmModule: DynamicModule;
