@@ -52,4 +52,29 @@ export class ShopProductsService {
             resolve(asset)
         })
     }
+
+    async getVariantsByProductId(id: string): Promise<ProductVariant[]> {
+        return this.connection.getRepository(ProductVariant).find({
+            where:{product: {id}},
+            relations: [
+                'product',
+                'product.options',
+                'product.options.options',
+                'product.variants',
+                'product.collection',
+                'product.collection.seo',
+                'product.featuredAsset',
+                'product.facets',
+                'product.facets.facet',
+                'product.assets',
+                'product.assets.asset',
+                'asset',
+                'asset.asset',
+                'specs',
+                'seo',
+                'stock',
+                'price'
+            ]
+        })
+    }
 }

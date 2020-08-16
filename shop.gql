@@ -2442,6 +2442,7 @@ type Query {
   GetProductVariantForCollection(search: String, limit: Int, id: ID!): [ProductVariant!]!
   getHomePage: Page!
   getSingleProductVariant(id: ID!): ProductVariant!
+  getProductVariantByProduct(id: ID!): [ProductVariant!]!
   getProductAsset(prodId: ID, variantId: ID): Asset!
   GetDefaultStore: Store!
   GetCurrentUser: User!

@@ -15,6 +15,13 @@ export class ShopProductVariantResolver {
         return this.shopProductsService.getProductById(id)
     }
 
+    @Query(() => [ProductVariant])
+    async getProductVariantByProduct(
+        @Args('id', {type: () => ID}) id: string,
+    ): Promise<ProductVariant[]> {
+        return this.shopProductsService.getVariantsByProductId(id)
+    }
+
     @Query(() => Asset)
     async getProductAsset(
         @Args('variantId', {type: () => ID, nullable: true}) variantId: string,
