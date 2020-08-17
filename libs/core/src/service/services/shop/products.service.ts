@@ -60,20 +60,13 @@ export class ShopProductsService {
                 'product',
                 'product.options',
                 'product.options.options',
-                'product.variants',
-                'product.collection',
-                'product.collection.seo',
-                'product.featuredAsset',
-                'product.facets',
-                'product.facets.facet',
-                'product.assets',
-                'product.assets.asset',
                 'asset',
                 'asset.asset',
                 'specs',
                 'seo',
                 'stock',
-                'price'
+                'price',
+                'price.store',
             ]
         })
     }

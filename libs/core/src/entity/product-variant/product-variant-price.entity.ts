@@ -48,7 +48,7 @@ export class ProductVariantPrice extends BaseEntity {
     @ManyToOne(type => ProductVariant, variant => variant.price)
     variant: ProductVariant
 
-    @Field(() => Store)
+    @Field(() => Store, {nullable: true})
     @ManyToOne(type => Store, store => store.prices)
     store: Store
     

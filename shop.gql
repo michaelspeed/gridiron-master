@@ -222,7 +222,7 @@ type ProductVariantPrice {
   taxIncluded: Boolean!
   tax: TaxRate!
   variant: ProductVariant!
-  store: Store!
+  store: Store
 }
 
 type ProductOption {
