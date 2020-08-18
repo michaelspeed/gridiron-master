@@ -115,7 +115,7 @@ async function configureShopGraphQLOptions(
 
     return {
         path: '/' + options.apiPath,
-        autoSchemaFile: 'shop.gql',
+        // autoSchemaFile: 'shop.graphql',
         include: [...options.resolverModule, ...getDynamicGraphQLModulesForPlugins(options.apiType)],
         uploads: {
             maxFileSize: configService.assetOptions.uploadMaxFileSize,
@@ -127,6 +127,7 @@ async function configureShopGraphQLOptions(
         buildSchemaOptions: {
             skipCheck: true,
         },
+        typePaths: [path.join(__dirname,'..', 'schema','shop', 'shop.graphql')],
         resolverValidationOptions: {
             allowResolversNotInSchema: true,
         },

@@ -47,7 +47,7 @@ export class ShopGQLModule {}
     imports: [
         ServiceModule.forRoot(),
         ApiSharedModule,
-        // AdminGQLModule,
+        AdminGQLModule,
         ShopGQLModule
     ],
 })
