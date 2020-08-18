@@ -78,7 +78,7 @@ export class ProductVariant extends BaseEntity {
     @OneToMany(type => ProductVariantPrice, price => price.variant)
     price: ProductVariantPrice[]
 
-    @Field(() => ProductVariantSpecifications)
+    @Field(() => ProductVariantSpecifications, {nullable: true})
     @OneToOne(type => ProductVariantSpecifications, specs => specs.variant)
     @JoinColumn()
     specs: ProductVariantSpecifications

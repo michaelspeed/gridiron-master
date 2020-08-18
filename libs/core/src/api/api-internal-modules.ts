@@ -52,6 +52,7 @@ import {ShopStoreResolver} from "./resolvers/shop/store.resolver";
 import {ShopUserResolver} from "./resolvers/shop/user.resolver";
 import {ShopAddressResolver} from "./resolvers/shop/address.resolver";
 import {ShopSearchResolver} from "./resolvers/shop/search.resolver";
+import {SearchFacetResolver} from "./resolvers/shop/facet.resolver";
 
 const adminResolvers = [
     AdministratorResolver,
@@ -99,7 +100,8 @@ const shopResolvers = [
     ShopStoreResolver,
     ShopUserResolver,
     ShopAddressResolver,
-    ShopSearchResolver
+    ShopSearchResolver,
+    SearchFacetResolver
 ]
 
 @Module({

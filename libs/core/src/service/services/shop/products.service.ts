@@ -70,4 +70,13 @@ export class ShopProductsService {
             ]
         })
     }
+
+    async singleProductById(id: string): Promise<Product> {
+        return this.connection.getRepository(Product).findOne({
+            where:{
+                id
+            },
+            relations: ['collection', 'options', 'featuredAsset', 'facets', 'assets', 'variants']
+        })
+    }
 }
