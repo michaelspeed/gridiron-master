@@ -10,5 +10,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="gridiron-admin-view" />
     <orderEntry type="module" module-name="girdiron-consumer" />
+    <orderEntry type="module" module-name="GridironConsumerMobile" />
   </component>
 </module>
