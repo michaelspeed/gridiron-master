@@ -40,15 +40,15 @@ export class ProductVariantPrice extends BaseEntity {
     @Column()
     taxIncluded: boolean;
 
-    @Field(() => TaxRate)
+    // @Field(() => TaxRate)
     @ManyToOne(type => TaxRate, tax => tax.variants)
     tax: TaxRate
 
-    @Field(() => ProductVariant)
+    // @Field(() => ProductVariant)
     @ManyToOne(type => ProductVariant, variant => variant.price)
     variant: ProductVariant
 
-    @Field(() => Store, {nullable: true})
+    // @Field(() => Store, {nullable: true})
     @ManyToOne(type => Store, store => store.prices)
     store: Store
     

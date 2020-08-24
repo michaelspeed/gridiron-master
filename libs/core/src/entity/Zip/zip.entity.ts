@@ -1,9 +1,19 @@
 import {ID, ObjectType} from '@nestjs/graphql';
-import {BaseEntity, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, Unique, UpdateDateColumn} from 'typeorm';
-import {FilterableField} from '@nestjs-query/query-graphql';
+import {
+    BaseEntity,
+    Column,
+    CreateDateColumn,
+    Entity,
+    ManyToMany,
+    PrimaryGeneratedColumn,
+    UpdateDateColumn
+} from 'typeorm';
+import {Connection, FilterableConnection, FilterableField, PagingStrategies} from '@nestjs-query/query-graphql';
+import {Vendor} from "../vendor/vendor.entity";
 
 @ObjectType('Zip')
 @Entity({name: 'zip'})
+@FilterableConnection('vendors', () => Vendor, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 export class Zip extends BaseEntity {
     @FilterableField(() => ID)
     @PrimaryGeneratedColumn('uuid')
@@ -28,4 +38,7 @@ export class Zip extends BaseEntity {
     @FilterableField()
     @Column({unique: true})
     code: number;
+
+    @ManyToMany(() => Vendor, vendor => vendor.zip)
+    vendors: Vendor[]
 }

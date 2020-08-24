@@ -24,7 +24,7 @@ export class ProductVariantSpecifications extends BaseEntity {
     @Column('simple-json')
     specs: JSON
 
-    @Field(() => ProductVariant)
+    // @Field(() => ProductVariant)
     @OneToOne(() => ProductVariant, variant => variant.specs)
     variant: ProductVariant
 }

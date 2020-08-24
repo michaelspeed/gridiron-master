@@ -59,23 +59,23 @@ export class Collection extends BaseEntity {
     @Column("text")
     description: string
 
-    @Field(() => [Collection])
+    // @Field(() => [Collection])
     @TreeChildren()
     children: Collection[]
 
     @TreeParent()
     parent: Collection
 
-    @Field(() => [Product])
+    // @Field(() => [Product])
     @OneToMany(type => Product, prod => prod.collection)
     products: Product[]
 
-    @Field(() => Seo)
+    // @Field(() => Seo)
     @OneToOne(type => Seo, seo => seo.collection)
     @JoinColumn()
     seo: Seo
 
-    @Field(() => [BillingAgreement])
+    // @Field(() => [BillingAgreement])
     @OneToMany(type => BillingAgreement, agreement => agreement.collection)
     agreements: BillingAgreement[]
 }

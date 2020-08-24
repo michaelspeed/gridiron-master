@@ -60,7 +60,7 @@ export class StockKeeping extends BaseEntity {
     @Column({enum: StockKeepingType, type: 'enum', default: StockKeepingType.VENDOR})
     type: StockKeepingType
 
-    @Field(() => ProductVariant)
+    // @Field(() => ProductVariant)
     @ManyToOne(() => ProductVariant, variant => variant.stock)
     variant: ProductVariant
 

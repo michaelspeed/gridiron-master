@@ -1,14 +1,25 @@
-import {BaseEntity, Column, CreateDateColumn, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn} from 'typeorm';
+import {
+    BaseEntity,
+    Column,
+    CreateDateColumn,
+    Entity,
+    JoinColumn, JoinTable, ManyToMany,
+    ManyToOne,
+    OneToOne,
+    PrimaryGeneratedColumn,
+    UpdateDateColumn
+} from 'typeorm';
 import {ID, ObjectType} from '@nestjs/graphql';
-import {FilterableField, PagingStrategies, Relation} from '@nestjs-query/query-graphql';
+import {Connection, FilterableField, PagingStrategies, Relation} from '@nestjs-query/query-graphql';
 import {User} from '../user/user.entity';
-import {Store, VendorLicense} from '../';
+import {Store, VendorLicense, Zip} from '../';
 
 @ObjectType('Vendor')
 @Entity({name: 'vendor'})
 @Relation('user', () => User, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @Relation('license', () => VendorLicense, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @Relation('store', () => Store, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
+@Connection('zip', () => Zip, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 export class Vendor extends BaseEntity {
     @FilterableField(() => ID)
     @PrimaryGeneratedColumn('uuid')
@@ -45,4 +56,8 @@ export class Vendor extends BaseEntity {
     @OneToOne(type => VendorLicense)
     @JoinColumn()
     license: VendorLicense
+
+    @ManyToMany(() => Zip, zip => zip.vendors)
+    @JoinTable()
+    zip: Zip[]
 }

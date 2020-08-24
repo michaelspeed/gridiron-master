@@ -55,3 +55,8 @@ export * from './settlement/settlement.entity'
 export * from './delivery/delivery.entity'
 export * from './delivery/delivery-pool.entity'
 export * from './search/search.entity'
+
+
+// nestjsQuery
+export * from './collection/collectionquery.entity'
+export * from './product/productquery.entity'

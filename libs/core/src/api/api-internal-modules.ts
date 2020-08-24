@@ -18,7 +18,7 @@ import {CountryResolver} from './resolvers/admin/country.resolver';
 import {AdministratorService} from '../service/services/admin/administrator.service';
 import {JwtModule} from '@nestjs/jwt';
 import {NestjsQueryTypeOrmModule} from '@nestjs-query/query-typeorm';
-import {coreEntityMap} from '../entity/coreEntityMap';
+import {coreEntityMap, nestQueryDTOMap} from '../entity/coreEntityMap';
 import {SeoResolver} from './resolvers/admin/seo.resolver';
 import {adminServiceMap} from '../service/services/admin/adminServicesMap';
 import {EventBusModule} from '../event-bus';

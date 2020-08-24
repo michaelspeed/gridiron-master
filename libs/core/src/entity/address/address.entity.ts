@@ -73,7 +73,7 @@ export class Address extends BaseEntity {
     @Column({type: "enum", enum: AddressType, default: AddressType.HOME})
     addressType: AddressType
 
-    @Field(() => User)
+    // @Field(() => User)
     @ManyToOne(() => User, use => use.address)
     user: User
 

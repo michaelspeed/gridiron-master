@@ -1,5 +1,5 @@
-import {Query, Resolver} from '@nestjs/graphql';
-import {Zip} from '../../../entity';
+import {Args, ID, Mutation, Query, Resolver} from '@nestjs/graphql';
+import {Vendor, Zip} from '../../../entity';
 import {CRUDResolver, PagingStrategies} from '@nestjs-query/query-graphql';
 import {InjectQueryService, QueryService} from '@nestjs-query/core';
 import {ZipService} from '../../../service/services/admin/zip.service';
@@ -23,5 +23,13 @@ export class ZipResolver extends CRUDResolver(Zip, {
     @Query(() => [Zip])
     findAllZip(): Promise<Zip[]> {
         return this.zipService.findAll()
+    }
+
+    @Mutation(() => Vendor)
+    CreateZipToVendor(
+        @Args('vendorId', {type: () => ID}) vendorId: string,
+        @Args('zips', {type: () => [ID]}) zips: string[],
+    ): Promise<Vendor> {
+        return this.zipService.addZipToVendor(vendorId, zips)
     }
 }
