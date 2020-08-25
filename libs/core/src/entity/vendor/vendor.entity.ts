@@ -4,15 +4,21 @@ import {
     CreateDateColumn,
     Entity,
     JoinColumn, JoinTable, ManyToMany,
-    ManyToOne,
+    ManyToOne, OneToMany,
     OneToOne,
     PrimaryGeneratedColumn,
     UpdateDateColumn
 } from 'typeorm';
 import {ID, ObjectType} from '@nestjs/graphql';
-import {Connection, FilterableField, PagingStrategies, Relation} from '@nestjs-query/query-graphql';
+import {
+    Connection,
+    FilterableConnection,
+    FilterableField,
+    PagingStrategies,
+    Relation
+} from '@nestjs-query/query-graphql';
 import {User} from '../user/user.entity';
-import {Store, VendorLicense, Zip} from '../';
+import {OrderLine, Store, VendorLicense, Zip} from '../';
 
 @ObjectType('Vendor')
 @Entity({name: 'vendor'})

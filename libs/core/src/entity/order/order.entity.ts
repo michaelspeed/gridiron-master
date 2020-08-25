@@ -1,11 +1,21 @@
-import {BaseEntity, Column, CreateDateColumn, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn} from 'typeorm';
+import {
+    BaseEntity,
+    Column,
+    CreateDateColumn,
+    Entity,
+    JoinColumn, ManyToOne,
+    OneToMany,
+    OneToOne,
+    PrimaryGeneratedColumn,
+    UpdateDateColumn
+} from 'typeorm';
 import {ID, ObjectType} from '@nestjs/graphql';
-import {FilterableField, PagingStrategies, Relation} from '@nestjs-query/query-graphql';
-import {OrderItem, OrderLine} from '..';
+import {FilterableConnection, FilterableField, PagingStrategies, Relation} from '@nestjs-query/query-graphql';
+import {OrderItem, OrderLine, User} from '..';
 
 @ObjectType('Order')
 @Entity({name: 'order'})
-@Relation('item', () => OrderLine, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
+@FilterableConnection('item', () => OrderLine, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 export class Order extends BaseEntity {
     @FilterableField(() => ID)
     @PrimaryGeneratedColumn('uuid')
@@ -21,18 +31,16 @@ export class Order extends BaseEntity {
 
     @FilterableField()
     @Column()
-    orderPlacedAt?: Date;
-
-    @FilterableField()
-    @Column()
     totalPrice: number;
 
     @FilterableField()
     @Column({type: 'text'})
     address: string
 
-    @OneToOne(() => OrderLine, item => item.order)
-    @JoinColumn()
-    item: OrderLine
+    @OneToMany(() => OrderLine, item => item.order)
+    line: OrderLine[]
+
+    @ManyToOne(() => User, user => user.order)
+    user: User
 
 }

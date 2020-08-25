@@ -1,12 +1,13 @@
 import {BaseEntity, Column, CreateDateColumn, Entity, ManyToOne, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn} from 'typeorm';
 import {ID, ObjectType} from '@nestjs/graphql';
 import {FilterableField, PagingStrategies, Relation} from '@nestjs-query/query-graphql';
-import {Order, OrderLine, ProductVariant, TaxCategory} from '..';
+import {Order, OrderLine, ProductVariant, TaxCategory, TaxRate} from '..';
 
 @ObjectType('OrderItem')
 @Entity({name: 'order-item'})
 @Relation('productVariant', () => ProductVariant, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
-@Relation('taxCategory', () => TaxCategory, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
+@Relation('taxCategory', () => TaxRate, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
+@Relation('line', () => OrderLine, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 export class OrderItem extends BaseEntity {
     @FilterableField(() => ID)
     @PrimaryGeneratedColumn('uuid')
@@ -21,16 +22,15 @@ export class OrderItem extends BaseEntity {
     updatedAt: Date;
 
     @FilterableField()
-    @Column() 
-    unitPrice: number;
-
-    @FilterableField()
     @Column()
     quantity: number;
 
-    @ManyToOne(type => ProductVariant)
+    @ManyToOne(type => ProductVariant, variant => variant.line)
     productVariant: ProductVariant;
 
-    @ManyToOne(type => TaxCategory)
-    taxCategory: TaxCategory;
+    @ManyToOne(type => TaxRate)
+    taxCategory: TaxRate;
+
+    @OneToOne(() => OrderLine, line => line.item)
+    line: OrderLine
 }

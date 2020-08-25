@@ -11,7 +11,7 @@ import {
 } from 'typeorm';
 import {Field, ID, ObjectType} from '@nestjs/graphql';
 import {FilterableField, PagingStrategies, Relation} from '@nestjs-query/query-graphql';
-import {Address, Administrator, Cart, Delivery, Vendor, View} from '..';
+import {Address, Administrator, Cart, Delivery, Order, Vendor, View} from '..';
 
 @ObjectType('User')
 @Relation('administrator', () => Administrator, {nullable: true})
@@ -100,4 +100,8 @@ export class User extends BaseEntity {
     @Field(() => [Address])
     @OneToMany(() => Address, add => add.user)
     address: Address[]
+
+    @Field(() => [Order])
+    @OneToMany(() => Order, order => order.user)
+    order: Order[]
 }

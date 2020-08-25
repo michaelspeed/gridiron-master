@@ -58,6 +58,8 @@ import {DeliveryPool} from "./delivery/delivery-pool.entity";
 import {Search} from "./search/search.entity";
 import {CollectionQuery} from "./collection/collectionquery.entity";
 import {ProductQuery} from "./product/productquery.entity";
+import {PromotionVariantPrice} from "./promotion-variant/promotion-variant-price.entity";
+import {CartPrice} from "./promotion-variant/cart-price.entity";
 
 export const coreEntityMap = {
     Address,
@@ -117,7 +119,9 @@ export const coreEntityMap = {
     Settlements,
     Delivery,
     DeliveryPool,
-    Search
+    Search,
+    PromotionVariantPrice,
+    CartPrice
 }
 
 export const nestQueryDTOMap = {

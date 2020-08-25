@@ -10,8 +10,14 @@ import {
     PrimaryGeneratedColumn,
     UpdateDateColumn
 } from 'typeorm';
-import {Connection, FilterableField, PagingStrategies, Relation} from '@nestjs-query/query-graphql';
-import {BillingAgreement, Country, ProductVariantPrice, StockKeeping, TaxCategory, Vendor, Zone} from '..';
+import {
+    Connection,
+    FilterableConnection,
+    FilterableField,
+    PagingStrategies,
+    Relation
+} from '@nestjs-query/query-graphql';
+import {BillingAgreement, Country, OrderLine, ProductVariantPrice, StockKeeping, TaxCategory, Vendor, Zone} from '..';
 import {StoreBalance} from "./storeBalance.entity";
 import {Settlements} from "../settlement/settlement.entity";
 
@@ -30,6 +36,7 @@ registerEnumType(StoreTypeEnum, {
 @Connection('sku', () => StockKeeping, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @Connection('settlement', () => Settlements, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @Connection('prices', () => Settlements, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
+@FilterableConnection('line', () => OrderLine, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @Entity({name: 'store'})
 export class Store extends BaseEntity {
     @FilterableField(() => ID)
@@ -115,4 +122,7 @@ export class Store extends BaseEntity {
 
     @OneToMany(() => ProductVariantPrice, price => price.store)
     prices: ProductVariantPrice[]
+
+    @OneToMany(() => OrderLine, line => line.store)
+    line: OrderLine[]
 }

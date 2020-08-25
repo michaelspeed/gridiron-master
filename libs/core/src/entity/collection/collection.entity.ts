@@ -12,7 +12,7 @@ import {
 } from 'typeorm';
 import {Field, ID, ObjectType} from '@nestjs/graphql';
 import {Connection, FilterableField, PagingStrategies, Relation} from '@nestjs-query/query-graphql';
-import {Seo, BillingAgreement, Product, Store} from '../';
+import {Seo, BillingAgreement, Product, Store, CartPrice} from '../';
 
 @ObjectType('Collection')
 @Entity({name: 'collection'})
@@ -22,6 +22,7 @@ import {Seo, BillingAgreement, Product, Store} from '../';
 @Connection('children', () => Collection, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @Relation('parent', () => Collection, {nullable: true, pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @Relation('seo', () => Seo, {nullable: true, pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
+@Relation('cartPrice', () => CartPrice, {nullable: true, pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 export class Collection extends BaseEntity {
     @FilterableField(() => ID)
     @PrimaryGeneratedColumn('uuid')
@@ -78,4 +79,8 @@ export class Collection extends BaseEntity {
     // @Field(() => [BillingAgreement])
     @OneToMany(type => BillingAgreement, agreement => agreement.collection)
     agreements: BillingAgreement[]
+
+    // @Field(() => CartPrice)
+    @OneToOne(() => CartPrice, cart => cart.collection)
+    cartPrice: CartPrice
 }

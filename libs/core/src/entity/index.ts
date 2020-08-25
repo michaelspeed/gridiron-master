@@ -55,6 +55,8 @@ export * from './settlement/settlement.entity'
 export * from './delivery/delivery.entity'
 export * from './delivery/delivery-pool.entity'
 export * from './search/search.entity'
+export * from './promotion-variant/promotion-variant-price.entity'
+export * from './promotion-variant/cart-price.entity'
 
 
 // nestjsQuery

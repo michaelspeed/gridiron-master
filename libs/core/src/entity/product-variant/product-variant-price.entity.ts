@@ -11,13 +11,14 @@ import {
 } from 'typeorm';
 import {Field, ID, ObjectType} from '@nestjs/graphql';
 import {FilterableField, FilterableRelation, PagingStrategies, Relation} from '@nestjs-query/query-graphql';
-import {ProductVariant, Store, TaxRate} from '../';
+import {ProductVariant, PromotionVariantPrice, Store, TaxRate} from '../';
 
 @ObjectType('ProductVariantPrice')
 @Entity({name: 'productVariantPrice'})
 @FilterableRelation('variant', () => ProductVariant, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @Relation('tax', () => TaxRate, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @Relation('store', () => TaxRate, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
+@Relation('promoprice', () => PromotionVariantPrice, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 export class ProductVariantPrice extends BaseEntity {
 
     @FilterableField(() => ID)
@@ -51,5 +52,8 @@ export class ProductVariantPrice extends BaseEntity {
     // @Field(() => Store, {nullable: true})
     @ManyToOne(type => Store, store => store.prices)
     store: Store
+
+    @OneToOne(() => PromotionVariantPrice, promoprice => promoprice.price)
+    promoprice: PromotionVariantPrice
     
 }

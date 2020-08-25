@@ -1,0 +1,7 @@
+export enum OrderStageType {
+    CREATED = "CREATED",
+    PACKAGED = "PACKAGED",
+    PROCESSED = "PROCESSED",
+    SHIPPED = "SHIPPED",
+    DELIVERED = "DELIVERED"
+}

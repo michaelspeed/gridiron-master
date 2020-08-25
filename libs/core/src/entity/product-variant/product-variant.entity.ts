@@ -18,7 +18,17 @@ import {
     PagingStrategies,
     Relation
 } from '@nestjs-query/query-graphql';
-import {Product, ProductOption, ProductVariantAsset, ProductVariantPrice, ProductVariantSpecifications, Seo, View} from '../';
+import {
+    OrderItem,
+    OrderLine,
+    Product,
+    ProductOption,
+    ProductVariantAsset,
+    ProductVariantPrice,
+    ProductVariantSpecifications,
+    Seo,
+    View
+} from '../';
 import {StockKeeping} from '@gridiron/core/entity/stock-movement/stock-keeping.entity';
 
 @ObjectType('ProductVariant')
@@ -29,6 +39,7 @@ import {StockKeeping} from '@gridiron/core/entity/stock-movement/stock-keeping.e
 @Relation('specs', () => ProductVariantSpecifications, {nullable: true, pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @Relation('seo', () => Seo, {nullable: true, pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @Connection('stock', () => StockKeeping, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
+@FilterableConnection('line', () => OrderItem, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 export class ProductVariant extends BaseEntity {
     @FilterableField(() => ID)
     @PrimaryGeneratedColumn('uuid')
@@ -93,4 +104,10 @@ export class ProductVariant extends BaseEntity {
     // @Field(() => [StockKeeping])
     @OneToMany(() => StockKeeping, keeping => keeping.variant)
     stock: StockKeeping[]
+
+    // @Field(() => [OrderItem])
+    @OneToMany(() => OrderItem, line => line.productVariant)
+    line: OrderItem[]
+
+
 }

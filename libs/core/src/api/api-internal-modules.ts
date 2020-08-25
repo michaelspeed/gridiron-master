@@ -53,6 +53,8 @@ import {ShopUserResolver} from "./resolvers/shop/user.resolver";
 import {ShopAddressResolver} from "./resolvers/shop/address.resolver";
 import {ShopSearchResolver} from "./resolvers/shop/search.resolver";
 import {SearchFacetResolver} from "./resolvers/shop/facet.resolver";
+import {OrderLineResolver} from "./resolvers/admin/order-line.resolver";
+import {OrderItemResolver} from "./resolvers/admin/order-item.resolver";
 
 const adminResolvers = [
     AdministratorResolver,
@@ -89,7 +91,9 @@ const adminResolvers = [
     AdminMenuResolver,
     PageResolver,
     AddressResolver,
-    SettlementsResolver
+    SettlementsResolver,
+    OrderLineResolver,
+    OrderItemResolver
 ]
 
 const shopResolvers = [
