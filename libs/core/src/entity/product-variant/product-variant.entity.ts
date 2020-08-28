@@ -35,7 +35,7 @@ import {StockKeeping} from '@gridiron/core/entity/stock-movement/stock-keeping.e
 @Entity({name: 'productVariant'})
 @Relation('product', () => Product, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @Relation('asset', () => ProductVariantAsset, {nullable: true, pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
-@Connection('price', () => ProductVariantPrice, {nullable: true, pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true, allowFiltering: false})
+@FilterableConnection('price', () => ProductVariantPrice, {relationName: 'price' ,nullable: true, pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true, allowFiltering: false})
 @Relation('specs', () => ProductVariantSpecifications, {nullable: true, pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @Relation('seo', () => Seo, {nullable: true, pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @Connection('stock', () => StockKeeping, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})

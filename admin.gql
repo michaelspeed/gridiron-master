@@ -495,7 +495,7 @@ type Order {
   updatedAt: DateTime!
   totalPrice: Float!
   address: String!
-  items(
+  lines(
     """Limit or page results."""
     paging: OffsetPaging = {limit: 10}
 
@@ -505,10 +505,11 @@ type Order {
     """Specify to sort results."""
     sorting: [OrderLineSort!] = []
   ): [OrderLine!]!
-  itemsAggregate(
+  user: User!
+  linesAggregate(
     """Filter to find records to aggregate on"""
     filter: OrderLineAggregateFilter
-  ): OrderItemsAggregateResponse!
+  ): OrderLinesAggregateResponse!
 }
 
 input OrderLineFilter {
@@ -518,6 +519,25 @@ input OrderLineFilter {
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
   stage: StringFieldComparison
+  store: OrderLineFilterStoreFilter
+}
+
+input OrderLineFilterStoreFilter {
+  and: [OrderLineFilterStoreFilter!]
+  or: [OrderLineFilterStoreFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  storeName: StringFieldComparison
+  phoneNumber: StringFieldComparison
+  officialemail: StringFieldComparison
+  zipcode: StringFieldComparison
+  streetAddress1: StringFieldComparison
+  streetAddress2: StringFieldComparison
+  GSTIN: StringFieldComparison
+  singleStore: BooleanFieldComparison
+  rentalStore: BooleanFieldComparison
+  channelMarkets: BooleanFieldComparison
 }
 
 input OrderLineSort {
@@ -556,7 +576,7 @@ type OrderLine {
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
-  priceJSON: JSON!
+  priceField: JSON!
   stage: String!
   store: Store!
   item: OrderItem!
@@ -672,6 +692,7 @@ input ProductVariantFilter {
   name: StringFieldComparison
   trackInventory: BooleanFieldComparison
   line: ProductVariantFilterOrderItemFilter
+  price: ProductVariantFilterProductVariantPriceFilter
 }
 
 input ProductVariantFilterOrderItemFilter {
@@ -681,6 +702,16 @@ input ProductVariantFilterOrderItemFilter {
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
   quantity: NumberFieldComparison
+}
+
+input ProductVariantFilterProductVariantPriceFilter {
+  and: [ProductVariantFilterProductVariantPriceFilter!]
+  or: [ProductVariantFilterProductVariantPriceFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  price: NumberFieldComparison
+  taxIncluded: BooleanFieldComparison
 }
 
 input ProductVariantSort {
@@ -1189,7 +1220,7 @@ type Store {
     """Specify to sort results."""
     sorting: [StockKeepingSort!] = []
   ): [StockKeeping!]!
-  balance: StoreBalance!
+  balance: StoreBalance
   country: Country!
   linesAggregate(
     """Filter to find records to aggregate on"""
@@ -1660,9 +1691,9 @@ type ProductVariantPrice {
   updatedAt: DateTime!
   price: Float!
   taxIncluded: Boolean!
-  promoprice: PromotionVariantPrice!
-  store: TaxRate!
-  tax: TaxRate!
+  promoprice: PromotionVariantPrice
+  store: Store!
+  tax: TaxRate
   variant: ProductVariant!
 }
 
@@ -2045,6 +2076,7 @@ type PromotionVariantPrice {
   startsAt: DateTime!
   endsAt: DateTime!
   enabled: Boolean!
+  price: ProductVariantPrice!
 }
 
 type CartPriceRules {
@@ -2053,6 +2085,7 @@ type CartPriceRules {
   updatedAt: DateTime!
   priceType: String!
   value: Float!
+  collection: Collection
 }
 
 type Country {
@@ -4808,31 +4841,31 @@ type OrderAggregateResponse {
   max: OrderMaxAggregate
 }
 
-type OrderItemsCountAggregate {
+type OrderLinesCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
   stage: Int
 }
 
-type OrderItemsMinAggregate {
+type OrderLinesMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
   stage: String
 }
 
-type OrderItemsMaxAggregate {
+type OrderLinesMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
   stage: String
 }
 
-type OrderItemsAggregateResponse {
-  count: OrderItemsCountAggregate
-  min: OrderItemsMinAggregate
-  max: OrderItemsMaxAggregate
+type OrderLinesAggregateResponse {
+  count: OrderLinesCountAggregate
+  min: OrderLinesMinAggregate
+  max: OrderLinesMaxAggregate
 }
 
 type ZipDeleteResponse {
@@ -5267,7 +5300,7 @@ type OrderLineDeleteResponse {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
-  priceJSON: JSON
+  priceField: JSON
   stage: String
 }
 
@@ -5340,6 +5373,114 @@ type OrderItemAggregateResponse {
   avg: OrderItemAvgAggregate
   min: OrderItemMinAggregate
   max: OrderItemMaxAggregate
+}
+
+type PromotionVariantPriceDeleteResponse {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  priceType: String
+  value: Float
+  forever: Boolean
+  startsAt: DateTime
+  endsAt: DateTime
+  enabled: Boolean
+}
+
+type PromotionVariantPriceCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  priceType: Int
+  value: Int
+  forever: Int
+  startsAt: Int
+  endsAt: Int
+  enabled: Int
+}
+
+type PromotionVariantPriceSumAggregate {
+  value: Float
+}
+
+type PromotionVariantPriceAvgAggregate {
+  value: Float
+}
+
+type PromotionVariantPriceMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  priceType: String
+  value: Float
+  startsAt: DateTime
+  endsAt: DateTime
+}
+
+type PromotionVariantPriceMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  priceType: String
+  value: Float
+  startsAt: DateTime
+  endsAt: DateTime
+}
+
+type PromotionVariantPriceAggregateResponse {
+  count: PromotionVariantPriceCountAggregate
+  sum: PromotionVariantPriceSumAggregate
+  avg: PromotionVariantPriceAvgAggregate
+  min: PromotionVariantPriceMinAggregate
+  max: PromotionVariantPriceMaxAggregate
+}
+
+type CartPriceRulesDeleteResponse {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  priceType: String
+  value: Float
+}
+
+type CartPriceRulesCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  priceType: Int
+  value: Int
+}
+
+type CartPriceRulesSumAggregate {
+  value: Float
+}
+
+type CartPriceRulesAvgAggregate {
+  value: Float
+}
+
+type CartPriceRulesMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  priceType: String
+  value: Float
+}
+
+type CartPriceRulesMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  priceType: String
+  value: Float
+}
+
+type CartPriceRulesAggregateResponse {
+  count: CartPriceRulesCountAggregate
+  sum: CartPriceRulesSumAggregate
+  avg: CartPriceRulesAvgAggregate
+  min: CartPriceRulesMinAggregate
+  max: CartPriceRulesMaxAggregate
 }
 
 type Query {
@@ -5888,6 +6029,35 @@ type Query {
     """Filter to find records to aggregate on"""
     filter: OrderItemAggregateFilter
   ): OrderItemAggregateResponse!
+  promotionVariantPrice(id: ID!): PromotionVariantPrice
+  promotionVariantPrices(
+    """Limit or page results."""
+    paging: OffsetPaging = {limit: 10}
+
+    """Specify to filter the records returned."""
+    filter: PromotionVariantPriceFilter = {}
+
+    """Specify to sort results."""
+    sorting: [PromotionVariantPriceSort!] = []
+  ): [PromotionVariantPrice!]!
+  promotionVariantPriceAggregate(
+    """Filter to find records to aggregate on"""
+    filter: PromotionVariantPriceAggregateFilter
+  ): PromotionVariantPriceAggregateResponse!
+  cartPriceRules(
+    """Limit or page results."""
+    paging: OffsetPaging = {limit: 10}
+
+    """Specify to filter the records returned."""
+    filter: CartPriceRulesFilter = {}
+
+    """Specify to sort results."""
+    sorting: [CartPriceRulesSort!] = []
+  ): [CartPriceRules!]!
+  cartPriceRulesAggregate(
+    """Filter to find records to aggregate on"""
+    filter: CartPriceRulesAggregateFilter
+  ): CartPriceRulesAggregateResponse!
 }
 
 input AssetFilter {
@@ -6197,7 +6367,7 @@ input OrderFilter {
   updatedAt: DateFieldComparison
   totalPrice: NumberFieldComparison
   address: StringFieldComparison
-  item: OrderFilterOrderLineFilter
+  line: OrderFilterOrderLineFilter
 }
 
 input OrderFilterOrderLineFilter {
@@ -6383,6 +6553,86 @@ input AddressAggregateFilter {
   defaultShippingAddress: BooleanFieldComparison
   defaultBillingAddress: BooleanFieldComparison
   addressType: AddressTypeFilterComparison
+}
+
+input PromotionVariantPriceFilter {
+  and: [PromotionVariantPriceFilter!]
+  or: [PromotionVariantPriceFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  priceType: StringFieldComparison
+  value: NumberFieldComparison
+  forever: BooleanFieldComparison
+  startsAt: DateFieldComparison
+  endsAt: DateFieldComparison
+  enabled: BooleanFieldComparison
+}
+
+input PromotionVariantPriceSort {
+  field: PromotionVariantPriceSortFields!
+  direction: SortDirection!
+  nulls: SortNulls
+}
+
+enum PromotionVariantPriceSortFields {
+  id
+  createdAt
+  updatedAt
+  priceType
+  value
+  forever
+  startsAt
+  endsAt
+  enabled
+}
+
+input PromotionVariantPriceAggregateFilter {
+  and: [PromotionVariantPriceAggregateFilter!]
+  or: [PromotionVariantPriceAggregateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  priceType: StringFieldComparison
+  value: NumberFieldComparison
+  forever: BooleanFieldComparison
+  startsAt: DateFieldComparison
+  endsAt: DateFieldComparison
+  enabled: BooleanFieldComparison
+}
+
+input CartPriceRulesFilter {
+  and: [CartPriceRulesFilter!]
+  or: [CartPriceRulesFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  priceType: StringFieldComparison
+  value: NumberFieldComparison
+}
+
+input CartPriceRulesSort {
+  field: CartPriceRulesSortFields!
+  direction: SortDirection!
+  nulls: SortNulls
+}
+
+enum CartPriceRulesSortFields {
+  id
+  createdAt
+  updatedAt
+  priceType
+  value
+}
+
+input CartPriceRulesAggregateFilter {
+  and: [CartPriceRulesAggregateFilter!]
+  or: [CartPriceRulesAggregateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  priceType: StringFieldComparison
+  value: NumberFieldComparison
 }
 
 type Mutation {
@@ -6671,8 +6921,10 @@ type Mutation {
   createManyCancellations(input: CreateManyCancellationsInput!): [Cancellation!]!
   removeKeepingFromCancellation(input: RelationInput!): Cancellation!
   setKeepingOnCancellation(input: RelationInput!): Cancellation!
-  removeItemsFromOrder(input: RelationsInput!): Order!
-  addItemsToOrder(input: RelationsInput!): Order!
+  removeLinesFromOrder(input: RelationsInput!): Order!
+  removeUserFromOrder(input: RelationInput!): Order!
+  addLinesToOrder(input: RelationsInput!): Order!
+  setUserOnOrder(input: RelationInput!): Order!
   createOrderAdmin(orderLineDto: [OrderLineDto!]!, address: String!, userId: ID!): Order!
   deleteOneZip(input: DeleteOneInput!): ZipDeleteResponse!
   deleteManyZips(input: DeleteManyZipsInput!): DeleteManyResponse!
@@ -6710,6 +6962,8 @@ type Mutation {
   addUsersToAddress(input: RelationsInput!): Address!
   removeStoreFromSettlements(input: RelationInput!): Settlements!
   setStoreOnSettlements(input: RelationInput!): Settlements!
+  updateOneOrderLine(input: UpdateOneOrderLineInput!): OrderLine!
+  updateManyOrderLines(input: UpdateManyOrderLinesInput!): UpdateManyResponse!
   removeStoreFromOrderLine(input: RelationInput!): OrderLine!
   removeItemFromOrderLine(input: RelationInput!): OrderLine!
   removeOrderFromOrderLine(input: RelationInput!): OrderLine!
@@ -6722,6 +6976,22 @@ type Mutation {
   setLineOnOrderItem(input: RelationInput!): OrderItem!
   setTaxCategoryOnOrderItem(input: RelationInput!): OrderItem!
   setProductVariantOnOrderItem(input: RelationInput!): OrderItem!
+  deleteOnePromotionVariantPrice(input: DeleteOneInput!): PromotionVariantPriceDeleteResponse!
+  deleteManyPromotionVariantPrices(input: DeleteManyPromotionVariantPricesInput!): DeleteManyResponse!
+  updateOnePromotionVariantPrice(input: UpdateOnePromotionVariantPriceInput!): PromotionVariantPrice!
+  updateManyPromotionVariantPrices(input: UpdateManyPromotionVariantPricesInput!): UpdateManyResponse!
+  createOnePromotionVariantPrice(input: CreateOnePromotionVariantPriceInput!): PromotionVariantPrice!
+  createManyPromotionVariantPrices(input: CreateManyPromotionVariantPricesInput!): [PromotionVariantPrice!]!
+  removePriceFromPromotionVariantPrice(input: RelationInput!): PromotionVariantPrice!
+  setPriceOnPromotionVariantPrice(input: RelationInput!): PromotionVariantPrice!
+  deleteOneCartPriceRules(input: DeleteOneInput!): CartPriceRulesDeleteResponse!
+  deleteManyCartPriceRules(input: DeleteManyCartPriceRulesInput!): DeleteManyResponse!
+  updateOneCartPriceRules(input: UpdateOneCartPriceRulesInput!): CartPriceRules!
+  updateManyCartPriceRules(input: UpdateManyCartPriceRulesInput!): UpdateManyResponse!
+  createOneCartPriceRules(input: CreateOneCartPriceRulesInput!): CartPriceRules!
+  createManyCartPriceRules(input: CreateManyCartPriceRulesInput!): [CartPriceRules!]!
+  removeCollectionFromCartPriceRules(input: RelationInput!): CartPriceRules!
+  setCollectionOnCartPriceRules(input: RelationInput!): CartPriceRules!
 }
 
 input RelationsInput {
@@ -8457,6 +8727,189 @@ input CreateManyAddressesInput {
   addresses: [CreateAddress!]!
 }
 
+input UpdateOneOrderLineInput {
+  """The id of the record to update"""
+  id: ID!
+
+  """The update to apply."""
+  update: UpdateOrderLine!
+}
+
+input UpdateOrderLine {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  priceField: JSON
+  stage: String
+}
+
+input UpdateManyOrderLinesInput {
+  """Filter used to find fields to update"""
+  filter: OrderLineUpdateFilter!
+
+  """The update to apply to all records found using the filter"""
+  update: UpdateOrderLine!
+}
+
+input OrderLineUpdateFilter {
+  and: [OrderLineUpdateFilter!]
+  or: [OrderLineUpdateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  stage: StringFieldComparison
+}
+
+input DeleteManyPromotionVariantPricesInput {
+  """Filter to find records to delete"""
+  filter: PromotionVariantPriceDeleteFilter!
+}
+
+input PromotionVariantPriceDeleteFilter {
+  and: [PromotionVariantPriceDeleteFilter!]
+  or: [PromotionVariantPriceDeleteFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  priceType: StringFieldComparison
+  value: NumberFieldComparison
+  forever: BooleanFieldComparison
+  startsAt: DateFieldComparison
+  endsAt: DateFieldComparison
+  enabled: BooleanFieldComparison
+}
+
+input UpdateOnePromotionVariantPriceInput {
+  """The id of the record to update"""
+  id: ID!
+
+  """The update to apply."""
+  update: UpdatePromotionVariantPrice!
+}
+
+input UpdatePromotionVariantPrice {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  priceType: String
+  value: Float
+  forever: Boolean
+  startsAt: DateTime
+  endsAt: DateTime
+  enabled: Boolean
+}
+
+input UpdateManyPromotionVariantPricesInput {
+  """Filter used to find fields to update"""
+  filter: PromotionVariantPriceUpdateFilter!
+
+  """The update to apply to all records found using the filter"""
+  update: UpdatePromotionVariantPrice!
+}
+
+input PromotionVariantPriceUpdateFilter {
+  and: [PromotionVariantPriceUpdateFilter!]
+  or: [PromotionVariantPriceUpdateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  priceType: StringFieldComparison
+  value: NumberFieldComparison
+  forever: BooleanFieldComparison
+  startsAt: DateFieldComparison
+  endsAt: DateFieldComparison
+  enabled: BooleanFieldComparison
+}
+
+input CreateOnePromotionVariantPriceInput {
+  """The record to create"""
+  promotionVariantPrice: CreatePromotionVariantPrice!
+}
+
+input CreatePromotionVariantPrice {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  priceType: String
+  value: Float
+  forever: Boolean
+  startsAt: DateTime
+  endsAt: DateTime
+  enabled: Boolean
+}
+
+input CreateManyPromotionVariantPricesInput {
+  """Array of records to create"""
+  promotionVariantPrices: [CreatePromotionVariantPrice!]!
+}
+
+input DeleteManyCartPriceRulesInput {
+  """Filter to find records to delete"""
+  filter: CartPriceRulesDeleteFilter!
+}
+
+input CartPriceRulesDeleteFilter {
+  and: [CartPriceRulesDeleteFilter!]
+  or: [CartPriceRulesDeleteFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  priceType: StringFieldComparison
+  value: NumberFieldComparison
+}
+
+input UpdateOneCartPriceRulesInput {
+  """The id of the record to update"""
+  id: ID!
+
+  """The update to apply."""
+  update: UpdateCartPriceRules!
+}
+
+input UpdateCartPriceRules {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  priceType: String
+  value: Float
+}
+
+input UpdateManyCartPriceRulesInput {
+  """Filter used to find fields to update"""
+  filter: CartPriceRulesUpdateFilter!
+
+  """The update to apply to all records found using the filter"""
+  update: UpdateCartPriceRules!
+}
+
+input CartPriceRulesUpdateFilter {
+  and: [CartPriceRulesUpdateFilter!]
+  or: [CartPriceRulesUpdateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  priceType: StringFieldComparison
+  value: NumberFieldComparison
+}
+
+input CreateOneCartPriceRulesInput {
+  """The record to create"""
+  cartPriceRules: CreateCartPriceRules!
+}
+
+input CreateCartPriceRules {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  priceType: String
+  value: Float
+}
+
+input CreateManyCartPriceRulesInput {
+  """Array of records to create"""
+  cartPriceRules: [CreateCartPriceRules!]!
+}
+
 type Subscription {
   deletedOneAsset(input: DeleteOneAssetSubscriptionFilterInput): AssetDeleteResponse!
   deletedManyAssets: DeleteManyResponse!
@@ -8633,6 +9086,16 @@ type Subscription {
   updatedOneOrderItem(input: UpdateOneOrderItemSubscriptionFilterInput): OrderItem!
   updatedManyOrderItems: UpdateManyResponse!
   createdOrderItem(input: CreateOrderItemSubscriptionFilterInput): OrderItem!
+  deletedOnePromotionVariantPrice(input: DeleteOnePromotionVariantPriceSubscriptionFilterInput): PromotionVariantPriceDeleteResponse!
+  deletedManyPromotionVariantPrices: DeleteManyResponse!
+  updatedOnePromotionVariantPrice(input: UpdateOnePromotionVariantPriceSubscriptionFilterInput): PromotionVariantPrice!
+  updatedManyPromotionVariantPrices: UpdateManyResponse!
+  createdPromotionVariantPrice(input: CreatePromotionVariantPriceSubscriptionFilterInput): PromotionVariantPrice!
+  deletedOneCartPriceRules(input: DeleteOneCartPriceRulesSubscriptionFilterInput): CartPriceRulesDeleteResponse!
+  deletedManyCartPriceRules: DeleteManyResponse!
+  updatedOneCartPriceRules(input: UpdateOneCartPriceRulesSubscriptionFilterInput): CartPriceRules!
+  updatedManyCartPriceRules: UpdateManyResponse!
+  createdCartPriceRules(input: CreateCartPriceRulesSubscriptionFilterInput): CartPriceRules!
 }
 
 input DeleteOneAssetSubscriptionFilterInput {
@@ -9557,4 +10020,58 @@ input UpdateOneOrderItemSubscriptionFilterInput {
 input CreateOrderItemSubscriptionFilterInput {
   """Specify to filter the records returned."""
   filter: OrderItemSubscriptionFilter!
+}
+
+input DeleteOnePromotionVariantPriceSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: PromotionVariantPriceSubscriptionFilter!
+}
+
+input PromotionVariantPriceSubscriptionFilter {
+  and: [PromotionVariantPriceSubscriptionFilter!]
+  or: [PromotionVariantPriceSubscriptionFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  priceType: StringFieldComparison
+  value: NumberFieldComparison
+  forever: BooleanFieldComparison
+  startsAt: DateFieldComparison
+  endsAt: DateFieldComparison
+  enabled: BooleanFieldComparison
+}
+
+input UpdateOnePromotionVariantPriceSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: PromotionVariantPriceSubscriptionFilter!
+}
+
+input CreatePromotionVariantPriceSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: PromotionVariantPriceSubscriptionFilter!
+}
+
+input DeleteOneCartPriceRulesSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: CartPriceRulesSubscriptionFilter!
+}
+
+input CartPriceRulesSubscriptionFilter {
+  and: [CartPriceRulesSubscriptionFilter!]
+  or: [CartPriceRulesSubscriptionFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  priceType: StringFieldComparison
+  value: NumberFieldComparison
+}
+
+input UpdateOneCartPriceRulesSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: CartPriceRulesSubscriptionFilter!
+}
+
+input CreateCartPriceRulesSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: CartPriceRulesSubscriptionFilter!
 }

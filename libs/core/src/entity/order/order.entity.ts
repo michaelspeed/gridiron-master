@@ -15,7 +15,8 @@ import {OrderItem, OrderLine, User} from '..';
 
 @ObjectType('Order')
 @Entity({name: 'order'})
-@FilterableConnection('item', () => OrderLine, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
+@FilterableConnection('line', () => OrderLine, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true, relationName: 'line'})
+@Relation('user', () => User, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true, relationName: 'user'})
 export class Order extends BaseEntity {
     @FilterableField(() => ID)
     @PrimaryGeneratedColumn('uuid')

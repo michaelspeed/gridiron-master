@@ -1,25 +1,19 @@
 import {Resolver} from "@nestjs/graphql";
-import {OrderLine} from "../../../entity";
+import {ProductVariantPrice, PromotionVariantPrice} from "../../../entity";
 import {CRUDResolver, PagingStrategies} from "@nestjs-query/query-graphql";
 import {InjectQueryService, QueryService} from "@nestjs-query/core";
 
-@Resolver(() => OrderLine)
-export class OrderLineResolver extends CRUDResolver(OrderLine, {
+@Resolver(of => PromotionVariantPrice)
+export class PromotionVariantPriceResolver extends CRUDResolver(PromotionVariantPrice, {
     pagingStrategy: PagingStrategies.OFFSET,
     enableAggregate: true,
     aggregate: {
         enabled: true
     },
-    enableSubscriptions: true,
-    create: {
-        disabled: true
-    },
-    delete: {
-        disabled: true
-    }
+    enableSubscriptions: true
 }){
     constructor(
-        @InjectQueryService(OrderLine) readonly service: QueryService<OrderLine>
+        @InjectQueryService(PromotionVariantPrice) readonly service: QueryService<PromotionVariantPrice>
     ) {
         super(service);
     }

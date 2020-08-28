@@ -55,6 +55,8 @@ import {ShopSearchResolver} from "./resolvers/shop/search.resolver";
 import {SearchFacetResolver} from "./resolvers/shop/facet.resolver";
 import {OrderLineResolver} from "./resolvers/admin/order-line.resolver";
 import {OrderItemResolver} from "./resolvers/admin/order-item.resolver";
+import {PromotionVariantPriceResolver} from "./resolvers/admin/promotion-variant-price.resolver";
+import {CartPriceResolver} from "./resolvers/admin/cart-price.resolver";
 
 const adminResolvers = [
     AdministratorResolver,
@@ -93,7 +95,9 @@ const adminResolvers = [
     AddressResolver,
     SettlementsResolver,
     OrderLineResolver,
-    OrderItemResolver
+    OrderItemResolver,
+    PromotionVariantPriceResolver,
+    CartPriceResolver
 ]
 
 const shopResolvers = [

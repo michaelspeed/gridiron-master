@@ -32,7 +32,7 @@ registerEnumType(StoreTypeEnum, {
 
 @ObjectType('Store')
 @Relation('country', () => Country, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
-@Relation('balance', () => StoreBalance, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
+@Relation('balance', () => StoreBalance, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true, nullable: true})
 @Connection('sku', () => StockKeeping, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @Connection('settlement', () => Settlements, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @Connection('prices', () => Settlements, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})

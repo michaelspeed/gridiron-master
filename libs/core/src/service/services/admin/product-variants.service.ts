@@ -89,6 +89,7 @@ export class ProductVariantsService {
             const variantPrice = await this.connection.getRepository(ProductVariantPrice).findOne({where: {id: variantPriceId}})
             variantPrice.price = price
             variantPrice.taxIncluded = included
+            console.log(await this.connection.getRepository(TaxRate).findOne({where:{id: taxId}}))
             variantPrice.tax = await this.connection.getRepository(TaxRate).findOne({where:{id: taxId}})
             this.connection.getRepository(ProductVariantPrice).save(variantPrice)
                 .then(value => resolve(value)).catch(error => reject(error))

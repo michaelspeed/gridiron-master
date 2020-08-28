@@ -15,10 +15,10 @@ import {ProductVariant, PromotionVariantPrice, Store, TaxRate} from '../';
 
 @ObjectType('ProductVariantPrice')
 @Entity({name: 'productVariantPrice'})
-@FilterableRelation('variant', () => ProductVariant, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
-@Relation('tax', () => TaxRate, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
-@Relation('store', () => TaxRate, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
-@Relation('promoprice', () => PromotionVariantPrice, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
+@FilterableRelation('variant', () => ProductVariant)
+@Relation('tax', () => TaxRate, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true, nullable: true})
+@Relation('store', () => Store, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
+@Relation('promoprice', () => PromotionVariantPrice, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true, nullable: true})
 export class ProductVariantPrice extends BaseEntity {
 
     @FilterableField(() => ID)
