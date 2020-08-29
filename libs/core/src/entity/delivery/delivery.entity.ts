@@ -3,13 +3,13 @@ import {
     BaseEntity,
     CreateDateColumn,
     Entity,
-    JoinColumn,
+    JoinColumn, OneToMany,
     OneToOne,
     PrimaryGeneratedColumn,
     UpdateDateColumn
 } from "typeorm";
 import {FilterableField} from "@nestjs-query/query-graphql";
-import {User} from "..";
+import {DeliverySignIn, User} from "..";
 
 @ObjectType('Delivery')
 @Entity({name: 'delivery'})
@@ -30,4 +30,8 @@ export class Delivery extends BaseEntity {
     @OneToOne(type => User, user => user.delivery)
     @JoinColumn()
     user: User
+
+    @Field(() => [DeliverySignIn])
+    @OneToMany(() => DeliverySignIn, signIn => signIn.delivery)
+    signIn: DeliverySignIn[]
 }

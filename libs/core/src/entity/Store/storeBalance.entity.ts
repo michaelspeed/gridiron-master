@@ -31,6 +31,10 @@ export class StoreBalance extends BaseEntity {
     @Column({default: 0, type: "float"})
     balance: number;
 
+    @FilterableField()
+    @Column({default: 0, type: "float"})
+    balanceVolume: number;
+
     @OneToOne(type1 => Store, store => store.balance)
     store: Store
 }

@@ -60,6 +60,8 @@ import {CollectionQuery} from "./collection/collectionquery.entity";
 import {ProductQuery} from "./product/productquery.entity";
 import {PromotionVariantPrice} from "./promotion-variant/promotion-variant-price.entity";
 import {CartPrice} from "./promotion-variant/cart-price.entity";
+import {Accounts} from "./Accounts/accounts.entity";
+import {DeliverySignIn} from "./delivery/delivery-signin.entity";
 
 export const coreEntityMap = {
     Address,
@@ -121,7 +123,9 @@ export const coreEntityMap = {
     DeliveryPool,
     Search,
     PromotionVariantPrice,
-    CartPrice
+    CartPrice,
+    Accounts,
+    DeliverySignIn
 }
 
 export const nestQueryDTOMap = {

@@ -951,6 +951,7 @@ type Vendor {
     """Specify to sort results."""
     sorting: [ZipSort!] = []
   ): [Zip!]!
+  account: Store!
   store: Store!
   license: VendorLicense!
   user: User!
@@ -1319,6 +1320,7 @@ type StoreBalance {
   createdAt: DateTime!
   updatedAt: DateTime!
   balance: Float!
+  balanceVolume: Float!
 }
 
 type Settlements {
@@ -2260,6 +2262,15 @@ type CartPriceRules {
   priceType: String!
   value: Float!
   collection: Collection
+}
+
+type Account {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  currentBalance: Float!
+  totalVolumeBalance: Float!
+  vendor: Vendor!
 }
 
 type Country {
@@ -5575,6 +5586,38 @@ type CartPriceRulesAggregateResponse {
   max: CartPriceRulesMaxAggregate
 }
 
+type AccountDeleteResponse {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  currentBalance: Float
+  totalVolumeBalance: Float
+}
+
+type AccountCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+}
+
+type AccountMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+type AccountMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+type AccountAggregateResponse {
+  count: AccountCountAggregate
+  min: AccountMinAggregate
+  max: AccountMaxAggregate
+}
+
 type Query {
   GetAdministratorData: Administrator!
   GetAllAdministrator(search: String): [Administrator!]!
@@ -6151,6 +6194,22 @@ type Query {
     """Filter to find records to aggregate on"""
     filter: CartPriceRulesAggregateFilter
   ): CartPriceRulesAggregateResponse!
+  account(id: ID!): Account
+  accounts(
+    """Limit or page results."""
+    paging: OffsetPaging = {limit: 10}
+
+    """Specify to filter the records returned."""
+    filter: AccountFilter = {}
+
+    """Specify to sort results."""
+    sorting: [AccountSort!] = []
+  ): [Account!]!
+  accountAggregate(
+    """Filter to find records to aggregate on"""
+    filter: AccountAggregateFilter
+  ): AccountAggregateResponse!
+  GetVendorAccount: Account!
 }
 
 input AssetFilter {
@@ -6675,6 +6734,34 @@ input CartPriceRulesAggregateFilter {
   value: NumberFieldComparison
 }
 
+input AccountFilter {
+  and: [AccountFilter!]
+  or: [AccountFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+}
+
+input AccountSort {
+  field: AccountSortFields!
+  direction: SortDirection!
+  nulls: SortNulls
+}
+
+enum AccountSortFields {
+  id
+  createdAt
+  updatedAt
+}
+
+input AccountAggregateFilter {
+  and: [AccountAggregateFilter!]
+  or: [AccountAggregateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+}
+
 type Mutation {
   administratorLogin(password: String!, email: String!): AdministratorDto!
   createAdministrator(type: AdministratorEnum!, phone: String!, email: String!, lname: String!, fname: String!): Administrator!
@@ -6761,10 +6848,12 @@ type Mutation {
   setVendorOnUser(input: RelationInput!): User!
   setAdministratorOnUser(input: RelationInput!): User!
   removeZipsFromVendor(input: RelationsInput!): Vendor!
+  removeAccountFromVendor(input: RelationInput!): Vendor!
   removeStoreFromVendor(input: RelationInput!): Vendor!
   removeLicenseFromVendor(input: RelationInput!): Vendor!
   removeUserFromVendor(input: RelationInput!): Vendor!
   addZipsToVendor(input: RelationsInput!): Vendor!
+  setAccountOnVendor(input: RelationInput!): Vendor!
   setStoreOnVendor(input: RelationInput!): Vendor!
   setLicenseOnVendor(input: RelationInput!): Vendor!
   setUserOnVendor(input: RelationInput!): Vendor!
@@ -7034,6 +7123,8 @@ type Mutation {
   createManyCartPriceRules(input: CreateManyCartPriceRulesInput!): [CartPriceRules!]!
   removeCollectionFromCartPriceRules(input: RelationInput!): CartPriceRules!
   setCollectionOnCartPriceRules(input: RelationInput!): CartPriceRules!
+  removeVendorFromAccount(input: RelationInput!): Account!
+  setVendorOnAccount(input: RelationInput!): Account!
 }
 
 input RelationsInput {
@@ -9138,6 +9229,11 @@ type Subscription {
   updatedOneCartPriceRules(input: UpdateOneCartPriceRulesSubscriptionFilterInput): CartPriceRules!
   updatedManyCartPriceRules: UpdateManyResponse!
   createdCartPriceRules(input: CreateCartPriceRulesSubscriptionFilterInput): CartPriceRules!
+  deletedOneAccount(input: DeleteOneAccountSubscriptionFilterInput): AccountDeleteResponse!
+  deletedManyAccounts: DeleteManyResponse!
+  updatedOneAccount(input: UpdateOneAccountSubscriptionFilterInput): Account!
+  updatedManyAccounts: UpdateManyResponse!
+  createdAccount(input: CreateAccountSubscriptionFilterInput): Account!
 }
 
 input DeleteOneAssetSubscriptionFilterInput {
@@ -10116,4 +10212,27 @@ input UpdateOneCartPriceRulesSubscriptionFilterInput {
 input CreateCartPriceRulesSubscriptionFilterInput {
   """Specify to filter the records returned."""
   filter: CartPriceRulesSubscriptionFilter!
+}
+
+input DeleteOneAccountSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: AccountSubscriptionFilter!
+}
+
+input AccountSubscriptionFilter {
+  and: [AccountSubscriptionFilter!]
+  or: [AccountSubscriptionFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+}
+
+input UpdateOneAccountSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: AccountSubscriptionFilter!
+}
+
+input CreateAccountSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: AccountSubscriptionFilter!
 }

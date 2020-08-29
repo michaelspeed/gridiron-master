@@ -1,7 +1,17 @@
 import {Injectable} from '@nestjs/common';
 import {InjectConnection} from '@nestjs/typeorm';
 import {Connection} from 'typeorm';
-import {AuthenticatedSession, Store, StoreTypeEnum, User, Vendor, VendorLicense, VendorPlans, Zone} from '../../../entity';
+import {
+    Accounts,
+    AuthenticatedSession,
+    Store,
+    StoreTypeEnum,
+    User,
+    Vendor,
+    VendorLicense,
+    VendorPlans,
+    Zone
+} from '../../../entity';
 import uniqid from 'uniqid';
 import {VendorPlanPrice, VendorPlanTenure} from '@gridiron/core/enums/VendorPlan';
 import * as bcrypt from 'bcrypt';
@@ -135,6 +145,10 @@ export class VendorService {
             store.rentalStore = rentals
             store.type = StoreTypeEnum.VENDOR
             vendor.store = await this.connection.getRepository(Store).save(store)
+
+            const account = new Accounts()
+            const savedAccount = await this.connection.getRepository(Accounts).save(account)
+            vendor.account = savedAccount
 
             const vendorLicense = new VendorLicense()
             const plan = await this.connection.getRepository(VendorPlans).findOne({where:{id: planID}})

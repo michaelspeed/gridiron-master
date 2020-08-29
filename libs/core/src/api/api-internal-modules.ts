@@ -57,6 +57,7 @@ import {OrderLineResolver} from "./resolvers/admin/order-line.resolver";
 import {OrderItemResolver} from "./resolvers/admin/order-item.resolver";
 import {PromotionVariantPriceResolver} from "./resolvers/admin/promotion-variant-price.resolver";
 import {CartPriceResolver} from "./resolvers/admin/cart-price.resolver";
+import {AccountsResolver} from "./resolvers/admin/accounts.resolver";
 
 const adminResolvers = [
     AdministratorResolver,
@@ -97,7 +98,8 @@ const adminResolvers = [
     OrderLineResolver,
     OrderItemResolver,
     PromotionVariantPriceResolver,
-    CartPriceResolver
+    CartPriceResolver,
+    AccountsResolver
 ]
 
 const shopResolvers = [

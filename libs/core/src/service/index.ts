@@ -15,6 +15,8 @@ export * from './services/admin/product.service'
 export * from './services/global/session.service'
 export * from './services/admin/billing-agreement.service'
 export * from './services/admin/order.service'
+export * from './services/admin/accounts.service'
+export * from './services/admin/delivery.service'
 
 export * from './helpers/utils/get-entity-throw'
 
