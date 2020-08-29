@@ -8,7 +8,7 @@ import {
     UpdateDateColumn
 } from "typeorm";
 import {ID, ObjectType, registerEnumType} from "@nestjs/graphql";
-import {FilterableField, PagingStrategies, Relation} from "@nestjs-query/query-graphql";
+import {FilterableField, FilterableRelation, PagingStrategies, Relation} from "@nestjs-query/query-graphql";
 import {ProductVariantPrice} from "../../entity";
 import {PricePromoType} from "@gridiron/core/enums";
 
@@ -18,7 +18,7 @@ registerEnumType(PricePromoType, {
 
 @ObjectType('PromotionVariantPrice')
 @Entity('promotion-variant-price')
-@Relation('price', () => ProductVariantPrice, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
+@FilterableRelation('price', () => ProductVariantPrice, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 export class PromotionVariantPrice extends BaseEntity {
 
     @FilterableField(() => ID)

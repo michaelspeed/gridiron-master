@@ -39,6 +39,7 @@ import {ShopAddressService} from "./services/shop/address.service";
 import {ShopSearchService} from "./services/shop/search.service";
 import {ShopFacetService} from "./services/shop/facet.service";
 import {OrderService} from "./services/admin/order.service";
+import {PromotionPriceVariantService} from "./services/admin/promotion-price-variant.service";
 
 export const adminServices = [
     AdministratorService,
@@ -62,7 +63,8 @@ export const adminServices = [
     ZipService,
     AdminMenuService,
     PageService,
-    OrderService
+    OrderService,
+    PromotionPriceVariantService
 ]
 
 export const globalServices = [

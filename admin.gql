@@ -775,8 +775,163 @@ type User {
   delivery: Delivery!
   cart: Cart!
   view: [View!]!
-  address: Address
-  order: [Order!]!
+  address: [Address!]
+  order: [Order!]
+  orders(
+    """Limit or page results."""
+    paging: OffsetPaging = {limit: 10}
+
+    """Specify to filter the records returned."""
+    filter: OrderFilter = {}
+
+    """Specify to sort results."""
+    sorting: [OrderSort!] = []
+  ): [Order!]
+  addresses(
+    """Limit or page results."""
+    paging: OffsetPaging = {limit: 10}
+
+    """Specify to filter the records returned."""
+    filter: AddressFilter = {}
+
+    """Specify to sort results."""
+    sorting: [AddressSort!] = []
+  ): [Address!]
+  ordersAggregate(
+    """Filter to find records to aggregate on"""
+    filter: OrderAggregateFilter
+  ): UserOrdersAggregateResponse!
+  addressesAggregate(
+    """Filter to find records to aggregate on"""
+    filter: AddressAggregateFilter
+  ): UserAddressesAggregateResponse!
+}
+
+input OrderFilter {
+  and: [OrderFilter!]
+  or: [OrderFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  totalPrice: NumberFieldComparison
+  address: StringFieldComparison
+  line: OrderFilterOrderLineFilter
+}
+
+input OrderFilterOrderLineFilter {
+  and: [OrderFilterOrderLineFilter!]
+  or: [OrderFilterOrderLineFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  stage: StringFieldComparison
+}
+
+input OrderSort {
+  field: OrderSortFields!
+  direction: SortDirection!
+  nulls: SortNulls
+}
+
+enum OrderSortFields {
+  id
+  createdAt
+  updatedAt
+  totalPrice
+  address
+}
+
+input AddressFilter {
+  and: [AddressFilter!]
+  or: [AddressFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  fullName: StringFieldComparison
+  addressLine: StringFieldComparison
+  city: StringFieldComparison
+  state: StringFieldComparison
+  landmark: StringFieldComparison
+  postalCode: StringFieldComparison
+  phoneNumber: StringFieldComparison
+  alternatePhoneNumber: StringFieldComparison
+  defaultShippingAddress: BooleanFieldComparison
+  defaultBillingAddress: BooleanFieldComparison
+  addressType: AddressTypeFilterComparison
+}
+
+input AddressTypeFilterComparison {
+  is: Boolean
+  isNot: Boolean
+  eq: AddressType
+  neq: AddressType
+  gt: AddressType
+  gte: AddressType
+  lt: AddressType
+  lte: AddressType
+  like: AddressType
+  notLike: AddressType
+  iLike: AddressType
+  notILike: AddressType
+  in: [AddressType!]
+  notIn: [AddressType!]
+}
+
+enum AddressType {
+  HOME
+  WORK
+}
+
+input AddressSort {
+  field: AddressSortFields!
+  direction: SortDirection!
+  nulls: SortNulls
+}
+
+enum AddressSortFields {
+  id
+  createdAt
+  updatedAt
+  fullName
+  addressLine
+  city
+  state
+  landmark
+  postalCode
+  phoneNumber
+  alternatePhoneNumber
+  defaultShippingAddress
+  defaultBillingAddress
+  addressType
+}
+
+input OrderAggregateFilter {
+  and: [OrderAggregateFilter!]
+  or: [OrderAggregateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  totalPrice: NumberFieldComparison
+  address: StringFieldComparison
+}
+
+input AddressAggregateFilter {
+  and: [AddressAggregateFilter!]
+  or: [AddressAggregateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  fullName: StringFieldComparison
+  addressLine: StringFieldComparison
+  city: StringFieldComparison
+  state: StringFieldComparison
+  landmark: StringFieldComparison
+  postalCode: StringFieldComparison
+  phoneNumber: StringFieldComparison
+  alternatePhoneNumber: StringFieldComparison
+  defaultShippingAddress: BooleanFieldComparison
+  defaultBillingAddress: BooleanFieldComparison
+  addressType: AddressTypeFilterComparison
 }
 
 type Vendor {
@@ -945,7 +1100,26 @@ input ProductVariantPriceFilter {
   updatedAt: DateFieldComparison
   price: NumberFieldComparison
   taxIncluded: BooleanFieldComparison
+  store: ProductVariantPriceFilterStoreFilter
   variant: ProductVariantPriceFilterProductVariantFilter
+}
+
+input ProductVariantPriceFilterStoreFilter {
+  and: [ProductVariantPriceFilterStoreFilter!]
+  or: [ProductVariantPriceFilterStoreFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  storeName: StringFieldComparison
+  phoneNumber: StringFieldComparison
+  officialemail: StringFieldComparison
+  zipcode: StringFieldComparison
+  streetAddress1: StringFieldComparison
+  streetAddress2: StringFieldComparison
+  GSTIN: StringFieldComparison
+  singleStore: BooleanFieldComparison
+  rentalStore: BooleanFieldComparison
+  channelMarkets: BooleanFieldComparison
 }
 
 input ProductVariantPriceFilterProductVariantFilter {
@@ -2171,100 +2345,7 @@ type Address {
   defaultShippingAddress: Boolean!
   defaultBillingAddress: Boolean!
   addressType: AddressType!
-  users(
-    """Limit or page results."""
-    paging: CursorPaging = {first: 10}
-
-    """Specify to filter the records returned."""
-    filter: UserFilter = {}
-
-    """Specify to sort results."""
-    sorting: [UserSort!] = []
-  ): AddressUsersConnection
-  usersAggregate(
-    """Filter to find records to aggregate on"""
-    filter: UserAggregateFilter
-  ): AddressUsersAggregateResponse!
-}
-
-enum AddressType {
-  HOME
-  WORK
-}
-
-input CursorPaging {
-  """Paginate before opaque cursor"""
-  before: ConnectionCursor
-
-  """Paginate after opaque cursor"""
-  after: ConnectionCursor
-
-  """Paginate first"""
-  first: Int
-
-  """Paginate last"""
-  last: Int
-}
-
-"""Cursor for paging through collections"""
-scalar ConnectionCursor
-
-input UserFilter {
-  and: [UserFilter!]
-  or: [UserFilter!]
-  id: IDFilterComparison
-  createdAt: DateFieldComparison
-  updatedAt: DateFieldComparison
-  email: StringFieldComparison
-  verified: BooleanFieldComparison
-  verificationToken: StringFieldComparison
-  passwordResetToken: StringFieldComparison
-  identifierChangeToken: StringFieldComparison
-  pendingIdentifier: StringFieldComparison
-  lastLogin: DateFieldComparison
-  firstName: StringFieldComparison
-  lastName: StringFieldComparison
-  phoneNumber: StringFieldComparison
-}
-
-input UserSort {
-  field: UserSortFields!
-  direction: SortDirection!
-  nulls: SortNulls
-}
-
-enum UserSortFields {
-  id
-  createdAt
-  updatedAt
-  email
-  verified
-  verificationToken
-  passwordResetToken
-  identifierChangeToken
-  pendingIdentifier
-  lastLogin
-  firstName
-  lastName
-  phoneNumber
-}
-
-input UserAggregateFilter {
-  and: [UserAggregateFilter!]
-  or: [UserAggregateFilter!]
-  id: IDFilterComparison
-  createdAt: DateFieldComparison
-  updatedAt: DateFieldComparison
-  email: StringFieldComparison
-  verified: BooleanFieldComparison
-  verificationToken: StringFieldComparison
-  passwordResetToken: StringFieldComparison
-  identifierChangeToken: StringFieldComparison
-  pendingIdentifier: StringFieldComparison
-  lastLogin: DateFieldComparison
-  firstName: StringFieldComparison
-  lastName: StringFieldComparison
-  phoneNumber: StringFieldComparison
+  user: User
 }
 
 type AdministratorDto {
@@ -3175,6 +3256,99 @@ type UserAggregateResponse {
   count: UserCountAggregate
   min: UserMinAggregate
   max: UserMaxAggregate
+}
+
+type UserOrdersCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  totalPrice: Int
+  address: Int
+}
+
+type UserOrdersSumAggregate {
+  totalPrice: Float
+}
+
+type UserOrdersAvgAggregate {
+  totalPrice: Float
+}
+
+type UserOrdersMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  totalPrice: Float
+  address: String
+}
+
+type UserOrdersMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  totalPrice: Float
+  address: String
+}
+
+type UserOrdersAggregateResponse {
+  count: UserOrdersCountAggregate
+  sum: UserOrdersSumAggregate
+  avg: UserOrdersAvgAggregate
+  min: UserOrdersMinAggregate
+  max: UserOrdersMaxAggregate
+}
+
+type UserAddressesCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  fullName: Int
+  addressLine: Int
+  city: Int
+  state: Int
+  landmark: Int
+  postalCode: Int
+  phoneNumber: Int
+  alternatePhoneNumber: Int
+  defaultShippingAddress: Int
+  defaultBillingAddress: Int
+  addressType: Int
+}
+
+type UserAddressesMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  fullName: String
+  addressLine: String
+  city: String
+  state: String
+  landmark: String
+  postalCode: String
+  phoneNumber: String
+  alternatePhoneNumber: String
+  addressType: AddressType
+}
+
+type UserAddressesMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  fullName: String
+  addressLine: String
+  city: String
+  state: String
+  landmark: String
+  postalCode: String
+  phoneNumber: String
+  alternatePhoneNumber: String
+  addressType: AddressType
+}
+
+type UserAddressesAggregateResponse {
+  count: UserAddressesCountAggregate
+  min: UserAddressesMinAggregate
+  max: UserAddressesMaxAggregate
 }
 
 type VendorDto {
@@ -5146,88 +5320,6 @@ type AddressAggregateResponse {
   max: AddressMaxAggregate
 }
 
-type UserEdge {
-  """The node containing the User"""
-  node: User!
-
-  """Cursor for this node."""
-  cursor: ConnectionCursor!
-}
-
-type PageInfo {
-  """true if paging forward and there are more records."""
-  hasNextPage: Boolean
-
-  """true if paging backwards and there are more records."""
-  hasPreviousPage: Boolean
-
-  """The cursor of the first returned record."""
-  startCursor: ConnectionCursor
-
-  """The cursor of the last returned record."""
-  endCursor: ConnectionCursor
-}
-
-type AddressUsersConnection {
-  """Paging information"""
-  pageInfo: PageInfo!
-
-  """Array of edges."""
-  edges: [UserEdge!]!
-}
-
-type AddressUsersCountAggregate {
-  id: Int
-  createdAt: Int
-  updatedAt: Int
-  email: Int
-  verified: Int
-  verificationToken: Int
-  passwordResetToken: Int
-  identifierChangeToken: Int
-  pendingIdentifier: Int
-  lastLogin: Int
-  firstName: Int
-  lastName: Int
-  phoneNumber: Int
-}
-
-type AddressUsersMinAggregate {
-  id: ID
-  createdAt: DateTime
-  updatedAt: DateTime
-  email: String
-  verificationToken: String
-  passwordResetToken: String
-  identifierChangeToken: String
-  pendingIdentifier: String
-  lastLogin: DateTime
-  firstName: String
-  lastName: String
-  phoneNumber: String
-}
-
-type AddressUsersMaxAggregate {
-  id: ID
-  createdAt: DateTime
-  updatedAt: DateTime
-  email: String
-  verificationToken: String
-  passwordResetToken: String
-  identifierChangeToken: String
-  pendingIdentifier: String
-  lastLogin: DateTime
-  firstName: String
-  lastName: String
-  phoneNumber: String
-}
-
-type AddressUsersAggregateResponse {
-  count: AddressUsersCountAggregate
-  min: AddressUsersMinAggregate
-  max: AddressUsersMaxAggregate
-}
-
 type SettlementsDeleteResponse {
   id: ID
   createdAt: DateTime
@@ -6044,6 +6136,7 @@ type Query {
     """Filter to find records to aggregate on"""
     filter: PromotionVariantPriceAggregateFilter
   ): PromotionVariantPriceAggregateResponse!
+  GetPromotionsPrices: [ProductVariantPrice!]!
   cartPriceRules(
     """Limit or page results."""
     paging: OffsetPaging = {limit: 10}
@@ -6220,6 +6313,64 @@ input TaxCategoryAggregateFilter {
   name: StringFieldComparison
 }
 
+input UserFilter {
+  and: [UserFilter!]
+  or: [UserFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  email: StringFieldComparison
+  verified: BooleanFieldComparison
+  verificationToken: StringFieldComparison
+  passwordResetToken: StringFieldComparison
+  identifierChangeToken: StringFieldComparison
+  pendingIdentifier: StringFieldComparison
+  lastLogin: DateFieldComparison
+  firstName: StringFieldComparison
+  lastName: StringFieldComparison
+  phoneNumber: StringFieldComparison
+}
+
+input UserSort {
+  field: UserSortFields!
+  direction: SortDirection!
+  nulls: SortNulls
+}
+
+enum UserSortFields {
+  id
+  createdAt
+  updatedAt
+  email
+  verified
+  verificationToken
+  passwordResetToken
+  identifierChangeToken
+  pendingIdentifier
+  lastLogin
+  firstName
+  lastName
+  phoneNumber
+}
+
+input UserAggregateFilter {
+  and: [UserAggregateFilter!]
+  or: [UserAggregateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  email: StringFieldComparison
+  verified: BooleanFieldComparison
+  verificationToken: StringFieldComparison
+  passwordResetToken: StringFieldComparison
+  identifierChangeToken: StringFieldComparison
+  pendingIdentifier: StringFieldComparison
+  lastLogin: DateFieldComparison
+  firstName: StringFieldComparison
+  lastName: StringFieldComparison
+  phoneNumber: StringFieldComparison
+}
+
 input SeoFilter {
   and: [SeoFilter!]
   or: [SeoFilter!]
@@ -6359,50 +6510,6 @@ input VendorPlansAggregateFilter {
   planValue: NumberFieldComparison
 }
 
-input OrderFilter {
-  and: [OrderFilter!]
-  or: [OrderFilter!]
-  id: IDFilterComparison
-  createdAt: DateFieldComparison
-  updatedAt: DateFieldComparison
-  totalPrice: NumberFieldComparison
-  address: StringFieldComparison
-  line: OrderFilterOrderLineFilter
-}
-
-input OrderFilterOrderLineFilter {
-  and: [OrderFilterOrderLineFilter!]
-  or: [OrderFilterOrderLineFilter!]
-  id: IDFilterComparison
-  createdAt: DateFieldComparison
-  updatedAt: DateFieldComparison
-  stage: StringFieldComparison
-}
-
-input OrderSort {
-  field: OrderSortFields!
-  direction: SortDirection!
-  nulls: SortNulls
-}
-
-enum OrderSortFields {
-  id
-  createdAt
-  updatedAt
-  totalPrice
-  address
-}
-
-input OrderAggregateFilter {
-  and: [OrderAggregateFilter!]
-  or: [OrderAggregateFilter!]
-  id: IDFilterComparison
-  createdAt: DateFieldComparison
-  updatedAt: DateFieldComparison
-  totalPrice: NumberFieldComparison
-  address: StringFieldComparison
-}
-
 input PageFilter {
   and: [PageFilter!]
   or: [PageFilter!]
@@ -6477,84 +6584,6 @@ input PageAggregateFilter {
   pageCategory: PageCategoryFilterComparison
 }
 
-input AddressFilter {
-  and: [AddressFilter!]
-  or: [AddressFilter!]
-  id: IDFilterComparison
-  createdAt: DateFieldComparison
-  updatedAt: DateFieldComparison
-  fullName: StringFieldComparison
-  addressLine: StringFieldComparison
-  city: StringFieldComparison
-  state: StringFieldComparison
-  landmark: StringFieldComparison
-  postalCode: StringFieldComparison
-  phoneNumber: StringFieldComparison
-  alternatePhoneNumber: StringFieldComparison
-  defaultShippingAddress: BooleanFieldComparison
-  defaultBillingAddress: BooleanFieldComparison
-  addressType: AddressTypeFilterComparison
-}
-
-input AddressTypeFilterComparison {
-  is: Boolean
-  isNot: Boolean
-  eq: AddressType
-  neq: AddressType
-  gt: AddressType
-  gte: AddressType
-  lt: AddressType
-  lte: AddressType
-  like: AddressType
-  notLike: AddressType
-  iLike: AddressType
-  notILike: AddressType
-  in: [AddressType!]
-  notIn: [AddressType!]
-}
-
-input AddressSort {
-  field: AddressSortFields!
-  direction: SortDirection!
-  nulls: SortNulls
-}
-
-enum AddressSortFields {
-  id
-  createdAt
-  updatedAt
-  fullName
-  addressLine
-  city
-  state
-  landmark
-  postalCode
-  phoneNumber
-  alternatePhoneNumber
-  defaultShippingAddress
-  defaultBillingAddress
-  addressType
-}
-
-input AddressAggregateFilter {
-  and: [AddressAggregateFilter!]
-  or: [AddressAggregateFilter!]
-  id: IDFilterComparison
-  createdAt: DateFieldComparison
-  updatedAt: DateFieldComparison
-  fullName: StringFieldComparison
-  addressLine: StringFieldComparison
-  city: StringFieldComparison
-  state: StringFieldComparison
-  landmark: StringFieldComparison
-  postalCode: StringFieldComparison
-  phoneNumber: StringFieldComparison
-  alternatePhoneNumber: StringFieldComparison
-  defaultShippingAddress: BooleanFieldComparison
-  defaultBillingAddress: BooleanFieldComparison
-  addressType: AddressTypeFilterComparison
-}
-
 input PromotionVariantPriceFilter {
   and: [PromotionVariantPriceFilter!]
   or: [PromotionVariantPriceFilter!]
@@ -6567,6 +6596,17 @@ input PromotionVariantPriceFilter {
   startsAt: DateFieldComparison
   endsAt: DateFieldComparison
   enabled: BooleanFieldComparison
+  price: PromotionVariantPriceFilterProductVariantPriceFilter
+}
+
+input PromotionVariantPriceFilterProductVariantPriceFilter {
+  and: [PromotionVariantPriceFilterProductVariantPriceFilter!]
+  or: [PromotionVariantPriceFilterProductVariantPriceFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  price: NumberFieldComparison
+  taxIncluded: BooleanFieldComparison
 }
 
 input PromotionVariantPriceSort {
@@ -6712,10 +6752,12 @@ type Mutation {
   setCategoryOnTaxRate(input: RelationInput!): TaxRate!
   deleteOneUser(input: DeleteOneInput!): UserDeleteResponse!
   deleteManyUsers(input: DeleteManyUsersInput!): DeleteManyResponse!
-  removeAddressFromUser(input: RelationInput!): User!
+  removeOrdersFromUser(input: RelationsInput!): User!
+  removeAddressesFromUser(input: RelationsInput!): User!
   removeVendorFromUser(input: RelationInput!): User!
   removeAdministratorFromUser(input: RelationInput!): User!
-  setAddressOnUser(input: RelationInput!): User!
+  addOrdersToUser(input: RelationsInput!): User!
+  addAddressesToUser(input: RelationsInput!): User!
   setVendorOnUser(input: RelationInput!): User!
   setAdministratorOnUser(input: RelationInput!): User!
   removeZipsFromVendor(input: RelationsInput!): Vendor!
@@ -6958,8 +7000,8 @@ type Mutation {
   updateManyAddresses(input: UpdateManyAddressesInput!): UpdateManyResponse!
   createOneAddress(input: CreateOneAddressInput!): Address!
   createManyAddresses(input: CreateManyAddressesInput!): [Address!]!
-  removeUsersFromAddress(input: RelationsInput!): Address!
-  addUsersToAddress(input: RelationsInput!): Address!
+  removeUserFromAddress(input: RelationInput!): Address!
+  setUserOnAddress(input: RelationInput!): Address!
   removeStoreFromSettlements(input: RelationInput!): Settlements!
   setStoreOnSettlements(input: RelationInput!): Settlements!
   updateOneOrderLine(input: UpdateOneOrderLineInput!): OrderLine!

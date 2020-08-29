@@ -11,7 +11,7 @@ registerEnumType(AddressType, {
 
 @ObjectType('Address')
 @Entity({name: 'address'})
-@Connection('user', () => User, {nullable: true})
+@Relation('user', () => User, {nullable: true, relationName: 'user'})
 export class Address extends BaseEntity {
 
     @FilterableField(() => ID)

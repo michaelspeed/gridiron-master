@@ -10,13 +10,14 @@ import {
     UpdateDateColumn
 } from 'typeorm';
 import {Field, ID, ObjectType} from '@nestjs/graphql';
-import {FilterableField, PagingStrategies, Relation} from '@nestjs-query/query-graphql';
+import {Connection, FilterableField, PagingStrategies, Relation} from '@nestjs-query/query-graphql';
 import {Address, Administrator, Cart, Delivery, Order, Vendor, View} from '..';
 
 @ObjectType('User')
 @Relation('administrator', () => Administrator, {nullable: true})
 @Relation('vendor', () => Vendor, {nullable: true})
-@Relation('address', () => Address, {nullable: true})
+@Connection('address', () => Address, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true, nullable: true, relationName: 'address'})
+@Connection('order', () => Order, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true, nullable: true, relationName: 'order'})
 @Entity({name: 'user'})
 export class User extends BaseEntity {
 
@@ -97,11 +98,11 @@ export class User extends BaseEntity {
     @OneToMany(() => View, view => view.user)
     view: View[]
 
-    @Field(() => [Address])
+    @Field(() => [Address], {nullable: true})
     @OneToMany(() => Address, add => add.user)
     address: Address[]
 
-    @Field(() => [Order])
+    @Field(() => [Order], {nullable: true})
     @OneToMany(() => Order, order => order.user)
     order: Order[]
 }
