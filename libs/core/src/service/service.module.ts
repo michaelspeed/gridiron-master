@@ -42,6 +42,7 @@ import {OrderService} from "./services/admin/order.service";
 import {PromotionPriceVariantService} from "./services/admin/promotion-price-variant.service";
 import {AccountsService} from "./services/admin/accounts.service";
 import {DeliveryService} from "./services/admin/delivery.service";
+import {OrderLineSubscriber} from "./services/subscribers/OrderSubscriber";
 
 export const adminServices = [
     AdministratorService,
@@ -138,7 +139,8 @@ export class ServiceModule {
                 useFactory: (configService: ConfigService) => {
                     return {
                         subscribers: [
-                            ZipSubscriber
+                            ZipSubscriber,
+                            OrderLineSubscriber
                         ],
                         ...configService.dbConnectionOptions
                     }

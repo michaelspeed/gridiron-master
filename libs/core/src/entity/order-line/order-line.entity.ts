@@ -11,7 +11,7 @@ import {
 } from 'typeorm';
 import {Field, ID, ObjectType, registerEnumType} from '@nestjs/graphql';
 import {FilterableField, FilterableRelation, PagingStrategies, Relation} from '@nestjs-query/query-graphql';
-import {Order, OrderItem, ProductVariant, Store, TaxCategory, Vendor} from '..';
+import {DeliveryPool, Order, OrderItem, ProductVariant, Store, TaxCategory, Vendor} from '..';
 import GraphQLJSON from "graphql-type-json";
 import {OrderStageType} from "@gridiron/core/enums";
 
@@ -24,6 +24,7 @@ registerEnumType(OrderStageType, {
 @Relation('order', () => Order, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @Relation('item', () => OrderItem, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @FilterableRelation('store', () => Store, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true, relationName: 'store'})
+@FilterableRelation('pool', () => DeliveryPool, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true, relationName: 'pool'})
 export class OrderLine extends BaseEntity {
 
     @FilterableField(() => ID)
@@ -55,4 +56,7 @@ export class OrderLine extends BaseEntity {
 
     @ManyToOne(() => Store, vendor => vendor.line)
     store: Store
+
+    @ManyToOne(() => DeliveryPool, pool => pool.lines)
+    pool: DeliveryPool
 }

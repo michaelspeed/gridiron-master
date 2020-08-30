@@ -519,7 +519,16 @@ input OrderLineFilter {
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
   stage: StringFieldComparison
+  pool: OrderLineFilterDeliveryPoolFilter
   store: OrderLineFilterStoreFilter
+}
+
+input OrderLineFilterDeliveryPoolFilter {
+  and: [OrderLineFilterDeliveryPoolFilter!]
+  or: [OrderLineFilterDeliveryPoolFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
 }
 
 input OrderLineFilterStoreFilter {
@@ -578,6 +587,7 @@ type OrderLine {
   updatedAt: DateTime!
   priceField: JSON!
   stage: String!
+  pool: DeliveryPool!
   store: Store!
   item: OrderItem!
   order: Order!
@@ -772,8 +782,8 @@ type User {
   phoneNumber: String!
   administrator: Administrator
   vendor: Vendor
-  delivery: Delivery!
-  cart: Cart!
+  delivery: Delivery
+  cart: Cart
   view: [View!]!
   address: [Address!]
   order: [Order!]
@@ -2239,7 +2249,58 @@ type Delivery {
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
-  user: User!
+  user: User
+  signIn: [DeliverySignIn!]!
+  signIns(
+    """Limit or page results."""
+    paging: OffsetPaging = {limit: 10}
+
+    """Specify to filter the records returned."""
+    filter: DeliverySignInFilter = {}
+
+    """Specify to sort results."""
+    sorting: [DeliverySignInSort!] = []
+  ): [DeliverySignIn!]
+  signInsAggregate(
+    """Filter to find records to aggregate on"""
+    filter: DeliverySignInAggregateFilter
+  ): DeliverySignInsAggregateResponse!
+}
+
+input DeliverySignInFilter {
+  and: [DeliverySignInFilter!]
+  or: [DeliverySignInFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+}
+
+input DeliverySignInSort {
+  field: DeliverySignInSortFields!
+  direction: SortDirection!
+  nulls: SortNulls
+}
+
+enum DeliverySignInSortFields {
+  id
+  createdAt
+  updatedAt
+}
+
+input DeliverySignInAggregateFilter {
+  and: [DeliverySignInAggregateFilter!]
+  or: [DeliverySignInAggregateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+}
+
+type DeliveryPool {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  signIn: DeliverySignIn!
+  lines: [OrderLine!]!
 }
 
 type PromotionVariantPrice {
@@ -2271,6 +2332,14 @@ type Account {
   currentBalance: Float!
   totalVolumeBalance: Float!
   vendor: Vendor!
+}
+
+type DeliverySignIn {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  delivery: Delivery!
+  pool: DeliveryPool!
 }
 
 type Country {
@@ -5618,6 +5687,66 @@ type AccountAggregateResponse {
   max: AccountMaxAggregate
 }
 
+type DeliveryStrandedCount {
+  count: Float!
+}
+
+type DeliveryDeleteResponse {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  user: User
+  signIn: [DeliverySignIn!]
+}
+
+type DeliveryCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+}
+
+type DeliveryMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+type DeliveryMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+type DeliveryAggregateResponse {
+  count: DeliveryCountAggregate
+  min: DeliveryMinAggregate
+  max: DeliveryMaxAggregate
+}
+
+type DeliverySignInsCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+}
+
+type DeliverySignInsMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+type DeliverySignInsMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+type DeliverySignInsAggregateResponse {
+  count: DeliverySignInsCountAggregate
+  min: DeliverySignInsMinAggregate
+  max: DeliverySignInsMaxAggregate
+}
+
 type Query {
   GetAdministratorData: Administrator!
   GetAllAdministrator(search: String): [Administrator!]!
@@ -6210,6 +6339,23 @@ type Query {
     filter: AccountAggregateFilter
   ): AccountAggregateResponse!
   GetVendorAccount: Account!
+  delivery(id: ID!): Delivery
+  deliveries(
+    """Limit or page results."""
+    paging: OffsetPaging = {limit: 10}
+
+    """Specify to filter the records returned."""
+    filter: DeliveryFilter = {}
+
+    """Specify to sort results."""
+    sorting: [DeliverySort!] = []
+  ): [Delivery!]!
+  deliveryAggregate(
+    """Filter to find records to aggregate on"""
+    filter: DeliveryAggregateFilter
+  ): DeliveryAggregateResponse!
+  GetPoolStrength: [DeliveryPool!]!
+  GetDeliveryStrandedCount: DeliveryStrandedCount!
 }
 
 input AssetFilter {
@@ -6762,6 +6908,43 @@ input AccountAggregateFilter {
   updatedAt: DateFieldComparison
 }
 
+input DeliveryFilter {
+  and: [DeliveryFilter!]
+  or: [DeliveryFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  signIn: DeliveryFilterDeliverySignInFilter
+}
+
+input DeliveryFilterDeliverySignInFilter {
+  and: [DeliveryFilterDeliverySignInFilter!]
+  or: [DeliveryFilterDeliverySignInFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+}
+
+input DeliverySort {
+  field: DeliverySortFields!
+  direction: SortDirection!
+  nulls: SortNulls
+}
+
+enum DeliverySortFields {
+  id
+  createdAt
+  updatedAt
+}
+
+input DeliveryAggregateFilter {
+  and: [DeliveryAggregateFilter!]
+  or: [DeliveryAggregateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+}
+
 type Mutation {
   administratorLogin(password: String!, email: String!): AdministratorDto!
   createAdministrator(type: AdministratorEnum!, phone: String!, email: String!, lname: String!, fname: String!): Administrator!
@@ -6841,10 +7024,12 @@ type Mutation {
   deleteManyUsers(input: DeleteManyUsersInput!): DeleteManyResponse!
   removeOrdersFromUser(input: RelationsInput!): User!
   removeAddressesFromUser(input: RelationsInput!): User!
+  removeDeliveryFromUser(input: RelationInput!): User!
   removeVendorFromUser(input: RelationInput!): User!
   removeAdministratorFromUser(input: RelationInput!): User!
   addOrdersToUser(input: RelationsInput!): User!
   addAddressesToUser(input: RelationsInput!): User!
+  setDeliveryOnUser(input: RelationInput!): User!
   setVendorOnUser(input: RelationInput!): User!
   setAdministratorOnUser(input: RelationInput!): User!
   removeZipsFromVendor(input: RelationsInput!): Vendor!
@@ -7095,9 +7280,11 @@ type Mutation {
   setStoreOnSettlements(input: RelationInput!): Settlements!
   updateOneOrderLine(input: UpdateOneOrderLineInput!): OrderLine!
   updateManyOrderLines(input: UpdateManyOrderLinesInput!): UpdateManyResponse!
+  removePoolFromOrderLine(input: RelationInput!): OrderLine!
   removeStoreFromOrderLine(input: RelationInput!): OrderLine!
   removeItemFromOrderLine(input: RelationInput!): OrderLine!
   removeOrderFromOrderLine(input: RelationInput!): OrderLine!
+  setPoolOnOrderLine(input: RelationInput!): OrderLine!
   setStoreOnOrderLine(input: RelationInput!): OrderLine!
   setItemOnOrderLine(input: RelationInput!): OrderLine!
   setOrderOnOrderLine(input: RelationInput!): OrderLine!
@@ -7125,6 +7312,12 @@ type Mutation {
   setCollectionOnCartPriceRules(input: RelationInput!): CartPriceRules!
   removeVendorFromAccount(input: RelationInput!): Account!
   setVendorOnAccount(input: RelationInput!): Account!
+  removeSignInsFromDelivery(input: RelationsInput!): Delivery!
+  removeUserFromDelivery(input: RelationInput!): Delivery!
+  addSignInsToDelivery(input: RelationsInput!): Delivery!
+  setUserOnDelivery(input: RelationInput!): Delivery!
+  SetNewDeliveryGuy(userId: ID!): Delivery!
+  SetDeliverySignIn(type: Boolean!): DeliverySignIn!
 }
 
 input RelationsInput {
@@ -9234,6 +9427,11 @@ type Subscription {
   updatedOneAccount(input: UpdateOneAccountSubscriptionFilterInput): Account!
   updatedManyAccounts: UpdateManyResponse!
   createdAccount(input: CreateAccountSubscriptionFilterInput): Account!
+  deletedOneDelivery(input: DeleteOneDeliverySubscriptionFilterInput): DeliveryDeleteResponse!
+  deletedManyDeliveries: DeleteManyResponse!
+  updatedOneDelivery(input: UpdateOneDeliverySubscriptionFilterInput): Delivery!
+  updatedManyDeliveries: UpdateManyResponse!
+  createdDelivery(input: CreateDeliverySubscriptionFilterInput): Delivery!
 }
 
 input DeleteOneAssetSubscriptionFilterInput {
@@ -10235,4 +10433,27 @@ input UpdateOneAccountSubscriptionFilterInput {
 input CreateAccountSubscriptionFilterInput {
   """Specify to filter the records returned."""
   filter: AccountSubscriptionFilter!
+}
+
+input DeleteOneDeliverySubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: DeliverySubscriptionFilter!
+}
+
+input DeliverySubscriptionFilter {
+  and: [DeliverySubscriptionFilter!]
+  or: [DeliverySubscriptionFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+}
+
+input UpdateOneDeliverySubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: DeliverySubscriptionFilter!
+}
+
+input CreateDeliverySubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: DeliverySubscriptionFilter!
 }

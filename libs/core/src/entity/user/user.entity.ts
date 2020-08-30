@@ -3,7 +3,7 @@ import {
     Column,
     CreateDateColumn,
     Entity,
-    Index,
+    Index, JoinColumn,
     OneToMany,
     OneToOne,
     PrimaryGeneratedColumn,
@@ -16,6 +16,7 @@ import {Address, Administrator, Cart, Delivery, Order, Vendor, View} from '..';
 @ObjectType('User')
 @Relation('administrator', () => Administrator, {nullable: true})
 @Relation('vendor', () => Vendor, {nullable: true})
+@Relation('delivery', () => Delivery, {nullable: true})
 @Connection('address', () => Address, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true, nullable: true, relationName: 'address'})
 @Connection('order', () => Order, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true, nullable: true, relationName: 'order'})
 @Entity({name: 'user'})
@@ -78,19 +79,20 @@ export class User extends BaseEntity {
     @Column()
     phoneNumber: string;
 
-    @Field(() => Administrator)
+    @Field(() => Administrator, {nullable: true})
     @OneToOne(type => Administrator, ad => ad.user)
     administrator: Administrator;
 
-    @Field(() => Vendor)
+    @Field(() => Vendor, {nullable: true})
     @OneToOne(type => Vendor, vendor => vendor.user)
     vendor: Vendor
 
-    @Field(() => Delivery)
+    @Field(() => Delivery, {nullable: true})
     @OneToOne(type => Delivery, delivery => delivery.user)
+    @JoinColumn()
     delivery: Delivery
 
-    @Field(() => Cart)
+    @Field(() => Cart, {nullable: true})
     @OneToOne(() => Cart, cart => cart.user)
     cart: Cart
 

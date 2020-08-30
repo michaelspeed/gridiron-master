@@ -1,7 +1,15 @@
 import {Field, ID, ObjectType} from "@nestjs/graphql";
-import {BaseEntity, CreateDateColumn, Entity, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn} from "typeorm";
+import {
+    BaseEntity,
+    CreateDateColumn,
+    Entity,
+    OneToMany,
+    OneToOne,
+    PrimaryGeneratedColumn,
+    UpdateDateColumn
+} from "typeorm";
 import {FilterableField} from "@nestjs-query/query-graphql";
-import {DeliverySignIn} from "../../entity";
+import {DeliverySignIn, OrderLine} from "../../entity";
 
 @ObjectType('DeliveryPool')
 @Entity({name: 'deliverypool'})
@@ -21,4 +29,8 @@ export class DeliveryPool extends BaseEntity {
     @Field(() => DeliverySignIn)
     @OneToOne(() => DeliverySignIn, sign => sign.pool)
     signIn: DeliverySignIn
+
+    @Field(() => [OrderLine])
+    @OneToMany(() => OrderLine, line => line.pool)
+    lines: OrderLine[]
 }
