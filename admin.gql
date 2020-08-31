@@ -2352,6 +2352,15 @@ type Payment {
   transactionId: String!
 }
 
+type PaymentMethod {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  api: String!
+  secretKey: String!
+  enabled: Boolean!
+}
+
 type Country {
   id: ID!
   createdAt: DateTime!
@@ -6366,6 +6375,8 @@ type Query {
   ): DeliveryAggregateResponse!
   GetPoolStrength: [DeliveryPool!]!
   GetDeliveryStrandedCount: DeliveryStrandedCount!
+  GetAllPaymentMethods: [PaymentMethod!]!
+  GetDefaultPaymentMethods: PaymentMethod!
 }
 
 input AssetFilter {
@@ -7330,6 +7341,8 @@ type Mutation {
   setUserOnDelivery(input: RelationInput!): Delivery!
   SetNewDeliveryGuy(userId: ID!): Delivery!
   SetDeliverySignIn(type: Boolean!): DeliverySignIn!
+  CreatePaymentMethod(secret: String!, api: String!): PaymentMethod!
+  UpdatePaymentMethod(enabled: Boolean!, modeId: String!): PaymentMethod!
 }
 
 input RelationsInput {
