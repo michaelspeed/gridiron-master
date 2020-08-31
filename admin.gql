@@ -505,6 +505,7 @@ type Order {
     """Specify to sort results."""
     sorting: [OrderLineSort!] = []
   ): [OrderLine!]!
+  payment: Payment
   user: User!
   linesAggregate(
     """Filter to find records to aggregate on"""
@@ -2340,6 +2341,15 @@ type DeliverySignIn {
   updatedAt: DateTime!
   delivery: Delivery!
   pool: DeliveryPool!
+}
+
+type Payment {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  amount: Float!
+  errorMessage: String!
+  transactionId: String!
 }
 
 type Country {
@@ -6947,7 +6957,7 @@ input DeliveryAggregateFilter {
 
 type Mutation {
   administratorLogin(password: String!, email: String!): AdministratorDto!
-  createAdministrator(type: AdministratorEnum!, phone: String!, email: String!, lname: String!, fname: String!): Administrator!
+  createAdministrator(type: AdministratorEnum!, password: String!, phone: String!, email: String!, lname: String!, fname: String!): Administrator!
   updateAdministratorPassword(newpassword: String!, password: String!, email: String!): User!
   removeFeaturedsFromAsset(input: RelationsInput!): Asset!
   removeProductAssetsFromAsset(input: RelationsInput!): Asset!
@@ -7238,8 +7248,10 @@ type Mutation {
   removeKeepingFromCancellation(input: RelationInput!): Cancellation!
   setKeepingOnCancellation(input: RelationInput!): Cancellation!
   removeLinesFromOrder(input: RelationsInput!): Order!
+  removePaymentFromOrder(input: RelationInput!): Order!
   removeUserFromOrder(input: RelationInput!): Order!
   addLinesToOrder(input: RelationsInput!): Order!
+  setPaymentOnOrder(input: RelationInput!): Order!
   setUserOnOrder(input: RelationInput!): Order!
   createOrderAdmin(orderLineDto: [OrderLineDto!]!, address: String!, userId: ID!): Order!
   deleteOneZip(input: DeleteOneInput!): ZipDeleteResponse!

@@ -15,10 +15,9 @@ import {UserResolver} from './resolvers/admin/user.resolver';
 import {VendorResolver} from './resolvers/admin/vendor.resolver';
 import {ZoneResolver} from './resolvers/admin/zone.resolver';
 import {CountryResolver} from './resolvers/admin/country.resolver';
-import {AdministratorService} from '../service/services/admin/administrator.service';
 import {JwtModule} from '@nestjs/jwt';
 import {NestjsQueryTypeOrmModule} from '@nestjs-query/query-typeorm';
-import {coreEntityMap, nestQueryDTOMap} from '../entity/coreEntityMap';
+import {coreEntityMap} from '../entity/coreEntityMap';
 import {SeoResolver} from './resolvers/admin/seo.resolver';
 import {adminServiceMap} from '../service/services/admin/adminServicesMap';
 import {EventBusModule} from '../event-bus';
@@ -59,6 +58,7 @@ import {PromotionVariantPriceResolver} from "./resolvers/admin/promotion-variant
 import {CartPriceResolver} from "./resolvers/admin/cart-price.resolver";
 import {AccountsResolver} from "./resolvers/admin/accounts.resolver";
 import {DeliveryResolver} from "./resolvers/admin/delivery.resolver";
+import {PaymentMethodResolver} from "./resolvers/admin/paymentMethod.resolver";
 
 const adminResolvers = [
     AdministratorResolver,
@@ -101,7 +101,8 @@ const adminResolvers = [
     PromotionVariantPriceResolver,
     CartPriceResolver,
     AccountsResolver,
-    DeliveryResolver
+    DeliveryResolver,
+    PaymentMethodResolver
 ]
 
 const shopResolvers = [

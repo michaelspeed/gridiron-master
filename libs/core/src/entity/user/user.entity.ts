@@ -36,7 +36,7 @@ export class User extends BaseEntity {
 
     @Index()
     @FilterableField()
-    @Column({ unique: true })
+    @Column()
     email: string;
 
     @Column()

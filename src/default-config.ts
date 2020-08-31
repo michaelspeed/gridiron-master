@@ -39,7 +39,9 @@ export const DEF_CONFIG: GridIronConfig = {
         username: 'oncall',
         password: 'oncall0609',
         connectTimeout: 1000000,
-        synchronize: true
+        synchronize: true,
+        /*logger: "advanced-console",
+        logging: "all"*/
     },
     jobQueueOptions: {
         jobQueueStrategy: new InMemoryJobQueueStrategy(),

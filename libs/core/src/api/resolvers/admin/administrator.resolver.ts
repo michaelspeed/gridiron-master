@@ -86,9 +86,31 @@ export class AdministratorResolver {
         @Args('lname') lname: string,
         @Args('email') email: string,
         @Args('phone') phone: string,
-        @Args({name: 'type', type: () => AdministratorEnum}) type: AdministratorEnum
+        @Args('password') password: string,
+        @Args({name: 'type', type: () => AdministratorEnum}) type: AdministratorEnum,
+        @Context() context
     ): Promise<Administrator> {
-        return this.administratorService.createAdministrator(fname, lname, email, type, phone)
+        return new Promise(async (resolve, reject) => {
+            const auth = context.req.headers.authorization;
+            const token = auth.split(' ')[1];
+            const admin: any = this.jwtService.decode(token)
+            const user = await User.findOne({where: {id: admin.userId}, relations: ["administrator"]})
+            if (user) {
+                if (user.administrator !== null) {
+                    this.administratorService.createAdministrator(fname, lname, email, type, phone, password)
+                        .then(value => {
+                            console.log(value)
+                            resolve(value)
+                        })
+                        .catch(error => {
+                            console.log(error)
+                            reject(error)
+                        })
+                } else {
+                    reject('Unauthorized')
+                }
+            }
+        })
     }
 
     @Mutation(() => User)
@@ -96,7 +118,22 @@ export class AdministratorResolver {
         @Args('email') email: string,
         @Args('password') password: string,
         @Args('newpassword') newpassword: string,
+        @Context() context
     ): Promise<User> {
-        return this.administratorService.updateAdministratorPassword(email, password, newpassword)
+        return new Promise(async (resolve, reject) =>  {
+            const auth = context.req.headers.authorization;
+            const token = auth.split(' ')[1];
+            const admin: any = this.jwtService.decode(token)
+            const user = await User.findOne({where: {id: admin.userId}, relations: ["administrator"]})
+            if (user) {
+                if (user.administrator !== null) {
+                    this.administratorService.updateAdministratorPassword(email, password, newpassword)
+                        .then(value => resolve(value))
+                        .catch(error => reject(error))
+                }
+            } else {
+                reject('Unauthorized')
+            }
+        })
     }
 }

@@ -12,11 +12,13 @@ import {
 import {ID, ObjectType} from '@nestjs/graphql';
 import {FilterableConnection, FilterableField, PagingStrategies, Relation} from '@nestjs-query/query-graphql';
 import {OrderItem, OrderLine, User} from '..';
+import {Payment} from "..";
 
 @ObjectType('Order')
 @Entity({name: 'order'})
 @FilterableConnection('line', () => OrderLine, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true, relationName: 'line'})
 @Relation('user', () => User, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true, relationName: 'user'})
+@Relation('payment', () => Payment, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true, relationName: 'payment', nullable: true})
 export class Order extends BaseEntity {
     @FilterableField(() => ID)
     @PrimaryGeneratedColumn('uuid')
@@ -43,5 +45,10 @@ export class Order extends BaseEntity {
 
     @ManyToOne(() => User, user => user.order)
     user: User
+
+    @OneToOne(() => Payment, payment => payment.order)
+    @JoinColumn()
+    payment: Payment
+
 
 }

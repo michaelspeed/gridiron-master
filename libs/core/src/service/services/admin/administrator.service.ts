@@ -15,7 +15,7 @@ export class AdministratorService {
     ) {
     }
 
-    async createAdministrator(fname: string, lname: string, email: string, type: AdministratorEnum, number: string): Promise<Administrator> {
+    async createAdministrator(fname: string, lname: string, email: string, type: AdministratorEnum, number: string, password: string): Promise<Administrator> {
         return new Promise(async (resolve, reject) => {
             const finduser = await this.connection.getRepository(User).findOne({where:{email}})
             if (!finduser) {
@@ -24,7 +24,7 @@ export class AdministratorService {
                 user.lastName = lname
                 user.email = email
                 user.phoneNumber = number
-                user.password = await bcrypt.hash("generated", 10)
+                user.password = await bcrypt.hash(password, 10)
                 this.connection.getRepository(User).save(user).then(value => {
                     const admin = new Administrator()
                     admin.firstName = fname
@@ -78,6 +78,7 @@ export class AdministratorService {
                     lastName: Like(`%${name !== undefined && name} %`)
                 }
             ]*/
+            relations: ['user']
         })
     }
 

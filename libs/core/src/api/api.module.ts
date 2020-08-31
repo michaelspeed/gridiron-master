@@ -48,7 +48,7 @@ export class ShopGQLModule {}
         ServiceModule.forRoot(),
         ApiSharedModule,
         AdminGQLModule,
-        // ShopGQLModule
+        //ShopGQLModule
     ],
 })
 export class ApiModule {}

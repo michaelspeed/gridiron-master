@@ -1,9 +1,19 @@
-import {BaseEntity, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn} from 'typeorm';
+import {
+    BaseEntity,
+    Column,
+    CreateDateColumn,
+    Entity, ManyToOne,
+    OneToOne,
+    PrimaryGeneratedColumn,
+    UpdateDateColumn
+} from 'typeorm';
 import {ID, ObjectType} from '@nestjs/graphql';
-import {FilterableField} from '@nestjs-query/query-graphql';
+import {FilterableField, PagingStrategies, Relation} from '@nestjs-query/query-graphql';
+import {Order, PaymentMethod, User} from "..";
 
 @ObjectType('Payment')
 @Entity({name: 'payment'})
+@Relation('order', () => Order, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true, relationName: 'order'})
 export class Payment extends BaseEntity {
     @FilterableField(() => ID)
     @PrimaryGeneratedColumn('uuid')
@@ -19,10 +29,6 @@ export class Payment extends BaseEntity {
 
     @FilterableField()
     @Column()
-    method: string;
-
-    @FilterableField()
-    @Column()
     amount: number;
 
     @FilterableField()
@@ -33,6 +39,12 @@ export class Payment extends BaseEntity {
     @Column({ nullable: true })
     transactionId: string;
 
-    // @Column('simple-json') metadata: PaymentMetadata;
+    @Column('simple-json') metadata: JSON;
     // @Column('varchar') state: PaymentState;
+
+    @OneToOne(() => Order, order => order.payment)
+    order: Order
+
+    @ManyToOne(() => PaymentMethod, method => method.transactions)
+    method: PaymentMethod
 }

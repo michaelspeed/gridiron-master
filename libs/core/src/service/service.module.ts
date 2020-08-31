@@ -43,6 +43,7 @@ import {PromotionPriceVariantService} from "./services/admin/promotion-price-var
 import {AccountsService} from "./services/admin/accounts.service";
 import {DeliveryService} from "./services/admin/delivery.service";
 import {OrderLineSubscriber} from "./services/subscribers/OrderSubscriber";
+import {PaymentMethodService} from "./services/admin/paymentMethod.service";
 
 export const adminServices = [
     AdministratorService,
@@ -69,7 +70,8 @@ export const adminServices = [
     OrderService,
     PromotionPriceVariantService,
     AccountsService,
-    DeliveryService
+    DeliveryService,
+    PaymentMethodService
 ]
 
 export const globalServices = [
