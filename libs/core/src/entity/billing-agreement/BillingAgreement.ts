@@ -14,7 +14,7 @@ import {
     UpdateDateColumn
 } from 'typeorm';
 import {BillingAgreementEnum, BillingAgreementState} from '../../enums';
-import {BillingAgreementRequest, Collection, Store} from '../../entity';
+import {BillingAgreementRequest, Collection, ProductVariant, Store} from '../../entity';
 
 registerEnumType(BillingAgreementEnum, {
     name: 'BillingAgreementEnum'
@@ -27,6 +27,7 @@ registerEnumType(BillingAgreementState, {
 @ObjectType('BillingAgreement')
 @Entity('billing-agreement')
 @Relation('collection', () => Collection, {nullable: true,pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
+@FilterableRelation('variant', () => ProductVariant, {nullable: true,pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true, relationName: 'variant'})
 @FilterableRelation('store', () => Store, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @Connection('request', () => BillingAgreementRequest, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 export class BillingAgreement extends BaseEntity {
@@ -54,6 +55,10 @@ export class BillingAgreement extends BaseEntity {
     @Field(() => BillingAgreementState)
     @Column({type: 'enum', enum: BillingAgreementState})
     state: BillingAgreementState
+
+    @Field(() => ProductVariant)
+    @ManyToOne(type => ProductVariant, variant => variant.agreements)
+    variant: ProductVariant
 
     @Field(() => Collection, {nullable: true})
     @ManyToOne(type1 => Collection, collect => collect.agreements)

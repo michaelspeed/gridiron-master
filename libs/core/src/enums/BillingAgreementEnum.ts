@@ -6,7 +6,10 @@ export enum BillingAgreementEnum {
     COLLECTIONBASE = "COLLECTIONBASE",
 
     // Single Commission
-    COMISSIONBASE = "COMISSIONBASE"
+    COMISSIONBASE = "COMISSIONBASE",
+
+    // Prod Commission
+    PRODCOMMISSION = "PRODCOMMISSION"
 }
 
 export enum BillingAgreementState {

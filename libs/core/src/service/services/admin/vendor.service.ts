@@ -4,7 +4,7 @@ import {Connection} from 'typeorm';
 import {
     Accounts,
     AuthenticatedSession,
-    Store,
+    Store, StoreBalance,
     StoreTypeEnum,
     User,
     Vendor,
@@ -144,6 +144,11 @@ export class VendorService {
             store.streetAddress2 = streetAddress2
             store.rentalStore = rentals
             store.type = StoreTypeEnum.VENDOR
+
+            const balance = new StoreBalance()
+            const savedBalance = await this.connection.getRepository(StoreBalance).save(balance)
+            store.balance = savedBalance
+
             vendor.store = await this.connection.getRepository(Store).save(store)
 
             const account = new Accounts()

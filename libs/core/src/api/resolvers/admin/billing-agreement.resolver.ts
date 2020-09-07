@@ -1,4 +1,4 @@
-import {Args, Context, ID, Mutation, Query, Resolver} from '@nestjs/graphql';
+import {Args, Context, Float, ID, Mutation, Query, Resolver} from '@nestjs/graphql';
 import {BillingAgreement, BillingAgreementRequest} from '../../../entity';
 import {BillingAgreementService, UserService} from '../../../service';
 import {CRUDResolver} from '@nestjs-query/query-graphql';
@@ -35,6 +35,23 @@ export class BillingAgreementResolver {
         return this.billingAgreementService.findAgreementById(id)
     }
 
+    @Mutation(() => BillingAgreement)
+    async CreateVendorProdVariant(
+        @Args({name: 'variantId', type: () => ID, nullable: false}) variantId: string,
+        @Args({name: 'storeId', type: () => ID, nullable: false}) storeId: string,
+        @Args({name: 'value', type: () => Float, nullable: false}) value: number,
+    ): Promise<BillingAgreement> {
+        return this.billingAgreementService.createProdBillingAgreement(value, variantId, storeId)
+    }
+
+    @Mutation(() => BillingAgreement)
+    async UpdateVendorProdVariant(
+        @Args({name: 'id', type: () => ID, nullable: false}) id: string,
+        @Args({name: 'value', type: () => Float, nullable: false}) value: number,
+    ): Promise<BillingAgreement> {
+        return this.billingAgreementService.updateBillingAgreementForStore(id, value)
+    }
+
     @Mutation(() => BillingAgreementRequest)
     async CreateBillingRequest(
         @Args('id') id: string,
@@ -48,6 +65,14 @@ export class BillingAgreementResolver {
         @Args('id') id: string,
     ): Promise<BillingAgreementRequest[]> {
         return this.billingAgreementService.findBillingRequestForBillingAgreement(id)
+    }
+
+    @Query(() => BillingAgreement)
+    async GetBillingAgreementForStore(
+        @Args('storeId') storeId: string,
+        @Args('variantId') variantId: string,
+    ): Promise<BillingAgreement> {
+        return this.billingAgreementService.getBillingAgreementForStore(storeId, variantId)
     }
 
     @Mutation(() => BillingAgreementRequest)
@@ -68,4 +93,5 @@ export class BillingAgreementResolver {
             }
         })
     }
+
 }

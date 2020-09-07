@@ -19,6 +19,7 @@ import {
     Relation
 } from '@nestjs-query/query-graphql';
 import {
+    BillingAgreement,
     OrderItem,
     OrderLine,
     Product,
@@ -36,6 +37,7 @@ import {StockKeeping} from '@gridiron/core/entity/stock-movement/stock-keeping.e
 @Relation('product', () => Product, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @Relation('asset', () => ProductVariantAsset, {nullable: true, pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @FilterableConnection('price', () => ProductVariantPrice, {relationName: 'price' ,nullable: true, pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true, allowFiltering: false})
+@FilterableConnection('agreements', () => BillingAgreement, {relationName: 'agreements' ,nullable: true, pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true, allowFiltering: false})
 @Relation('specs', () => ProductVariantSpecifications, {nullable: true, pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @Relation('seo', () => Seo, {nullable: true, pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @Connection('stock', () => StockKeeping, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
@@ -100,6 +102,10 @@ export class ProductVariant extends BaseEntity {
     // @Field(() => Seo,{nullable: true})
     @OneToOne(type => Seo, seo => seo.variant)
     seo: Seo
+
+    // @Field(() => [BillingAgreement])
+    @OneToMany(type => BillingAgreement, agreement => agreement.variant)
+    agreements: BillingAgreement[]
 
     // @Field(() => [StockKeeping])
     @OneToMany(() => StockKeeping, keeping => keeping.variant)

@@ -1,7 +1,6 @@
 import {Injectable, OnModuleInit} from '@nestjs/common';
 import {EventBus, VendorEvents} from '../../../event-bus';
-import {BillingAgreement, BillingAgreementRequest, Collection, Store, Vendor} from '../../../entity';
-import {VendorPlanPrice} from '../../../enums/VendorPlan';
+import {BillingAgreement, BillingAgreementRequest, Collection, ProductVariant, Store, Vendor} from '../../../entity';
 import {BillingAgreementEnum, BillingAgreementState} from '../../../enums/BillingAgreementEnum';
 import {InjectConnection} from '@nestjs/typeorm';
 import {Connection} from 'typeorm';
@@ -138,6 +137,44 @@ export class BillingAgreementService implements OnModuleInit {
             this.connection.getRepository(BillingAgreementRequest).save(billRequest).then(value1 => {
                 resolve(value1)
             }).catch(error => reject(error))
+        })
+    }
+
+    createProdBillingAgreement(value: number, variantId: string, storeId: string): Promise<BillingAgreement> {
+        return new Promise<BillingAgreement>(async (resolve, reject) => {
+            const billAgree = new BillingAgreement()
+            billAgree.variant = await this.connection.getRepository(ProductVariant).findOne({where:{id: variantId}})
+            billAgree.type = BillingAgreementEnum.PRODCOMMISSION
+            billAgree.store = await this.connection.getRepository(Store).findOne({where:{id: storeId}})
+            billAgree.state = BillingAgreementState.APPROVED
+            billAgree.value = value
+            this.connection.getRepository(BillingAgreement)
+                .save(billAgree)
+                .then(value1 => {
+                    resolve(value1)
+                })
+                .catch(error => {
+                    reject(error)
+                })
+        })
+    }
+
+    async getBillingAgreementForStore(storeId: string, variantId: string): Promise<BillingAgreement> {
+        return new Promise<BillingAgreement>(async (resolve, reject) => {
+            this.connection.getRepository(BillingAgreement)
+                .findOne({store:{id: storeId}, variant:{id: variantId}})
+                .then(value => resolve(value)).catch(error => reject(error))
+        })
+    }
+
+    async updateBillingAgreementForStore(id: string, value: number): Promise<BillingAgreement> {
+        return new Promise(async (resolve, reject) => {
+            const billId = await this.connection.getRepository(BillingAgreement).findOne({where:{id}})
+            billId.value = value
+            this.connection.getRepository(BillingAgreement)
+                .save(billId)
+                .then(value1 => resolve(value1))
+                .catch(error => reject(error))
         })
     }
 }
