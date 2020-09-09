@@ -65,6 +65,7 @@ import {DeliverySignIn} from "./delivery/delivery-signin.entity";
 import {DeliveryStranded} from "./delivery/delivery-stranded.entity";
 import {Payment} from "./payment/payment.entity";
 import {PaymentMethod} from "./payment-method/payment-method.entity";
+import {CartItem} from "./cart/cartItem.entity";
 
 export const coreEntityMap = {
     Address,
@@ -131,7 +132,8 @@ export const coreEntityMap = {
     DeliverySignIn,
     DeliveryStranded,
     Payment,
-    PaymentMethod
+    PaymentMethod,
+    CartItem
 }
 
 export const nestQueryDTOMap = {

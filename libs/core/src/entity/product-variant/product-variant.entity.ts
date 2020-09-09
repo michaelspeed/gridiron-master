@@ -19,7 +19,7 @@ import {
     Relation
 } from '@nestjs-query/query-graphql';
 import {
-    BillingAgreement,
+    BillingAgreement, CartItem,
     OrderItem,
     OrderLine,
     Product,
@@ -115,5 +115,7 @@ export class ProductVariant extends BaseEntity {
     @OneToMany(() => OrderItem, line => line.productVariant)
     line: OrderItem[]
 
+    @OneToMany(type => CartItem, cart => cart.variant)
+    carts: CartItem[]
 
 }

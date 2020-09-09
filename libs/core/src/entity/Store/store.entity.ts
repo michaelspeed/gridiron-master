@@ -17,7 +17,17 @@ import {
     PagingStrategies,
     Relation
 } from '@nestjs-query/query-graphql';
-import {BillingAgreement, Country, OrderLine, ProductVariantPrice, StockKeeping, TaxCategory, Vendor, Zone} from '..';
+import {
+    BillingAgreement,
+    CartItem,
+    Country,
+    OrderLine,
+    ProductVariantPrice,
+    StockKeeping,
+    TaxCategory,
+    Vendor,
+    Zone
+} from '..';
 import {StoreBalance} from "./storeBalance.entity";
 import {Settlements} from "../settlement/settlement.entity";
 
@@ -126,4 +136,7 @@ export class Store extends BaseEntity {
 
     @OneToMany(() => OrderLine, line => line.store)
     line: OrderLine[]
+
+    @OneToMany(() => CartItem, item => item.store)
+    cart: CartItem[]
 }

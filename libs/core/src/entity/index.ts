@@ -62,6 +62,7 @@ export * from './delivery/delivery-signin.entity'
 export * from './delivery/delivery-stranded.entity'
 export * from './payment/payment.entity'
 export * from './payment-method/payment-method.entity'
+export * from './cart/cartItem.entity'
 
 
 // nestjsQuery
