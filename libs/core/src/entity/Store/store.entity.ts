@@ -104,6 +104,7 @@ export class Store extends BaseEntity {
     @OneToMany(type1 => TaxCategory, taxc => taxc.store)
     taxCategory: TaxCategory[]
 
+    @Field(() => Vendor, {nullable: true})
     @OneToOne(type1 => Vendor, vendor => vendor.store)
     vendor: Vendor
 

@@ -1,7 +1,7 @@
 import {Injectable} from '@nestjs/common';
 import {InjectConnection} from '@nestjs/typeorm';
 import {Connection} from 'typeorm';
-import {ProductVariant, StockKeeping, Store, StoreTypeEnum} from '../../../entity';
+import {ProductVariant, StockKeeping, Store, StoreTypeEnum, Vendor} from '../../../entity';
 import {StockKeepingType} from '../../../enums/StockKeepingType';
 
 @Injectable()
@@ -68,11 +68,11 @@ export class StocksService {
                     }
                 }).then(value => resolve(value)).catch(error => reject(error))
             } else {
-                const store = await this.connection.getRepository(Store).findOne({where:{vendor:{id: vendorId}}})
+                const vendor = await this.connection.getRepository(Vendor).findOne({where:{id: vendorId}, relations: ['store']})
                 this.connection.getRepository(StockKeeping).findOne({
                     where:{
                         store: {
-                            id: store.id
+                            id: vendor.store.id
                         },
                         variant: {
                             id: variantId

@@ -28,11 +28,11 @@ export class ProductOptionGroup extends BaseEntity {
     @Column()
     code: string;
 
-    // @Field(() => Product)
+    @Field(() => Product)
     @ManyToOne(type => Product, prod => prod.options)
     product: Product
 
-    // @Field(() => [ProductOption])
+    @Field(() => [ProductOption])
     @OneToMany(type => ProductOption, options => options.group)
     options: ProductOption[]
 }

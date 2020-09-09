@@ -9,7 +9,7 @@ import {
     PrimaryGeneratedColumn,
     UpdateDateColumn
 } from 'typeorm';
-import {ID, ObjectType} from '@nestjs/graphql';
+import {Field, ID, ObjectType} from '@nestjs/graphql';
 import {
     Connection,
     FilterableConnection,
@@ -64,6 +64,7 @@ export class Vendor extends BaseEntity {
     @JoinColumn()
     license: VendorLicense
 
+    @Field(() => Zip, {nullable: true})
     @ManyToMany(() => Zip, zip => zip.vendors)
     @JoinTable()
     zip: Zip[]

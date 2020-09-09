@@ -343,6 +343,7 @@ input BillingAgreementFilter {
   updatedAt: DateFieldComparison
   value: NumberFieldComparison
   store: BillingAgreementFilterStoreFilter
+  variant: BillingAgreementFilterProductVariantFilter
 }
 
 input BillingAgreementFilterStoreFilter {
@@ -361,6 +362,20 @@ input BillingAgreementFilterStoreFilter {
   singleStore: BooleanFieldComparison
   rentalStore: BooleanFieldComparison
   channelMarkets: BooleanFieldComparison
+}
+
+input BillingAgreementFilterProductVariantFilter {
+  and: [BillingAgreementFilterProductVariantFilter!]
+  or: [BillingAgreementFilterProductVariantFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
+  dum_price: NumberFieldComparison
+  enabled: BooleanFieldComparison
+  sku: StringFieldComparison
+  name: StringFieldComparison
+  trackInventory: BooleanFieldComparison
 }
 
 input BillingAgreementSort {
@@ -703,6 +718,7 @@ input ProductVariantFilter {
   name: StringFieldComparison
   trackInventory: BooleanFieldComparison
   line: ProductVariantFilterOrderItemFilter
+  agreements: ProductVariantFilterBillingAgreementFilter
   price: ProductVariantFilterProductVariantPriceFilter
 }
 
@@ -713,6 +729,15 @@ input ProductVariantFilterOrderItemFilter {
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
   quantity: NumberFieldComparison
+}
+
+input ProductVariantFilterBillingAgreementFilter {
+  and: [ProductVariantFilterBillingAgreementFilter!]
+  or: [ProductVariantFilterBillingAgreementFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  value: NumberFieldComparison
 }
 
 input ProductVariantFilterProductVariantPriceFilter {
@@ -1805,6 +1830,16 @@ type ProductVariant {
     """Specify to sort results."""
     sorting: [StockKeepingSort!] = []
   ): [StockKeeping!]!
+  agreements(
+    """Limit or page results."""
+    paging: OffsetPaging = {limit: 10}
+
+    """Specify to filter the records returned."""
+    filter: BillingAgreementFilter = {}
+
+    """Specify to sort results."""
+    sorting: [BillingAgreementSort!] = []
+  ): [BillingAgreement!]
   prices(
     """Limit or page results."""
     paging: OffsetPaging = {limit: 10}
@@ -1827,6 +1862,10 @@ type ProductVariant {
     """Filter to find records to aggregate on"""
     filter: StockKeepingAggregateFilter
   ): ProductVariantStocksAggregateResponse!
+  agreementsAggregate(
+    """Filter to find records to aggregate on"""
+    filter: BillingAgreementAggregateFilter
+  ): ProductVariantAgreementsAggregateResponse!
   pricesAggregate(
     """Filter to find records to aggregate on"""
     filter: ProductVariantPriceAggregateFilter
@@ -2037,6 +2076,7 @@ type BillingAgreement {
   value: Float!
   type: BillingAgreementEnum!
   state: BillingAgreementState!
+  variant: ProductVariant!
   collection: Collection
   store: Store!
   request: [BillingAgreementRequest!]!
@@ -2046,6 +2086,7 @@ enum BillingAgreementEnum {
   PLANBASE
   COLLECTIONBASE
   COMISSIONBASE
+  PRODCOMMISSION
 }
 
 enum BillingAgreementState {
@@ -4345,6 +4386,43 @@ type ProductVariantStocksAggregateResponse {
   max: ProductVariantStocksMaxAggregate
 }
 
+type ProductVariantAgreementsCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  value: Int
+}
+
+type ProductVariantAgreementsSumAggregate {
+  value: Float
+}
+
+type ProductVariantAgreementsAvgAggregate {
+  value: Float
+}
+
+type ProductVariantAgreementsMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  value: Float
+}
+
+type ProductVariantAgreementsMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  value: Float
+}
+
+type ProductVariantAgreementsAggregateResponse {
+  count: ProductVariantAgreementsCountAggregate
+  sum: ProductVariantAgreementsSumAggregate
+  avg: ProductVariantAgreementsAvgAggregate
+  min: ProductVariantAgreementsMinAggregate
+  max: ProductVariantAgreementsMaxAggregate
+}
+
 type ProductVariantPricesCountAggregate {
   id: Int
   createdAt: Int
@@ -6128,6 +6206,7 @@ type Query {
   GetBillingAgreementByVendor: [BillingAgreement!]!
   GetBillingAgreement(id: ID!): BillingAgreement!
   GetBillingRequestForAgreement(id: String!): [BillingAgreementRequest!]!
+  GetBillingAgreementForStore(variantId: String!, storeId: String!): BillingAgreement!
   stockKeeping(id: ID!): StockKeeping
   stockKeepings(
     """Limit or page results."""
@@ -7145,6 +7224,7 @@ type Mutation {
   deleteManyProductVariants(input: DeleteManyProductVariantsInput!): DeleteManyResponse!
   removeLinesFromProductVariant(input: RelationsInput!): ProductVariant!
   removeStocksFromProductVariant(input: RelationsInput!): ProductVariant!
+  removeAgreementsFromProductVariant(input: RelationsInput!): ProductVariant!
   removePricesFromProductVariant(input: RelationsInput!): ProductVariant!
   removeSeoFromProductVariant(input: RelationInput!): ProductVariant!
   removeSpecsFromProductVariant(input: RelationInput!): ProductVariant!
@@ -7152,6 +7232,7 @@ type Mutation {
   removeProductFromProductVariant(input: RelationInput!): ProductVariant!
   addLinesToProductVariant(input: RelationsInput!): ProductVariant!
   addStocksToProductVariant(input: RelationsInput!): ProductVariant!
+  addAgreementsToProductVariant(input: RelationsInput!): ProductVariant!
   addPricesToProductVariant(input: RelationsInput!): ProductVariant!
   setSeoOnProductVariant(input: RelationInput!): ProductVariant!
   setSpecsOnProductVariant(input: RelationInput!): ProductVariant!
@@ -7217,6 +7298,8 @@ type Mutation {
   UpdatePlan(status: Boolean!, id: ID!): VendorPlans!
   removeVendorFromVendorLicense(input: RelationInput!): VendorLicense!
   setVendorOnVendorLicense(input: RelationInput!): VendorLicense!
+  CreateVendorProdVariant(value: Float!, storeId: ID!, variantId: ID!): BillingAgreement!
+  UpdateVendorProdVariant(value: Float!, id: ID!): BillingAgreement!
   CreateBillingRequest(value: String!, id: String!): BillingAgreementRequest!
   UpdateBillingRequest(value: String!, id: String!): BillingAgreementRequest!
   deleteOneStockKeeping(input: DeleteOneInput!): StockKeepingDeleteResponse!

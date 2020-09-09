@@ -1,11 +1,16 @@
 import {Injectable} from "@nestjs/common";
 import {InjectConnection} from "@nestjs/typeorm";
 import {Connection} from "typeorm";
-import {Asset, Product, ProductVariant} from "../../../entity";
+import {Asset, Product, ProductVariant, ProductVariantPrice, StockKeeping, Store, Vendor} from "../../../entity";
 
 interface GetProductAssetInterface {
     variantId?: string
     prodId?: string
+}
+
+interface GetAvailability {
+    stock: boolean
+    zip: boolean
 }
 
 @Injectable()
@@ -77,6 +82,47 @@ export class ShopProductsService {
                 id
             },
             relations: ['collection', 'options', 'featuredAsset', 'facets', 'assets', 'variants']
+        })
+    }
+
+    async getPriceForVariants(id: string, zip?: string): Promise<ProductVariant> {
+        return new Promise(async (resolve, reject) => {
+            this.connection.getRepository(ProductVariant)
+                .findOne({where:{id}, relations: ['price','price.promoprice', 'price.store', 'price.store.vendor', 'price.store.vendor.zip']})
+                .then(value => resolve(value))
+                .catch(error => reject(error))
+        })
+    }
+
+    async GetStocksAndZipAvailability(storeId: string, variantId: string, zipf: number): Promise<GetAvailability> {
+        return new Promise(async (resolve, reject) => {
+            let stock = false
+            let zip = false
+            const vendor = await this.connection.getRepository(Vendor).findOne({where:{store: {id: storeId}}, relations: ['zip']})
+            console.log(vendor.zip)
+            if (vendor.zip.find(item => item.code = zipf)) {
+                zip = true
+            } else if (vendor.zip.length === 0) {
+                zip = false
+            }
+            const stockMain = await this.connection.getRepository(StockKeeping).findOne({
+                where:{
+                    store: {
+                        id: storeId
+                    },
+                    variant: {
+                        id: variantId
+                    }
+                }
+            })
+
+            if (stockMain) {
+                stock = stockMain.quantity > 0;
+            }
+            resolve({
+                stock,
+                zip
+            })
         })
     }
 }

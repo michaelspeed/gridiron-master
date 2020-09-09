@@ -20,11 +20,11 @@ export class ProductVariantAsset extends BaseEntity {
     @UpdateDateColumn()
     updatedAt: Date;
 
-    // @Field(() => Asset)
+    @Field(() => Asset)
     @ManyToOne(type => Asset, asset => asset.variantAsset)
     asset: Asset
 
-    // @Field(() => ProductVariant)
+    @Field(() => ProductVariant)
     @OneToOne(type => ProductVariant, variant => variant.asset)
     @JoinColumn()
     variant: ProductVariant

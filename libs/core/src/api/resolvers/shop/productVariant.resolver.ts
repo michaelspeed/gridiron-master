@@ -1,6 +1,15 @@
-import {Args, ID, Query, Resolver} from "@nestjs/graphql";
+import {Args, Field, ID, Int, ObjectType, Query, Resolver} from "@nestjs/graphql";
 import {Asset, Product, ProductVariant} from "../../../entity";
 import {ShopProductsService} from "../../../service";
+
+@ObjectType()
+class StockZip {
+    @Field()
+    stock: boolean
+
+    @Field()
+    zip: boolean
+}
 
 @Resolver(of => ProductVariant)
 export class ShopProductVariantResolver {
@@ -20,6 +29,22 @@ export class ShopProductVariantResolver {
         @Args('id', {type: () => ID}) id: string,
     ): Promise<Product> {
         return this.shopProductsService.singleProductById(id)
+    }
+
+    @Query(() => ProductVariant)
+    async singProductPrice(
+        @Args('id', {type: () => ID}) id: string,
+    ): Promise<ProductVariant> {
+        return this.shopProductsService.getPriceForVariants(id)
+    }
+
+    @Query(() => StockZip)
+    async GetStocksAndZipAvailability(
+        @Args('storeId', {type: () => ID}) storeId: string,
+        @Args('variantId', {type: () => ID}) variantId: string,
+        @Args('zipf', {type: () => Int}) zipf: number,
+    ): Promise<StockZip> {
+        return this.shopProductsService.GetStocksAndZipAvailability(storeId, variantId, zipf)
     }
 
     @Query(() => [ProductVariant])
