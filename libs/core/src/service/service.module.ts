@@ -44,6 +44,7 @@ import {AccountsService} from "./services/admin/accounts.service";
 import {DeliveryService} from "./services/admin/delivery.service";
 import {OrderLineSubscriber} from "./services/subscribers/OrderSubscriber";
 import {PaymentMethodService} from "./services/admin/paymentMethod.service";
+import {ShopCartService} from "./services/shop/cart.service";
 
 export const adminServices = [
     AdministratorService,
@@ -87,7 +88,8 @@ export const shopServices = [
     ShopUserService,
     ShopAddressService,
     ShopSearchService,
-    ShopFacetService
+    ShopFacetService,
+    ShopCartService
 ]
 
 let defaultTypeOrmModule: DynamicModule;

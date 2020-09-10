@@ -11,7 +11,7 @@ import {
 } from 'typeorm';
 import {Field, ID, ObjectType} from '@nestjs/graphql';
 import {FilterableField, FilterableRelation, PagingStrategies, Relation} from '@nestjs-query/query-graphql';
-import {ProductVariant, PromotionVariantPrice, Store, TaxRate} from '../';
+import {CartItem, ProductVariant, PromotionVariantPrice, Store, TaxRate} from '../';
 
 @ObjectType('ProductVariantPrice')
 @Entity({name: 'productVariantPrice'})
@@ -56,5 +56,9 @@ export class ProductVariantPrice extends BaseEntity {
     @Field(() => PromotionVariantPrice, {nullable: true})
     @OneToOne(() => PromotionVariantPrice, promoprice => promoprice.price)
     promoprice: PromotionVariantPrice
+
+    @Field(() => CartItem, {nullable: true})
+    @OneToMany(() => CartItem, item => item.price)
+    cartItem: CartItem[]
     
 }

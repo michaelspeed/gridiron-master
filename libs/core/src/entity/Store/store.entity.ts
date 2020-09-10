@@ -137,6 +137,7 @@ export class Store extends BaseEntity {
     @OneToMany(() => OrderLine, line => line.store)
     line: OrderLine[]
 
+    @Field(() => [CartItem])
     @OneToMany(() => CartItem, item => item.store)
     cart: CartItem[]
 }

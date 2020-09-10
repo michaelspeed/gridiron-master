@@ -115,6 +115,7 @@ export class ProductVariant extends BaseEntity {
     @OneToMany(() => OrderItem, line => line.productVariant)
     line: OrderItem[]
 
+    @Field(() => [CartItem])
     @OneToMany(type => CartItem, cart => cart.variant)
     carts: CartItem[]
 

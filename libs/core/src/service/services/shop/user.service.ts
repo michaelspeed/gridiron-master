@@ -32,7 +32,7 @@ export class ShopUserService {
             const user = new User()
             user.email = email
             user.password = await bcrypt.hash(password, 10)
-            user.password = phone
+            user.phoneNumber = phone
             user.firstName = fname
             user.lastName = lname
             user.lastLogin = new Date()
