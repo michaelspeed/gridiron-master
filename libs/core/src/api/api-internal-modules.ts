@@ -60,6 +60,7 @@ import {AccountsResolver} from "./resolvers/admin/accounts.resolver";
 import {DeliveryResolver} from "./resolvers/admin/delivery.resolver";
 import {PaymentMethodResolver} from "./resolvers/admin/paymentMethod.resolver";
 import {SearchCartResolver} from "./resolvers/shop/cart.resolver";
+import {ShopOrderResolver} from "./resolvers/shop/order.resolver";
 
 const adminResolvers = [
     AdministratorResolver,
@@ -116,7 +117,8 @@ const shopResolvers = [
     ShopAddressResolver,
     ShopSearchResolver,
     SearchFacetResolver,
-    SearchCartResolver
+    SearchCartResolver,
+    ShopOrderResolver
 ]
 
 @Module({
