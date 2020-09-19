@@ -1,5 +1,5 @@
 import {BaseEntity, Column, CreateDateColumn, Entity, ManyToOne, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn} from 'typeorm';
-import {ID, ObjectType} from '@nestjs/graphql';
+import {Field, ID, ObjectType} from '@nestjs/graphql';
 import {FilterableField, PagingStrategies, Relation} from '@nestjs-query/query-graphql';
 import {Order, OrderLine, ProductVariant, TaxCategory, TaxRate} from '..';
 
@@ -25,6 +25,7 @@ export class OrderItem extends BaseEntity {
     @Column()
     quantity: number;
 
+    @Field(() => ProductVariant)
     @ManyToOne(type => ProductVariant, variant => variant.line)
     productVariant: ProductVariant;
 

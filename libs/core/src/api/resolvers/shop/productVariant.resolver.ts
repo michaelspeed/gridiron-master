@@ -1,4 +1,4 @@
-import {Args, Field, ID, Int, ObjectType, Query, Resolver} from "@nestjs/graphql";
+import {Args, Field, ID, Int, Mutation, ObjectType, Query, Resolver} from "@nestjs/graphql";
 import {Asset, Product, ProductVariant} from "../../../entity";
 import {ShopProductsService} from "../../../service";
 
@@ -60,5 +60,13 @@ export class ShopProductVariantResolver {
         @Args('prodId', {type: () => ID, nullable: true}) prodId: string,
     ): Promise<Asset> {
         return this.shopProductsService.getProdAsset({variantId, prodId})
+    }
+
+    @Mutation(() => ProductVariant)
+    async ShiftProductVariant(
+        @Args('name') name: string,
+        @Args('prodId') prodId: string,
+    ): Promise<ProductVariant> {
+        return this.shopProductsService.ShiftProductVariant(name, prodId)
     }
 }

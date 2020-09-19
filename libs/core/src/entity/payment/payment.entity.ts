@@ -40,11 +40,10 @@ export class Payment extends BaseEntity {
     transactionId: string;
 
     @Column('simple-json') metadata: JSON;
-    // @Column('varchar') state: PaymentState;
 
     @OneToOne(() => Order, order => order.payment)
     order: Order
 
-    @ManyToOne(() => PaymentMethod, method => method.transactions)
+    @ManyToOne(() => PaymentMethod, method => method.transactions, {nullable: true})
     method: PaymentMethod
 }

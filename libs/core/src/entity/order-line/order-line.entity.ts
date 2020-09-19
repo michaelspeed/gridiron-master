@@ -50,10 +50,12 @@ export class OrderLine extends BaseEntity {
     @ManyToOne(() => Order, order => order.line)
     order: Order
 
+    @Field(() => OrderItem)
     @OneToOne(() => OrderItem, item => item)
     @JoinColumn()
     item: OrderItem
 
+    @Field(() => Store)
     @ManyToOne(() => Store, vendor => vendor.line)
     store: Store
 

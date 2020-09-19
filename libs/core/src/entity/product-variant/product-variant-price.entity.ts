@@ -10,8 +10,8 @@ import {
     UpdateDateColumn
 } from 'typeorm';
 import {Field, ID, ObjectType} from '@nestjs/graphql';
-import {FilterableField, FilterableRelation, PagingStrategies, Relation} from '@nestjs-query/query-graphql';
-import {CartItem, ProductVariant, PromotionVariantPrice, Store, TaxRate} from '../';
+import {Connection, FilterableField, FilterableRelation, PagingStrategies, Relation} from '@nestjs-query/query-graphql';
+import {CartItem, ProductVariant, PromotionVariantPrice, StockBackLog, Store, TaxRate} from '../';
 
 @ObjectType('ProductVariantPrice')
 @Entity({name: 'productVariantPrice'})
@@ -19,6 +19,7 @@ import {CartItem, ProductVariant, PromotionVariantPrice, Store, TaxRate} from '.
 @Relation('tax', () => TaxRate, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true, nullable: true})
 @FilterableRelation('store', () => Store, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @Relation('promoprice', () => PromotionVariantPrice, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true, nullable: true})
+@Connection('backlog', () => StockBackLog, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true, nullable: true})
 export class ProductVariantPrice extends BaseEntity {
 
     @FilterableField(() => ID)
@@ -60,5 +61,9 @@ export class ProductVariantPrice extends BaseEntity {
     @Field(() => CartItem, {nullable: true})
     @OneToMany(() => CartItem, item => item.price)
     cartItem: CartItem[]
+
+    @Field(() => StockBackLog, {nullable: true})
+    @OneToMany(() => StockBackLog, backlog => backlog.variant)
+    backlog: StockBackLog[]
     
 }

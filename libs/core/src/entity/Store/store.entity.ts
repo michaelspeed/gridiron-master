@@ -22,7 +22,7 @@ import {
     CartItem,
     Country,
     OrderLine,
-    ProductVariantPrice,
+    ProductVariantPrice, StockBackLog,
     StockKeeping,
     TaxCategory,
     Vendor,
@@ -46,7 +46,8 @@ registerEnumType(StoreTypeEnum, {
 @Connection('sku', () => StockKeeping, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @Connection('settlement', () => Settlements, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @Connection('prices', () => Settlements, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
-@FilterableConnection('line', () => OrderLine, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
+@FilterableConnection('cart', () => CartItem, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
+@FilterableConnection('backlogs', () => StockBackLog, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @Entity({name: 'store'})
 export class Store extends BaseEntity {
     @FilterableField(() => ID)
@@ -140,4 +141,8 @@ export class Store extends BaseEntity {
     @Field(() => [CartItem])
     @OneToMany(() => CartItem, item => item.store)
     cart: CartItem[]
+
+    @Field(() => StockBackLog)
+    @OneToMany(() => StockBackLog, backlog => backlog.store)
+    backlogs: StockBackLog[]
 }

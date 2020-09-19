@@ -125,4 +125,17 @@ export class ShopProductsService {
             })
         })
     }
+
+    async ShiftProductVariant(name: string, productId: string): Promise<ProductVariant> {
+        return new Promise(async (resolve, reject) => {
+            const allvars = await this.connection.getRepository(ProductVariant).find({where:{product:{id: productId}}})
+            const nameSplit = name.split(" ")
+            for (const vars of allvars) {
+                const varsplit = vars.name.replace(/[^a-zA-Z0-9 ]/gi, '').split(" ")
+                if (nameSplit.every(elm => varsplit.includes(elm))) {
+                    resolve(vars)
+                }
+            }
+        })
+    }
 }
