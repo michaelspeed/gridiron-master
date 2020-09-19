@@ -18,8 +18,6 @@ export class OrderLineSubscriber implements EntitySubscriberInterface<OrderLine>
 
     afterUpdate(event: UpdateEvent<OrderLine>): Promise<any> | void {
         return new Promise(async (resolve, reject) => {
-            console.log(event.entity)
-            console.log(event.databaseEntity)
             if (event.entity) {
                 if (event.entity.stage === OrderStageType.PACKAGED) {
                     const deliverySignIns = await getConnection().getRepository(DeliverySignIn)

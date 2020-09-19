@@ -1,7 +1,17 @@
 import {Injectable} from "@nestjs/common";
 import {InjectConnection} from "@nestjs/typeorm";
 import {Connection} from "typeorm";
-import {Asset, Product, ProductVariant, ProductVariantPrice, StockKeeping, Store, Vendor} from "../../../entity";
+import {
+    Asset,
+    Product,
+    ProductVariant,
+    ProductVariantPrice,
+    Review,
+    StockKeeping,
+    Store, User,
+    Vendor
+} from "../../../entity";
+import {JwtService} from "@nestjs/jwt";
 
 interface GetProductAssetInterface {
     variantId?: string
@@ -16,8 +26,16 @@ interface GetAvailability {
 @Injectable()
 export class ShopProductsService {
     constructor(
-        @InjectConnection() private connection: Connection
+        @InjectConnection() private connection: Connection,
+        private readonly jwtService: JwtService,
     ) {}
+
+    async DecryptToken(token: string): Promise<{userId: string}> {
+        return new Promise(async (resolve, reject) => {
+            const decoded: any = await this.jwtService.decode(token)
+            resolve(decoded)
+        })
+    }
 
     async getProductById(id: string): Promise<ProductVariant> {
         return this.connection.getRepository(ProductVariant).findOne(
@@ -39,7 +57,8 @@ export class ShopProductsService {
                     'specs',
                     'seo',
                     'stock',
-                    'price'
+                    'price',
+                    'reviews'
                 ]}
             )
     }
@@ -136,6 +155,28 @@ export class ShopProductsService {
                     resolve(vars)
                 }
             }
+        })
+    }
+
+    async CreateReview(varId: string, text: string, stars: number, token: string): Promise<Review> {
+        return new Promise(async (resolve, reject) => {
+            const rev = new Review()
+            const user = await this.DecryptToken(token)
+            rev.user = await this.connection.getRepository(User).findOne({where:{id: user.userId}})
+            rev.variant = await this.connection.getRepository(ProductVariant).findOne({where:{id: varId}})
+            rev.stars = stars
+            rev.text = text
+            this.connection.getRepository(Review)
+                .save(rev)
+                .then(value => resolve(value))
+                .catch(error => reject(error))
+        })
+    }
+
+    async reviewsForVariant(id: string): Promise<Review[]> {
+        return new Promise(async (resolve, reject) => {
+            const revs = await this.connection.getRepository(Review).find({where:{variant:{id}}, take: 10})
+            resolve(revs)
         })
     }
 }

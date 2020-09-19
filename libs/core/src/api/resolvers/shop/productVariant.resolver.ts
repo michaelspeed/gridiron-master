@@ -1,5 +1,5 @@
-import {Args, Field, ID, Int, Mutation, ObjectType, Query, Resolver} from "@nestjs/graphql";
-import {Asset, Product, ProductVariant} from "../../../entity";
+import {Args, Context, Field, ID, Int, Mutation, ObjectType, Query, Resolver} from "@nestjs/graphql";
+import {Asset, Product, ProductVariant, Review} from "../../../entity";
 import {ShopProductsService} from "../../../service";
 
 @ObjectType()
@@ -68,5 +68,17 @@ export class ShopProductVariantResolver {
         @Args('prodId') prodId: string,
     ): Promise<ProductVariant> {
         return this.shopProductsService.ShiftProductVariant(name, prodId)
+    }
+
+    @Mutation(() => Review)
+    async creteReview(
+        @Args('text') text: string,
+        @Args('varId') varId: string,
+        @Args('stars') stars: number,
+        @Context() context
+    ): Promise<Review> {
+        const auth = context.req.headers.authorization;
+        const token = auth.split(' ')[1];
+        return this.shopProductsService.CreateReview(varId, text, stars, token)
     }
 }

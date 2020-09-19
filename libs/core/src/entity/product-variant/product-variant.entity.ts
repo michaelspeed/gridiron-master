@@ -28,9 +28,9 @@ import {
     ProductVariantPrice,
     ProductVariantSpecifications,
     Seo,
-    View
+    View,
+    StockKeeping, Review
 } from '../';
-import {StockKeeping} from '@gridiron/core/entity/stock-movement/stock-keeping.entity';
 
 @ObjectType('ProductVariant')
 @Entity({name: 'productVariant'})
@@ -75,6 +75,10 @@ export class ProductVariant extends BaseEntity {
     @Column()
     name: string;
 
+    @FilterableField()
+    @Column({default: 0})
+    rating: number;
+
     @Field(() => Product)
     @ManyToOne(type => Product, prod => prod.variants)
     product: Product
@@ -118,5 +122,9 @@ export class ProductVariant extends BaseEntity {
     @Field(() => [CartItem])
     @OneToMany(type => CartItem, cart => cart.variant)
     carts: CartItem[]
+
+    @Field(() => [Review])
+    @OneToMany(() => Review, rev => rev.variant)
+    reviews: Review[]
 
 }
