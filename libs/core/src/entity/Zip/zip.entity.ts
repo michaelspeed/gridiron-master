@@ -9,11 +9,12 @@ import {
     UpdateDateColumn
 } from 'typeorm';
 import {Connection, FilterableConnection, FilterableField, PagingStrategies} from '@nestjs-query/query-graphql';
-import {Vendor} from "../vendor/vendor.entity";
+import {Vendor, Store} from "..";
 
 @ObjectType('Zip')
 @Entity({name: 'zip'})
 @FilterableConnection('vendors', () => Vendor, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
+@FilterableConnection('store', () => Vendor, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 export class Zip extends BaseEntity {
     @FilterableField(() => ID)
     @PrimaryGeneratedColumn('uuid')
@@ -41,4 +42,7 @@ export class Zip extends BaseEntity {
 
     @ManyToMany(() => Vendor, vendor => vendor.zip)
     vendors: Vendor[]
+
+    @ManyToMany(() => Store, store => store.zip)
+    store: Store[]
 }

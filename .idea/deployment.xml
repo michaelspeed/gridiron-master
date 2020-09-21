@@ -7,6 +7,7 @@
           <mappings>
             <mapping deploy="/root/gridadmin" local="$PROJECT_DIR$/../gridiron-admin-view" web="/" />
             <mapping deploy="/root/airecommerce" local="$PROJECT_DIR$" web="/" />
+            <mapping deploy="/root/consumer" local="$PROJECT_DIR$/../girdiron-consumer" />
           </mappings>
         </serverdata>
       </paths>

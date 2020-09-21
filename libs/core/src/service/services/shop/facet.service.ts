@@ -1,7 +1,7 @@
 import {Injectable} from "@nestjs/common";
 import {InjectConnection} from "@nestjs/typeorm";
 import {Connection} from "typeorm";
-import {Collection, Product} from "../../../entity";
+import {Collection, FacetValue, Product} from "../../../entity";
 
 @Injectable()
 export class ShopFacetService {
@@ -28,5 +28,9 @@ export class ShopFacetService {
                 resolve(prods)
             }
         })
+    }
+
+    async getFacetInfo(id: string): Promise<FacetValue> {
+        return this.connection.getRepository(FacetValue).findOne({where:{id}, relations: ['facet']})
     }
 }

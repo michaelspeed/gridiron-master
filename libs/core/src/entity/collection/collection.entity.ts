@@ -12,7 +12,7 @@ import {
 } from 'typeorm';
 import {Field, ID, ObjectType} from '@nestjs/graphql';
 import {Connection, FilterableField, PagingStrategies, Relation} from '@nestjs-query/query-graphql';
-import {Seo, BillingAgreement, Product, Store, CartPrice} from '../';
+import {Seo, BillingAgreement, Product, Store, CartPrice, View} from '../';
 
 @ObjectType('Collection')
 @Entity({name: 'collection'})
@@ -83,4 +83,7 @@ export class Collection extends BaseEntity {
     @Field(() => CartPrice)
     @OneToOne(() => CartPrice, cart => cart.collection)
     cartPrice: CartPrice
+
+    @OneToMany(() => View, view => view.collection)
+    views: View[]
 }

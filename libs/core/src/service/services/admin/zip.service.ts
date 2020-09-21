@@ -1,7 +1,7 @@
 import {Injectable} from '@nestjs/common';
 import {InjectConnection} from '@nestjs/typeorm';
 import {Connection} from 'typeorm';
-import {Vendor, Zip} from '../../../entity';
+import {Store, Vendor, Zip} from '../../../entity';
 
 @Injectable()
 export class ZipService {
@@ -19,15 +19,15 @@ export class ZipService {
 
     addZipToVendor(id: string, zips: string[]): Promise<Vendor> {
         return new Promise<Vendor>(async (resolve, reject) => {
-            const vendor = await this.connection.getRepository(Vendor).findOne({where:{id}})
+            const store = await this.connection.getRepository(Store).findOne({where:{vendor:{id}}, relations: ['vendor']})
             const allZips = []
             for (const singz of zips) {
                 const getzip = await this.connection.getRepository(Zip).findOne({where: {id: singz}})
                 allZips.push(getzip)
             }
-            vendor.zip = allZips
-            this.connection.getRepository(Vendor).save(vendor).then(value => {
-                resolve(value)
+            store.zip = allZips
+            this.connection.getRepository(Store).save(store).then(value => {
+                resolve(store.vendor)
             }).catch(error => reject(error))
         })
     }

@@ -9,7 +9,7 @@ import {
     Review,
     StockKeeping,
     Store, User,
-    Vendor
+    Vendor, Zip
 } from "../../../entity";
 import {JwtService} from "@nestjs/jwt";
 
@@ -113,18 +113,30 @@ export class ShopProductsService {
         })
     }
 
-    async GetStocksAndZipAvailability(storeId: string, variantId: string, zipf: number): Promise<GetAvailability> {
+    async GetStocksAndZipAvailability(variantId: string, zipf: number): Promise<ProductVariantPrice[]> {
         return new Promise(async (resolve, reject) => {
-            let stock = false
+            const zips = await this.connection.getRepository(Zip).findOne({where:{code: zipf}, relations: ['store']})
+            const stores = zips.store.map(item => item.id)
+            const qb = await this.connection.getRepository(ProductVariantPrice)
+                .createQueryBuilder('ProductVariantPrice')
+                .innerJoinAndSelect('ProductVariantPrice.store', 'store')
+                .innerJoinAndSelect('ProductVariantPrice.variant', 'variant')
+                .leftJoinAndSelect('ProductVariantPrice.variant', 'variant')
+                .leftJoinAndSelect('ProductVariantPrice.store', 'store')
+                .where('store.id IN (:...stores)', {stores})
+                .andWhere('variant.id := variant', {variant: variantId})
+                .getMany()
+
+            resolve(qb)
+            /*let stock = false
             let zip = false
             const vendor = await this.connection.getRepository(Vendor).findOne({where:{store: {id: storeId}}, relations: ['zip']})
-            console.log(vendor.zip)
             if (vendor.zip.find(item => item.code = zipf)) {
                 zip = true
             } else if (vendor.zip.length === 0) {
                 zip = false
             }
-            const stockMain = await this.connection.getRepository(StockKeeping).findOne({
+            await this.connection.getRepository(StockKeeping).findOne({
                 where:{
                     store: {
                         id: storeId
@@ -134,14 +146,21 @@ export class ShopProductsService {
                     }
                 }
             })
-
-            if (stockMain) {
-                stock = stockMain.quantity > 0;
-            }
-            resolve({
-                stock,
-                zip
-            })
+                .then(value => {
+                    if (value) {
+                        stock = (value.quantity > 0 || value.backorder);
+                    }
+                    resolve({
+                        stock,
+                        zip
+                    })
+                })
+                .catch(error => {
+                    resolve({
+                        stock,
+                        zip
+                    })
+                })*/
         })
     }
 

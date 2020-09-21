@@ -1,5 +1,5 @@
 import {
-    BaseEntity,
+    BaseEntity, Column,
     CreateDateColumn,
     Entity,
     JoinColumn,
@@ -10,7 +10,7 @@ import {
 } from 'typeorm';
 import {FilterableField} from '@nestjs-query/query-graphql';
 import {ID, ObjectType} from '@nestjs/graphql';
-import {ProductVariant, User} from '..';
+import {Collection, Product, ProductVariant, User} from '..';
 
 @ObjectType('View')
 @Entity({name: 'view'})
@@ -28,9 +28,18 @@ export class View extends BaseEntity {
     @UpdateDateColumn()
     updatedAt: Date;
 
+    @Column({type: "text"})
+    slug: string
+
     @ManyToOne(type => User, user => user.view)
     user: User
 
     @ManyToOne(type => ProductVariant, prv => prv.view)
     variant: ProductVariant
+
+    @ManyToOne(type => Collection, coll => coll.views)
+    collection: Collection
+
+    @ManyToOne(type => Product, prod => prod.views)
+    product: Product
 }

@@ -1,5 +1,5 @@
 import {Args, ID, Query, Resolver} from "@nestjs/graphql";
-import {Facet, Product} from "../../../entity";
+import {Facet, FacetValue, Product} from "../../../entity";
 import {ShopFacetService} from "../../../service";
 
 @Resolver(() => Facet)
@@ -14,5 +14,12 @@ export class SearchFacetResolver {
         @Args('collection', {type: () => ID, nullable: true}) collection: string,
     ): Promise<Product[]> {
         return this.shopFacetService.facetPageService(id, collection)
+    }
+
+    @Query(() => FacetValue)
+    async GetFacetDocument(
+        @Args('id', {type: () => ID}) id: string,
+    ): Promise<FacetValue>{
+        return this.shopFacetService.getFacetInfo(id)
     }
 }

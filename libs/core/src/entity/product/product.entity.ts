@@ -12,7 +12,7 @@ import {
 } from 'typeorm';
 import {Field, ID, ObjectType} from '@nestjs/graphql';
 import {Connection, FilterableField, PagingStrategies, Relation} from '@nestjs-query/query-graphql';
-import {Asset, Collection, Facet, FacetValue, ProductAsset, ProductOptionGroup, ProductVariant} from '../';
+import {Asset, Collection, Facet, FacetValue, ProductAsset, ProductOptionGroup, ProductVariant, View} from '../';
 
 @ObjectType('Product')
 @Entity({name: 'product'})
@@ -74,4 +74,7 @@ export class Product extends BaseEntity {
     @Field(() => [ProductVariant])
     @OneToMany(type => ProductVariant, variant => variant.product)
     variants: ProductVariant[]
+
+    @OneToMany(() => View, view => view.product)
+    views: View[]
 }

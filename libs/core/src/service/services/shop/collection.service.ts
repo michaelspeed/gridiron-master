@@ -50,33 +50,32 @@ export class ShopCollectionService {
 
     async GetAllProductForCollection(id: string, limit?: number, search?: string): Promise<ProductVariant[]> {
         return new Promise(async (resolve, reject) => {
-            const col = await this.connection.getRepository(Collection).findOne({where:{id}, relations:['products']})
-            let prods = []
-            for (const progs of col.products) {
-                prods.push(progs.id)
+            const col = await this.connection.getRepository(Collection).findOne({where:{id}, relations:['products', 'children']})
+            let colIds = []
+            colIds.push(col.id)
+            for (const cods of col.children) {
+                colIds.push(cods.id)
             }
-            if (prods.length === 0) {
-                resolve([])
-            } else {
-                const qb = this.connection.getRepository(ProductVariant)
-                    .createQueryBuilder('productVariant')
-                    .innerJoinAndSelect('productVariant.product', 'product')
-                    .leftJoinAndSelect('productVariant.asset', 'asset')
-                    .leftJoinAndSelect('asset.asset', 'mainasset')
-                    .where(`product.id IN (:...prods)`, {prods})
+            const qb = this.connection.getRepository(ProductVariant)
+                .createQueryBuilder('productVariant')
+                .innerJoinAndSelect('productVariant.product', 'product')
+                .innerJoinAndSelect('product.collection', 'collection')
+                .leftJoinAndSelect('productVariant.asset', 'asset')
+                .leftJoinAndSelect('productVariant.price', 'price')
+                .leftJoinAndSelect('asset.asset', 'mainasset')
+                .where(`collection.id IN (:...colls)`, {colls: colIds})
 
-                if (search) {
-                    qb.andWhere(`(productVariant.name LIKE '%${search}%')`)
-                }
-
-
-                if (limit) {
-                    qb.limit(limit)
-                }
-
-                const variant = await qb.getMany()
-                resolve(variant)
+            if (search) {
+                qb.andWhere(`(productVariant.name LIKE '%${search}%')`)
             }
+
+
+            if (limit) {
+                qb.limit(limit)
+            }
+
+            const variant = await qb.getMany()
+            resolve(variant)
         })
     }
 }

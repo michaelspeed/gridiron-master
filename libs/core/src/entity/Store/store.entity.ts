@@ -3,7 +3,7 @@ import {
     BaseEntity,
     Column,
     CreateDateColumn,
-    Entity, JoinColumn,
+    Entity, JoinColumn, JoinTable, ManyToMany,
     ManyToOne,
     OneToMany,
     OneToOne,
@@ -25,7 +25,7 @@ import {
     ProductVariantPrice, StockBackLog,
     StockKeeping,
     TaxCategory,
-    Vendor,
+    Vendor, Zip,
     Zone
 } from '..';
 import {StoreBalance} from "./storeBalance.entity";
@@ -145,4 +145,9 @@ export class Store extends BaseEntity {
     @Field(() => StockBackLog)
     @OneToMany(() => StockBackLog, backlog => backlog.store)
     backlogs: StockBackLog[]
+
+    @Field(() => Zip, {nullable: true})
+    @ManyToMany(() => Zip, zip => zip.vendors)
+    @JoinTable()
+    zip: Zip[]
 }

@@ -1,5 +1,5 @@
 import {Args, Context, Field, ID, Int, Mutation, ObjectType, Query, Resolver} from "@nestjs/graphql";
-import {Asset, Product, ProductVariant, Review} from "../../../entity";
+import {Asset, Product, ProductVariant, ProductVariantPrice, Review} from "../../../entity";
 import {ShopProductsService} from "../../../service";
 
 @ObjectType()
@@ -38,13 +38,12 @@ export class ShopProductVariantResolver {
         return this.shopProductsService.getPriceForVariants(id)
     }
 
-    @Query(() => StockZip)
+    @Query(() => [ProductVariantPrice])
     async GetStocksAndZipAvailability(
-        @Args('storeId', {type: () => ID}) storeId: string,
         @Args('variantId', {type: () => ID}) variantId: string,
         @Args('zipf', {type: () => Int}) zipf: number,
-    ): Promise<StockZip> {
-        return this.shopProductsService.GetStocksAndZipAvailability(storeId, variantId, zipf)
+    ): Promise<ProductVariantPrice[]> {
+        return this.shopProductsService.GetStocksAndZipAvailability(variantId, zipf)
     }
 
     @Query(() => [ProductVariant])
