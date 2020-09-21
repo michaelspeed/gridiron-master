@@ -50,28 +50,28 @@ export class Product extends BaseEntity {
     @Column("longtext")
     description: string;
 
-    @Field(() => Collection, {nullable: true})
+    // @Field(() => Collection, {nullable: true})
     @ManyToOne(type => Collection, col => col.products)
     collection: Collection
 
-    @Field(() => [ProductOptionGroup])
+    // @Field(() => [ProductOptionGroup])
     @OneToMany(type => ProductOptionGroup, optGroup => optGroup.product)
     options: ProductOptionGroup[]
 
-    @Field(() => Asset)
+    // @Field(() => Asset)
     @ManyToOne(type => Asset, asset => asset.featured)
     featuredAsset: Asset
 
-    @Field(() => [FacetValue])
+    // @Field(() => [FacetValue])
     @ManyToMany(type => FacetValue, facet => facet.product)
     @JoinTable()
     facets: FacetValue[]
 
-    @Field(() => [ProductAsset], {nullable: true})
+    // @Field(() => [ProductAsset], {nullable: true})
     @OneToMany(type => ProductAsset, prasset => prasset.product)
     assets: ProductAsset[]
 
-    @Field(() => [ProductVariant])
+    // @Field(() => [ProductVariant])
     @OneToMany(type => ProductVariant, variant => variant.product)
     variants: ProductVariant[]
 

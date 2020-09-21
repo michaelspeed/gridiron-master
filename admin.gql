@@ -375,6 +375,7 @@ input BillingAgreementFilterProductVariantFilter {
   enabled: BooleanFieldComparison
   sku: StringFieldComparison
   name: StringFieldComparison
+  rating: NumberFieldComparison
   trackInventory: BooleanFieldComparison
 }
 
@@ -510,6 +511,7 @@ type Order {
   updatedAt: DateTime!
   totalPrice: Float!
   address: String!
+  mode: String!
   lines(
     """Limit or page results."""
     paging: OffsetPaging = {limit: 10}
@@ -592,9 +594,9 @@ type OrderItem {
   createdAt: DateTime!
   updatedAt: DateTime!
   quantity: Float!
+  productVariant: ProductVariant!
   line: OrderLine!
   taxCategory: TaxRate!
-  productVariant: ProductVariant!
 }
 
 type OrderLine {
@@ -716,6 +718,7 @@ input ProductVariantFilter {
   enabled: BooleanFieldComparison
   sku: StringFieldComparison
   name: StringFieldComparison
+  rating: NumberFieldComparison
   trackInventory: BooleanFieldComparison
   line: ProductVariantFilterOrderItemFilter
   agreements: ProductVariantFilterBillingAgreementFilter
@@ -765,6 +768,7 @@ enum ProductVariantSortFields {
   enabled
   sku
   name
+  rating
   trackInventory
 }
 
@@ -789,6 +793,7 @@ input ProductVariantAggregateFilter {
   enabled: BooleanFieldComparison
   sku: StringFieldComparison
   name: StringFieldComparison
+  rating: NumberFieldComparison
   trackInventory: BooleanFieldComparison
 }
 
@@ -811,6 +816,7 @@ type User {
   delivery: Delivery
   cart: Cart
   view: [View!]!
+  reviews: [Review!]!
   address: [Address!]
   order: [Order!]
   orders(
@@ -1006,7 +1012,26 @@ input ZipFilter {
   name: StringFieldComparison
   slug: StringFieldComparison
   code: NumberFieldComparison
+  store: ZipFilterStoreFilter
   vendors: ZipFilterVendorFilter
+}
+
+input ZipFilterStoreFilter {
+  and: [ZipFilterStoreFilter!]
+  or: [ZipFilterStoreFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  storeName: StringFieldComparison
+  phoneNumber: StringFieldComparison
+  officialemail: StringFieldComparison
+  zipcode: StringFieldComparison
+  streetAddress1: StringFieldComparison
+  streetAddress2: StringFieldComparison
+  GSTIN: StringFieldComparison
+  singleStore: BooleanFieldComparison
+  rentalStore: BooleanFieldComparison
+  channelMarkets: BooleanFieldComparison
 }
 
 input ZipFilterVendorFilter {
@@ -1170,6 +1195,7 @@ input ProductVariantPriceFilterProductVariantFilter {
   enabled: BooleanFieldComparison
   sku: StringFieldComparison
   name: StringFieldComparison
+  rating: NumberFieldComparison
   trackInventory: BooleanFieldComparison
 }
 
@@ -1288,16 +1314,35 @@ input StoreFilter {
   singleStore: BooleanFieldComparison
   rentalStore: BooleanFieldComparison
   channelMarkets: BooleanFieldComparison
-  line: StoreFilterOrderLineFilter
+  zip: StoreFilterZipFilter
+  backlogs: StoreFilterStockBackLogFilter
+  cart: StoreFilterCartItemFilter
 }
 
-input StoreFilterOrderLineFilter {
-  and: [StoreFilterOrderLineFilter!]
-  or: [StoreFilterOrderLineFilter!]
+input StoreFilterZipFilter {
+  and: [StoreFilterZipFilter!]
+  or: [StoreFilterZipFilter!]
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
-  stage: StringFieldComparison
+  name: StringFieldComparison
+  slug: StringFieldComparison
+  code: NumberFieldComparison
+}
+
+input StoreFilterStockBackLogFilter {
+  and: [StoreFilterStockBackLogFilter!]
+  or: [StoreFilterStockBackLogFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  quantity: NumberFieldComparison
+}
+
+input StoreFilterCartItemFilter {
+  and: [StoreFilterCartItemFilter!]
+  or: [StoreFilterCartItemFilter!]
+  id: IDFilterComparison
 }
 
 input StoreSort {
@@ -1392,16 +1437,36 @@ type Store {
   rentalStore: Boolean!
   channelMarkets: Boolean!
   type: StoreTypeEnum!
-  lines(
+  zips(
     """Limit or page results."""
     paging: OffsetPaging = {limit: 10}
 
     """Specify to filter the records returned."""
-    filter: OrderLineFilter = {}
+    filter: ZipFilter = {}
 
     """Specify to sort results."""
-    sorting: [OrderLineSort!] = []
-  ): [OrderLine!]!
+    sorting: [ZipSort!] = []
+  ): [Zip!]!
+  backlogs(
+    """Limit or page results."""
+    paging: OffsetPaging = {limit: 10}
+
+    """Specify to filter the records returned."""
+    filter: StockBackLogFilter = {}
+
+    """Specify to sort results."""
+    sorting: [StockBackLogSort!] = []
+  ): [StockBackLog!]!
+  carts(
+    """Limit or page results."""
+    paging: OffsetPaging = {limit: 10}
+
+    """Specify to filter the records returned."""
+    filter: CartItemFilter = {}
+
+    """Specify to sort results."""
+    sorting: [CartItemSort!] = []
+  ): [CartItem!]!
   prices(
     """Limit or page results."""
     paging: OffsetPaging = {limit: 10}
@@ -1434,10 +1499,18 @@ type Store {
   ): [StockKeeping!]!
   balance: StoreBalance
   country: Country!
-  linesAggregate(
+  zipsAggregate(
     """Filter to find records to aggregate on"""
-    filter: OrderLineAggregateFilter
-  ): StoreLinesAggregateResponse!
+    filter: ZipAggregateFilter
+  ): StoreZipsAggregateResponse!
+  backlogsAggregate(
+    """Filter to find records to aggregate on"""
+    filter: StockBackLogAggregateFilter
+  ): StoreBacklogsAggregateResponse!
+  cartsAggregate(
+    """Filter to find records to aggregate on"""
+    filter: CartItemAggregateFilter
+  ): StoreCartsAggregateResponse!
   pricesAggregate(
     """Filter to find records to aggregate on"""
     filter: SettlementsAggregateFilter
@@ -1455,6 +1528,44 @@ type Store {
 enum StoreTypeEnum {
   DEFAULT
   VENDOR
+}
+
+input StockBackLogFilter {
+  and: [StockBackLogFilter!]
+  or: [StockBackLogFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  quantity: NumberFieldComparison
+}
+
+input StockBackLogSort {
+  field: StockBackLogSortFields!
+  direction: SortDirection!
+  nulls: SortNulls
+}
+
+enum StockBackLogSortFields {
+  id
+  createdAt
+  updatedAt
+  quantity
+}
+
+input CartItemFilter {
+  and: [CartItemFilter!]
+  or: [CartItemFilter!]
+  id: IDFilterComparison
+}
+
+input CartItemSort {
+  field: CartItemSortFields!
+  direction: SortDirection!
+  nulls: SortNulls
+}
+
+enum CartItemSortFields {
+  id
 }
 
 input SettlementsFilter {
@@ -1540,6 +1651,21 @@ enum StockKeepingSortFields {
   stockstatus
   sku
   type
+}
+
+input StockBackLogAggregateFilter {
+  and: [StockBackLogAggregateFilter!]
+  or: [StockBackLogAggregateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  quantity: NumberFieldComparison
+}
+
+input CartItemAggregateFilter {
+  and: [CartItemAggregateFilter!]
+  or: [CartItemAggregateFilter!]
+  id: IDFilterComparison
 }
 
 input SettlementsAggregateFilter {
@@ -1649,157 +1775,6 @@ type ProductAsset {
   product: Product!
 }
 
-type StockKeeping {
-  id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  quantity: Float!
-  available_quantity: Float!
-  threshold: Float!
-  multiple: Boolean!
-  backorder: Boolean!
-  stockstatus: Boolean!
-  sku: String!
-  type: String!
-  sales(
-    """Limit or page results."""
-    paging: OffsetPaging = {limit: 10}
-
-    """Specify to filter the records returned."""
-    filter: SaleFilter = {}
-
-    """Specify to sort results."""
-    sorting: [SaleSort!] = []
-  ): [Sale!]!
-  cancels(
-    """Limit or page results."""
-    paging: OffsetPaging = {limit: 10}
-
-    """Specify to filter the records returned."""
-    filter: CancellationFilter = {}
-
-    """Specify to sort results."""
-    sorting: [CancellationSort!] = []
-  ): [Cancellation!]!
-  movements(
-    """Limit or page results."""
-    paging: OffsetPaging = {limit: 10}
-
-    """Specify to filter the records returned."""
-    filter: StockMovementFilter = {}
-
-    """Specify to sort results."""
-    sorting: [StockMovementSort!] = []
-  ): [StockMovement!]!
-  store: Store!
-  variant: ProductVariant!
-  salesAggregate(
-    """Filter to find records to aggregate on"""
-    filter: SaleAggregateFilter
-  ): StockKeepingSalesAggregateResponse!
-  cancelsAggregate(
-    """Filter to find records to aggregate on"""
-    filter: CancellationAggregateFilter
-  ): StockKeepingCancelsAggregateResponse!
-  movementsAggregate(
-    """Filter to find records to aggregate on"""
-    filter: StockMovementAggregateFilter
-  ): StockKeepingMovementsAggregateResponse!
-}
-
-input SaleFilter {
-  and: [SaleFilter!]
-  or: [SaleFilter!]
-  id: IDFilterComparison
-  createdAt: DateFieldComparison
-  updatedAt: DateFieldComparison
-  quantity: NumberFieldComparison
-}
-
-input SaleSort {
-  field: SaleSortFields!
-  direction: SortDirection!
-  nulls: SortNulls
-}
-
-enum SaleSortFields {
-  id
-  createdAt
-  updatedAt
-  quantity
-}
-
-input CancellationFilter {
-  and: [CancellationFilter!]
-  or: [CancellationFilter!]
-  id: IDFilterComparison
-  createdAt: DateFieldComparison
-  updatedAt: DateFieldComparison
-  quantity: NumberFieldComparison
-}
-
-input CancellationSort {
-  field: CancellationSortFields!
-  direction: SortDirection!
-  nulls: SortNulls
-}
-
-enum CancellationSortFields {
-  id
-  createdAt
-  updatedAt
-  quantity
-}
-
-input StockMovementFilter {
-  and: [StockMovementFilter!]
-  or: [StockMovementFilter!]
-  id: IDFilterComparison
-  createdAt: DateFieldComparison
-  updatedAt: DateFieldComparison
-  quantity: NumberFieldComparison
-}
-
-input StockMovementSort {
-  field: StockMovementSortFields!
-  direction: SortDirection!
-  nulls: SortNulls
-}
-
-enum StockMovementSortFields {
-  id
-  createdAt
-  updatedAt
-  quantity
-}
-
-input SaleAggregateFilter {
-  and: [SaleAggregateFilter!]
-  or: [SaleAggregateFilter!]
-  id: IDFilterComparison
-  createdAt: DateFieldComparison
-  updatedAt: DateFieldComparison
-  quantity: NumberFieldComparison
-}
-
-input CancellationAggregateFilter {
-  and: [CancellationAggregateFilter!]
-  or: [CancellationAggregateFilter!]
-  id: IDFilterComparison
-  createdAt: DateFieldComparison
-  updatedAt: DateFieldComparison
-  quantity: NumberFieldComparison
-}
-
-input StockMovementAggregateFilter {
-  and: [StockMovementAggregateFilter!]
-  or: [StockMovementAggregateFilter!]
-  id: IDFilterComparison
-  createdAt: DateFieldComparison
-  updatedAt: DateFieldComparison
-  quantity: NumberFieldComparison
-}
-
 type ProductVariant {
   id: ID!
   createdAt: DateTime!
@@ -1809,6 +1784,7 @@ type ProductVariant {
   enabled: Boolean!
   sku: String!
   name: String!
+  rating: Float!
   trackInventory: Boolean!
   lines(
     """Limit or page results."""
@@ -1917,10 +1893,24 @@ type ProductVariantPrice {
   updatedAt: DateTime!
   price: Float!
   taxIncluded: Boolean!
+  backlogs(
+    """Limit or page results."""
+    paging: OffsetPaging = {limit: 10}
+
+    """Specify to filter the records returned."""
+    filter: StockBackLogFilter = {}
+
+    """Specify to sort results."""
+    sorting: [StockBackLogSort!] = []
+  ): [StockBackLog!]
   promoprice: PromotionVariantPrice
   store: Store!
   tax: TaxRate
   variant: ProductVariant!
+  backlogsAggregate(
+    """Filter to find records to aggregate on"""
+    filter: StockBackLogAggregateFilter
+  ): ProductVariantPriceBacklogsAggregateResponse!
 }
 
 type ProductOption {
@@ -2100,6 +2090,7 @@ type ProductVariantSpecs {
   createdAt: DateTime!
   updatedAt: DateTime!
   specs: JSON!
+  variant: ProductVariant!
 }
 
 type Cart {
@@ -2108,6 +2099,8 @@ type Cart {
 
 type View {
   id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type BillingAgreementRequest {
@@ -2116,6 +2109,157 @@ type BillingAgreementRequest {
   updatedAt: DateTime!
   value: Float!
   state: BillingAgreementState!
+}
+
+type StockKeeping {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  quantity: Float!
+  available_quantity: Float!
+  threshold: Float!
+  multiple: Boolean!
+  backorder: Boolean!
+  stockstatus: Boolean!
+  sku: String!
+  type: String!
+  sales(
+    """Limit or page results."""
+    paging: OffsetPaging = {limit: 10}
+
+    """Specify to filter the records returned."""
+    filter: SaleFilter = {}
+
+    """Specify to sort results."""
+    sorting: [SaleSort!] = []
+  ): [Sale!]!
+  cancels(
+    """Limit or page results."""
+    paging: OffsetPaging = {limit: 10}
+
+    """Specify to filter the records returned."""
+    filter: CancellationFilter = {}
+
+    """Specify to sort results."""
+    sorting: [CancellationSort!] = []
+  ): [Cancellation!]!
+  movements(
+    """Limit or page results."""
+    paging: OffsetPaging = {limit: 10}
+
+    """Specify to filter the records returned."""
+    filter: StockMovementFilter = {}
+
+    """Specify to sort results."""
+    sorting: [StockMovementSort!] = []
+  ): [StockMovement!]!
+  store: Store!
+  variant: ProductVariant!
+  salesAggregate(
+    """Filter to find records to aggregate on"""
+    filter: SaleAggregateFilter
+  ): StockKeepingSalesAggregateResponse!
+  cancelsAggregate(
+    """Filter to find records to aggregate on"""
+    filter: CancellationAggregateFilter
+  ): StockKeepingCancelsAggregateResponse!
+  movementsAggregate(
+    """Filter to find records to aggregate on"""
+    filter: StockMovementAggregateFilter
+  ): StockKeepingMovementsAggregateResponse!
+}
+
+input SaleFilter {
+  and: [SaleFilter!]
+  or: [SaleFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  quantity: NumberFieldComparison
+}
+
+input SaleSort {
+  field: SaleSortFields!
+  direction: SortDirection!
+  nulls: SortNulls
+}
+
+enum SaleSortFields {
+  id
+  createdAt
+  updatedAt
+  quantity
+}
+
+input CancellationFilter {
+  and: [CancellationFilter!]
+  or: [CancellationFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  quantity: NumberFieldComparison
+}
+
+input CancellationSort {
+  field: CancellationSortFields!
+  direction: SortDirection!
+  nulls: SortNulls
+}
+
+enum CancellationSortFields {
+  id
+  createdAt
+  updatedAt
+  quantity
+}
+
+input StockMovementFilter {
+  and: [StockMovementFilter!]
+  or: [StockMovementFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  quantity: NumberFieldComparison
+}
+
+input StockMovementSort {
+  field: StockMovementSortFields!
+  direction: SortDirection!
+  nulls: SortNulls
+}
+
+enum StockMovementSortFields {
+  id
+  createdAt
+  updatedAt
+  quantity
+}
+
+input SaleAggregateFilter {
+  and: [SaleAggregateFilter!]
+  or: [SaleAggregateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  quantity: NumberFieldComparison
+}
+
+input CancellationAggregateFilter {
+  and: [CancellationAggregateFilter!]
+  or: [CancellationAggregateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  quantity: NumberFieldComparison
+}
+
+input StockMovementAggregateFilter {
+  and: [StockMovementAggregateFilter!]
+  or: [StockMovementAggregateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  quantity: NumberFieldComparison
 }
 
 type Cancellation {
@@ -2149,6 +2293,16 @@ type Zip {
   name: String!
   slug: String!
   code: Float!
+  stores(
+    """Limit or page results."""
+    paging: OffsetPaging = {limit: 10}
+
+    """Specify to filter the records returned."""
+    filter: StoreFilter = {}
+
+    """Specify to sort results."""
+    sorting: [StoreSort!] = []
+  ): [Store!]!
   vendors(
     """Limit or page results."""
     paging: OffsetPaging = {limit: 10}
@@ -2159,6 +2313,10 @@ type Zip {
     """Specify to sort results."""
     sorting: [VendorSort!] = []
   ): [Vendor!]!
+  storesAggregate(
+    """Filter to find records to aggregate on"""
+    filter: StoreAggregateFilter
+  ): ZipStoresAggregateResponse!
   vendorsAggregate(
     """Filter to find records to aggregate on"""
     filter: VendorAggregateFilter
@@ -2400,6 +2558,34 @@ type PaymentMethod {
   api: String!
   secretKey: String!
   enabled: Boolean!
+}
+
+type CartItem {
+  id: ID!
+  quantity: Float!
+  cart: Cart!
+  variant: ProductVariant!
+  store: Store!
+  price: ProductVariantPrice!
+}
+
+type StockBackLog {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  quantity: Float!
+  variant: ProductVariantPrice!
+  store: Store!
+}
+
+type Review {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  stars: Int!
+  text: String!
+  user: User!
+  variant: ProductVariant!
 }
 
 type Country {
@@ -2965,31 +3151,102 @@ type StoreAggregateResponse {
   max: StoreMaxAggregate
 }
 
-type StoreLinesCountAggregate {
+type StoreZipsCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
-  stage: Int
+  name: Int
+  slug: Int
+  code: Int
 }
 
-type StoreLinesMinAggregate {
+type StoreZipsSumAggregate {
+  code: Float
+}
+
+type StoreZipsAvgAggregate {
+  code: Float
+}
+
+type StoreZipsMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
-  stage: String
+  name: String
+  slug: String
+  code: Float
 }
 
-type StoreLinesMaxAggregate {
+type StoreZipsMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
-  stage: String
+  name: String
+  slug: String
+  code: Float
 }
 
-type StoreLinesAggregateResponse {
-  count: StoreLinesCountAggregate
-  min: StoreLinesMinAggregate
-  max: StoreLinesMaxAggregate
+type StoreZipsAggregateResponse {
+  count: StoreZipsCountAggregate
+  sum: StoreZipsSumAggregate
+  avg: StoreZipsAvgAggregate
+  min: StoreZipsMinAggregate
+  max: StoreZipsMaxAggregate
+}
+
+type StoreBacklogsCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  quantity: Int
+}
+
+type StoreBacklogsSumAggregate {
+  quantity: Float
+}
+
+type StoreBacklogsAvgAggregate {
+  quantity: Float
+}
+
+type StoreBacklogsMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  quantity: Float
+}
+
+type StoreBacklogsMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  quantity: Float
+}
+
+type StoreBacklogsAggregateResponse {
+  count: StoreBacklogsCountAggregate
+  sum: StoreBacklogsSumAggregate
+  avg: StoreBacklogsAvgAggregate
+  min: StoreBacklogsMinAggregate
+  max: StoreBacklogsMaxAggregate
+}
+
+type StoreCartsCountAggregate {
+  id: Int
+}
+
+type StoreCartsMinAggregate {
+  id: ID
+}
+
+type StoreCartsMaxAggregate {
+  id: ID
+}
+
+type StoreCartsAggregateResponse {
+  count: StoreCartsCountAggregate
+  min: StoreCartsMinAggregate
+  max: StoreCartsMaxAggregate
 }
 
 type StorePricesCountAggregate {
@@ -3342,6 +3599,7 @@ type UserDeleteResponse {
   delivery: Delivery
   cart: Cart
   view: [View!]
+  reviews: [Review!]
   address: [Address!]
   order: [Order!]
 }
@@ -4170,15 +4428,18 @@ type ProductVariantsCountAggregate {
   enabled: Int
   sku: Int
   name: Int
+  rating: Int
   trackInventory: Int
 }
 
 type ProductVariantsSumAggregate {
   dum_price: Float
+  rating: Float
 }
 
 type ProductVariantsAvgAggregate {
   dum_price: Float
+  rating: Float
 }
 
 type ProductVariantsMinAggregate {
@@ -4189,6 +4450,7 @@ type ProductVariantsMinAggregate {
   dum_price: Float
   sku: String
   name: String
+  rating: Float
 }
 
 type ProductVariantsMaxAggregate {
@@ -4199,6 +4461,7 @@ type ProductVariantsMaxAggregate {
   dum_price: Float
   sku: String
   name: String
+  rating: Float
 }
 
 type ProductVariantsAggregateResponse {
@@ -4242,6 +4505,7 @@ type ProductVariantDeleteResponse {
   enabled: Boolean
   sku: String
   name: String
+  rating: Float
   trackInventory: Boolean
 }
 
@@ -4254,15 +4518,18 @@ type ProductVariantCountAggregate {
   enabled: Int
   sku: Int
   name: Int
+  rating: Int
   trackInventory: Int
 }
 
 type ProductVariantSumAggregate {
   dum_price: Float
+  rating: Float
 }
 
 type ProductVariantAvgAggregate {
   dum_price: Float
+  rating: Float
 }
 
 type ProductVariantMinAggregate {
@@ -4273,6 +4540,7 @@ type ProductVariantMinAggregate {
   dum_price: Float
   sku: String
   name: String
+  rating: Float
 }
 
 type ProductVariantMaxAggregate {
@@ -4283,6 +4551,7 @@ type ProductVariantMaxAggregate {
   dum_price: Float
   sku: String
   name: String
+  rating: Float
 }
 
 type ProductVariantAggregateResponse {
@@ -4508,15 +4777,18 @@ type ProductOptionVariantsCountAggregate {
   enabled: Int
   sku: Int
   name: Int
+  rating: Int
   trackInventory: Int
 }
 
 type ProductOptionVariantsSumAggregate {
   dum_price: Float
+  rating: Float
 }
 
 type ProductOptionVariantsAvgAggregate {
   dum_price: Float
+  rating: Float
 }
 
 type ProductOptionVariantsMinAggregate {
@@ -4527,6 +4799,7 @@ type ProductOptionVariantsMinAggregate {
   dum_price: Float
   sku: String
   name: String
+  rating: Float
 }
 
 type ProductOptionVariantsMaxAggregate {
@@ -4537,6 +4810,7 @@ type ProductOptionVariantsMaxAggregate {
   dum_price: Float
   sku: String
   name: String
+  rating: Float
 }
 
 type ProductOptionVariantsAggregateResponse {
@@ -4659,6 +4933,43 @@ type ProductVariantPriceAggregateResponse {
   avg: ProductVariantPriceAvgAggregate
   min: ProductVariantPriceMinAggregate
   max: ProductVariantPriceMaxAggregate
+}
+
+type ProductVariantPriceBacklogsCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  quantity: Int
+}
+
+type ProductVariantPriceBacklogsSumAggregate {
+  quantity: Float
+}
+
+type ProductVariantPriceBacklogsAvgAggregate {
+  quantity: Float
+}
+
+type ProductVariantPriceBacklogsMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  quantity: Float
+}
+
+type ProductVariantPriceBacklogsMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  quantity: Float
+}
+
+type ProductVariantPriceBacklogsAggregateResponse {
+  count: ProductVariantPriceBacklogsCountAggregate
+  sum: ProductVariantPriceBacklogsSumAggregate
+  avg: ProductVariantPriceBacklogsAvgAggregate
+  min: ProductVariantPriceBacklogsMinAggregate
+  max: ProductVariantPriceBacklogsMaxAggregate
 }
 
 type ProductVariantAssetDeleteResponse {
@@ -5150,6 +5461,7 @@ type OrderDeleteResponse {
   updatedAt: DateTime
   totalPrice: Float
   address: String
+  mode: String
 }
 
 type OrderCountAggregate {
@@ -5269,6 +5581,54 @@ type ZipAggregateResponse {
   avg: ZipAvgAggregate
   min: ZipMinAggregate
   max: ZipMaxAggregate
+}
+
+type ZipStoresCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  storeName: Int
+  phoneNumber: Int
+  officialemail: Int
+  zipcode: Int
+  streetAddress1: Int
+  streetAddress2: Int
+  GSTIN: Int
+  singleStore: Int
+  rentalStore: Int
+  channelMarkets: Int
+}
+
+type ZipStoresMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  storeName: String
+  phoneNumber: String
+  officialemail: String
+  zipcode: String
+  streetAddress1: String
+  streetAddress2: String
+  GSTIN: String
+}
+
+type ZipStoresMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  storeName: String
+  phoneNumber: String
+  officialemail: String
+  zipcode: String
+  streetAddress1: String
+  streetAddress2: String
+  GSTIN: String
+}
+
+type ZipStoresAggregateResponse {
+  count: ZipStoresCountAggregate
+  min: ZipStoresMinAggregate
+  max: ZipStoresMaxAggregate
 }
 
 type ZipVendorsCountAggregate {
@@ -5605,6 +5965,7 @@ type OrderItemDeleteResponse {
   createdAt: DateTime
   updatedAt: DateTime
   quantity: Float
+  productVariant: ProductVariant
 }
 
 type OrderItemCountAggregate {
@@ -7087,13 +7448,17 @@ type Mutation {
   updateManyStores(input: UpdateManyStoresInput!): UpdateManyResponse!
   createOneStore(input: CreateOneStoreInput!): Store!
   createManyStores(input: CreateManyStoresInput!): [Store!]!
-  removeLinesFromStore(input: RelationsInput!): Store!
+  removeZipsFromStore(input: RelationsInput!): Store!
+  removeBacklogsFromStore(input: RelationsInput!): Store!
+  removeCartsFromStore(input: RelationsInput!): Store!
   removePricesFromStore(input: RelationsInput!): Store!
   removeSettlementsFromStore(input: RelationsInput!): Store!
   removeSkusFromStore(input: RelationsInput!): Store!
   removeBalanceFromStore(input: RelationInput!): Store!
   removeCountryFromStore(input: RelationInput!): Store!
-  addLinesToStore(input: RelationsInput!): Store!
+  addZipsToStore(input: RelationsInput!): Store!
+  addBacklogsToStore(input: RelationsInput!): Store!
+  addCartsToStore(input: RelationsInput!): Store!
   addPricesToStore(input: RelationsInput!): Store!
   addSettlementsToStore(input: RelationsInput!): Store!
   addSkusToStore(input: RelationsInput!): Store!
@@ -7267,10 +7632,12 @@ type Mutation {
   updateManyProductVariantPrices(input: UpdateManyProductVariantPricesInput!): UpdateManyResponse!
   createOneProductVariantPrice(input: CreateOneProductVariantPriceInput!): ProductVariantPrice!
   createManyProductVariantPrices(input: CreateManyProductVariantPricesInput!): [ProductVariantPrice!]!
+  removeBacklogsFromProductVariantPrice(input: RelationsInput!): ProductVariantPrice!
   removePromopriceFromProductVariantPrice(input: RelationInput!): ProductVariantPrice!
   removeStoreFromProductVariantPrice(input: RelationInput!): ProductVariantPrice!
   removeTaxFromProductVariantPrice(input: RelationInput!): ProductVariantPrice!
   removeVariantFromProductVariantPrice(input: RelationInput!): ProductVariantPrice!
+  addBacklogsToProductVariantPrice(input: RelationsInput!): ProductVariantPrice!
   setPromopriceOnProductVariantPrice(input: RelationInput!): ProductVariantPrice!
   setStoreOnProductVariantPrice(input: RelationInput!): ProductVariantPrice!
   setTaxOnProductVariantPrice(input: RelationInput!): ProductVariantPrice!
@@ -7354,7 +7721,9 @@ type Mutation {
   updateManyZips(input: UpdateManyZipsInput!): UpdateManyResponse!
   createOneZip(input: CreateOneZipInput!): Zip!
   createManyZips(input: CreateManyZipsInput!): [Zip!]!
+  removeStoresFromZip(input: RelationsInput!): Zip!
   removeVendorsFromZip(input: RelationsInput!): Zip!
+  addStoresToZip(input: RelationsInput!): Zip!
   addVendorsToZip(input: RelationsInput!): Zip!
   CreateZipToVendor(zips: [ID!]!, vendorId: ID!): Vendor!
   deleteOneMenu(input: DeleteOneInput!): MenuDeleteResponse!
@@ -8302,6 +8671,7 @@ input ProductVariantDeleteFilter {
   enabled: BooleanFieldComparison
   sku: StringFieldComparison
   name: StringFieldComparison
+  rating: NumberFieldComparison
   trackInventory: BooleanFieldComparison
 }
 
@@ -9965,6 +10335,7 @@ input ProductVariantSubscriptionFilter {
   enabled: BooleanFieldComparison
   sku: StringFieldComparison
   name: StringFieldComparison
+  rating: NumberFieldComparison
   trackInventory: BooleanFieldComparison
 }
 

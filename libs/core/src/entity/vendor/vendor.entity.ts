@@ -64,7 +64,7 @@ export class Vendor extends BaseEntity {
     @JoinColumn()
     license: VendorLicense
 
-    @Field(() => Zip, {nullable: true})
+    // @Field(() => Zip, {nullable: true})
     @ManyToMany(() => Zip, zip => zip.vendors)
     @JoinTable()
     zip: Zip[]

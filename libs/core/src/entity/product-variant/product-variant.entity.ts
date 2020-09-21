@@ -79,7 +79,7 @@ export class ProductVariant extends BaseEntity {
     @Column({default: 0})
     rating: number;
 
-    @Field(() => Product)
+    // @Field(() => Product)
     @ManyToOne(type => Product, prod => prod.variants)
     product: Product
 
@@ -87,15 +87,15 @@ export class ProductVariant extends BaseEntity {
     @Column({default: true})
     trackInventory: boolean;
 
-    @Field(() => ProductVariantAsset)
+    // @Field(() => ProductVariantAsset)
     @OneToOne(type => ProductVariantAsset, prod => prod.variant)
     asset: ProductVariantAsset
 
-    @Field(() => [ProductVariantPrice], {nullable: true})
+    // @Field(() => [ProductVariantPrice], {nullable: true})
     @OneToMany(type => ProductVariantPrice, price => price.variant)
     price: ProductVariantPrice[]
 
-    @Field(() => ProductVariantSpecifications, {nullable: true})
+    // @Field(() => ProductVariantSpecifications, {nullable: true})
     @OneToOne(type => ProductVariantSpecifications, specs => specs.variant)
     @JoinColumn()
     specs: ProductVariantSpecifications
@@ -103,27 +103,27 @@ export class ProductVariant extends BaseEntity {
     @OneToMany(type => View, view => view.variant)
     view: View[]
 
-    @Field(() => Seo,{nullable: true})
+    // @Field(() => Seo,{nullable: true})
     @OneToOne(type => Seo, seo => seo.variant)
     seo: Seo
 
-    @Field(() => [BillingAgreement])
+    // @Field(() => [BillingAgreement])
     @OneToMany(type => BillingAgreement, agreement => agreement.variant)
     agreements: BillingAgreement[]
 
-    @Field(() => [StockKeeping])
+    // @Field(() => [StockKeeping])
     @OneToMany(() => StockKeeping, keeping => keeping.variant)
     stock: StockKeeping[]
 
-    @Field(() => [OrderItem])
+    // @Field(() => [OrderItem])
     @OneToMany(() => OrderItem, line => line.productVariant)
     line: OrderItem[]
 
-    @Field(() => [CartItem])
+    // @Field(() => [CartItem])
     @OneToMany(type => CartItem, cart => cart.variant)
     carts: CartItem[]
 
-    @Field(() => [Review])
+    // @Field(() => [Review])
     @OneToMany(() => Review, rev => rev.variant)
     reviews: Review[]
 

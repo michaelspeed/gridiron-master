@@ -1,14 +1,4 @@
 import {Field, ID, ObjectType} from "@nestjs/graphql";
-import {
-    BaseEntity,
-    Column,
-    CreateDateColumn,
-    Entity, JoinColumn, OneToMany, OneToOne,
-    PrimaryGeneratedColumn,
-    Tree,
-    TreeChildren, TreeParent,
-    UpdateDateColumn
-} from "typeorm";
 import {Connection, FilterableField, PagingStrategies, Relation} from "@nestjs-query/query-graphql";
 import {BillingAgreement, Product, ProductQuery, Seo} from "@gridiron/core";
 
