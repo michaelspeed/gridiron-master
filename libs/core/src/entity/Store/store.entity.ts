@@ -20,16 +20,16 @@ import {
 import {
     BillingAgreement,
     CartItem,
-    Country,
+    Country, Invoice,
     OrderLine,
     ProductVariantPrice, StockBackLog,
     StockKeeping,
     TaxCategory,
     Vendor, Zip,
-    Zone
+    Zone,
+    Settlements,
+    StoreBalance
 } from '..';
-import {StoreBalance} from "./storeBalance.entity";
-import {Settlements} from "../settlement/settlement.entity";
 
 export enum StoreTypeEnum {
     DEFAULT = 'default',
@@ -49,6 +49,7 @@ registerEnumType(StoreTypeEnum, {
 @FilterableConnection('cart', () => CartItem, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @FilterableConnection('backlogs', () => StockBackLog, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @FilterableConnection('zip', () => Zip, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
+@FilterableConnection('invoices', () => Invoice, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true, relationName: 'invoices'})
 @Entity({name: 'store'})
 export class Store extends BaseEntity {
     @FilterableField(() => ID)
@@ -151,4 +152,7 @@ export class Store extends BaseEntity {
     @ManyToMany(() => Zip, zip => zip.store)
     @JoinTable()
     zip: Zip[]
+
+    @OneToMany(() => Invoice, invoice => invoice.store)
+    invoices: Invoice[]
 }

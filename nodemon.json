@@ -5,6 +5,6 @@
     "libs"
   ],
   "verbose": true,
-  "ext": "ts js vue",
+  "ext": "ts js",
   "exec": "ts-node -r tsconfig-paths/register"
 }

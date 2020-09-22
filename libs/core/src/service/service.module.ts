@@ -49,6 +49,8 @@ import {ShopOrderService} from "./services/shop/order.service";
 import {ShopPaymentService} from "./services/shop/payment.service";
 import {ReviewSubscriber} from "./services/subscribers/ReviewSubscriber";
 import {StatisticsService} from "./services/admin/statistics.service";
+import {StockSubscriber} from "./services/subscribers/StockSubscriber";
+import {OrderController} from "./controllers/order.controller";
 
 export const adminServices = [
     AdministratorService,
@@ -81,7 +83,8 @@ export const adminServices = [
 ]
 
 export const globalServices = [
-    SessionService
+    SessionService,
+    OrderLineSubscriber
 ]
 
 export const shopServices = [
@@ -133,7 +136,7 @@ export class ServiceCoreModule {
     constructor() {}
 }
 
-const workerController = []
+const workerController = [OrderController]
 
 @Module({
     imports: [
@@ -151,8 +154,9 @@ export class ServiceModule {
                     return {
                         subscribers: [
                             ZipSubscriber,
-                            OrderLineSubscriber,
-                            ReviewSubscriber
+                            // OrderLineSubscriber,
+                            ReviewSubscriber,
+                            StockSubscriber
                         ],
                         ...configService.dbConnectionOptions
                     }

@@ -33,11 +33,11 @@ export class StockBackLog extends BaseEntity {
     @Column({default: 0})
     quantity: number;
 
-    @Field(() => ProductVariantPrice)
+    // @Field(() => ProductVariantPrice)
     @ManyToOne(() => ProductVariantPrice, prodvar => prodvar.backlog)
     variant: ProductVariantPrice
 
-    @Field(() => Store)
+    // @Field(() => Store)
     @ManyToOne(() => Store, store => store.backlogs)
     store: Store
 }

@@ -51,6 +51,7 @@ export interface GridIronConfig {
     dbConnectionOptions?: ConnectionOptions,
     assetOptions?: AssetOptions
     jobQueueOptions?: JobQueueOptions
+    defaultTax?: number
 }
 
 export interface RuntimeGridIronConfig extends Required<GridIronConfig>{

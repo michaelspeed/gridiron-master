@@ -33,3 +33,5 @@ export * from './services/shop/address.service'
 export * from './services/shop/search.service'
 export * from './services/shop/facet.service'
 export * from './services/shop/cart.service'
+
+export * from './controllers/order.controller'

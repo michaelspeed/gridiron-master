@@ -537,8 +537,18 @@ input OrderLineFilter {
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
   stage: StringFieldComparison
+  invoice: OrderLineFilterInvoiceFilter
   pool: OrderLineFilterDeliveryPoolFilter
   store: OrderLineFilterStoreFilter
+}
+
+input OrderLineFilterInvoiceFilter {
+  and: [OrderLineFilterInvoiceFilter!]
+  or: [OrderLineFilterInvoiceFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  type: StringFieldComparison
 }
 
 input OrderLineFilterDeliveryPoolFilter {
@@ -605,6 +615,7 @@ type OrderLine {
   updatedAt: DateTime!
   priceField: JSON!
   stage: String!
+  invoice: Invoice!
   pool: DeliveryPool!
   store: Store!
   item: OrderItem!
@@ -1314,9 +1325,19 @@ input StoreFilter {
   singleStore: BooleanFieldComparison
   rentalStore: BooleanFieldComparison
   channelMarkets: BooleanFieldComparison
+  invoices: StoreFilterInvoiceFilter
   zip: StoreFilterZipFilter
   backlogs: StoreFilterStockBackLogFilter
   cart: StoreFilterCartItemFilter
+}
+
+input StoreFilterInvoiceFilter {
+  and: [StoreFilterInvoiceFilter!]
+  or: [StoreFilterInvoiceFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  type: StringFieldComparison
 }
 
 input StoreFilterZipFilter {
@@ -1396,32 +1417,6 @@ input StoreAggregateFilter {
   channelMarkets: BooleanFieldComparison
 }
 
-type StoreBalance {
-  id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  balance: Float!
-  balanceVolume: Float!
-}
-
-type Settlements {
-  id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  amount: Float!
-  taxamount: Float!
-  finalamount: Float!
-  transactionID: String!
-  remarks: String!
-  type: SettlementType!
-  store: Store!
-}
-
-enum SettlementType {
-  PROCESSING
-  PROCESSED
-}
-
 type Store {
   id: ID!
   createdAt: DateTime!
@@ -1437,6 +1432,16 @@ type Store {
   rentalStore: Boolean!
   channelMarkets: Boolean!
   type: StoreTypeEnum!
+  invoices(
+    """Limit or page results."""
+    paging: OffsetPaging = {limit: 10}
+
+    """Specify to filter the records returned."""
+    filter: InvoiceFilter = {}
+
+    """Specify to sort results."""
+    sorting: [InvoiceSort!] = []
+  ): [Invoice!]!
   zips(
     """Limit or page results."""
     paging: OffsetPaging = {limit: 10}
@@ -1499,6 +1504,10 @@ type Store {
   ): [StockKeeping!]!
   balance: StoreBalance
   country: Country!
+  invoicesAggregate(
+    """Filter to find records to aggregate on"""
+    filter: InvoiceAggregateFilter
+  ): StoreInvoicesAggregateResponse!
   zipsAggregate(
     """Filter to find records to aggregate on"""
     filter: ZipAggregateFilter
@@ -1528,6 +1537,57 @@ type Store {
 enum StoreTypeEnum {
   DEFAULT
   VENDOR
+}
+
+input InvoiceFilter {
+  and: [InvoiceFilter!]
+  or: [InvoiceFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  type: StringFieldComparison
+  store: InvoiceFilterStoreFilter
+  line: InvoiceFilterOrderLineFilter
+}
+
+input InvoiceFilterStoreFilter {
+  and: [InvoiceFilterStoreFilter!]
+  or: [InvoiceFilterStoreFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  storeName: StringFieldComparison
+  phoneNumber: StringFieldComparison
+  officialemail: StringFieldComparison
+  zipcode: StringFieldComparison
+  streetAddress1: StringFieldComparison
+  streetAddress2: StringFieldComparison
+  GSTIN: StringFieldComparison
+  singleStore: BooleanFieldComparison
+  rentalStore: BooleanFieldComparison
+  channelMarkets: BooleanFieldComparison
+}
+
+input InvoiceFilterOrderLineFilter {
+  and: [InvoiceFilterOrderLineFilter!]
+  or: [InvoiceFilterOrderLineFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  stage: StringFieldComparison
+}
+
+input InvoiceSort {
+  field: InvoiceSortFields!
+  direction: SortDirection!
+  nulls: SortNulls
+}
+
+enum InvoiceSortFields {
+  id
+  createdAt
+  updatedAt
+  type
 }
 
 input StockBackLogFilter {
@@ -1599,6 +1659,11 @@ input SettlementTypeFilterComparison {
   notIn: [SettlementType!]
 }
 
+enum SettlementType {
+  PROCESSING
+  PROCESSED
+}
+
 input SettlementsSort {
   field: SettlementsSortFields!
   direction: SortDirection!
@@ -1651,6 +1716,15 @@ enum StockKeepingSortFields {
   stockstatus
   sku
   type
+}
+
+input InvoiceAggregateFilter {
+  and: [InvoiceAggregateFilter!]
+  or: [InvoiceAggregateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  type: StringFieldComparison
 }
 
 input StockBackLogAggregateFilter {
@@ -2445,6 +2519,27 @@ enum PageCategory {
   PRODVARIANT
 }
 
+type StoreBalance {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  balance: Float!
+  balanceVolume: Float!
+}
+
+type Settlements {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  amount: Float!
+  taxamount: Float!
+  finalamount: Float!
+  transactionID: String!
+  remarks: String!
+  type: SettlementType!
+  store: Store!
+}
+
 type Delivery {
   id: ID!
   createdAt: DateTime!
@@ -2574,8 +2669,8 @@ type StockBackLog {
   createdAt: DateTime!
   updatedAt: DateTime!
   quantity: Float!
-  variant: ProductVariantPrice!
-  store: Store!
+  store: Store
+  variant: ProductVariantPrice
 }
 
 type Review {
@@ -2586,6 +2681,15 @@ type Review {
   text: String!
   user: User!
   variant: ProductVariant!
+}
+
+type Invoice {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  type: String!
+  store: Store!
+  line: OrderLine!
 }
 
 type Country {
@@ -3149,6 +3253,33 @@ type StoreAggregateResponse {
   count: StoreCountAggregate
   min: StoreMinAggregate
   max: StoreMaxAggregate
+}
+
+type StoreInvoicesCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  type: Int
+}
+
+type StoreInvoicesMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  type: String
+}
+
+type StoreInvoicesMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  type: String
+}
+
+type StoreInvoicesAggregateResponse {
+  count: StoreInvoicesCountAggregate
+  min: StoreInvoicesMinAggregate
+  max: StoreInvoicesMaxAggregate
 }
 
 type StoreZipsCountAggregate {
@@ -6215,6 +6346,84 @@ type StatisticeDto {
   datasource: [DataSource!]!
 }
 
+type StockBackLogDeleteResponse {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  quantity: Float
+}
+
+type StockBackLogCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  quantity: Int
+}
+
+type StockBackLogSumAggregate {
+  quantity: Float
+}
+
+type StockBackLogAvgAggregate {
+  quantity: Float
+}
+
+type StockBackLogMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  quantity: Float
+}
+
+type StockBackLogMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  quantity: Float
+}
+
+type StockBackLogAggregateResponse {
+  count: StockBackLogCountAggregate
+  sum: StockBackLogSumAggregate
+  avg: StockBackLogAvgAggregate
+  min: StockBackLogMinAggregate
+  max: StockBackLogMaxAggregate
+}
+
+type InvoiceDeleteResponse {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  type: String
+}
+
+type InvoiceCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  type: Int
+}
+
+type InvoiceMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  type: String
+}
+
+type InvoiceMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  type: String
+}
+
+type InvoiceAggregateResponse {
+  count: InvoiceCountAggregate
+  min: InvoiceMinAggregate
+  max: InvoiceMaxAggregate
+}
+
 type Query {
   GetAdministratorData: Administrator!
   GetAllAdministrator(search: String): [Administrator!]!
@@ -6828,6 +7037,36 @@ type Query {
   GetAllPaymentMethods: [PaymentMethod!]!
   GetDefaultPaymentMethods: PaymentMethod!
   GetProductSaleData(storeId: String, type: String!, productId: ID!): StatisticeDto!
+  stockBackLog(id: ID!): StockBackLog
+  stockBackLogs(
+    """Limit or page results."""
+    paging: OffsetPaging = {limit: 10}
+
+    """Specify to filter the records returned."""
+    filter: StockBackLogFilter = {}
+
+    """Specify to sort results."""
+    sorting: [StockBackLogSort!] = []
+  ): [StockBackLog!]!
+  stockBackLogAggregate(
+    """Filter to find records to aggregate on"""
+    filter: StockBackLogAggregateFilter
+  ): StockBackLogAggregateResponse!
+  invoice(id: ID!): Invoice
+  invoices(
+    """Limit or page results."""
+    paging: OffsetPaging = {limit: 10}
+
+    """Specify to filter the records returned."""
+    filter: InvoiceFilter = {}
+
+    """Specify to sort results."""
+    sorting: [InvoiceSort!] = []
+  ): [Invoice!]!
+  invoiceAggregate(
+    """Filter to find records to aggregate on"""
+    filter: InvoiceAggregateFilter
+  ): InvoiceAggregateResponse!
 }
 
 input AssetFilter {
@@ -7459,6 +7698,7 @@ type Mutation {
   updateManyStores(input: UpdateManyStoresInput!): UpdateManyResponse!
   createOneStore(input: CreateOneStoreInput!): Store!
   createManyStores(input: CreateManyStoresInput!): [Store!]!
+  removeInvoicesFromStore(input: RelationsInput!): Store!
   removeZipsFromStore(input: RelationsInput!): Store!
   removeBacklogsFromStore(input: RelationsInput!): Store!
   removeCartsFromStore(input: RelationsInput!): Store!
@@ -7467,6 +7707,7 @@ type Mutation {
   removeSkusFromStore(input: RelationsInput!): Store!
   removeBalanceFromStore(input: RelationInput!): Store!
   removeCountryFromStore(input: RelationInput!): Store!
+  addInvoicesToStore(input: RelationsInput!): Store!
   addZipsToStore(input: RelationsInput!): Store!
   addBacklogsToStore(input: RelationsInput!): Store!
   addCartsToStore(input: RelationsInput!): Store!
@@ -7766,10 +8007,12 @@ type Mutation {
   setStoreOnSettlements(input: RelationInput!): Settlements!
   updateOneOrderLine(input: UpdateOneOrderLineInput!): OrderLine!
   updateManyOrderLines(input: UpdateManyOrderLinesInput!): UpdateManyResponse!
+  removeInvoiceFromOrderLine(input: RelationInput!): OrderLine!
   removePoolFromOrderLine(input: RelationInput!): OrderLine!
   removeStoreFromOrderLine(input: RelationInput!): OrderLine!
   removeItemFromOrderLine(input: RelationInput!): OrderLine!
   removeOrderFromOrderLine(input: RelationInput!): OrderLine!
+  setInvoiceOnOrderLine(input: RelationInput!): OrderLine!
   setPoolOnOrderLine(input: RelationInput!): OrderLine!
   setStoreOnOrderLine(input: RelationInput!): OrderLine!
   setItemOnOrderLine(input: RelationInput!): OrderLine!
@@ -7806,6 +8049,18 @@ type Mutation {
   SetDeliverySignIn(type: Boolean!): DeliverySignIn!
   CreatePaymentMethod(secret: String!, api: String!): PaymentMethod!
   UpdatePaymentMethod(enabled: Boolean!, modeId: String!): PaymentMethod!
+  deleteOneStockBackLog(input: DeleteOneInput!): StockBackLogDeleteResponse!
+  deleteManyStockBackLogs(input: DeleteManyStockBackLogsInput!): DeleteManyResponse!
+  updateOneStockBackLog(input: UpdateOneStockBackLogInput!): StockBackLog!
+  updateManyStockBackLogs(input: UpdateManyStockBackLogsInput!): UpdateManyResponse!
+  removeStoreFromStockBackLog(input: RelationInput!): StockBackLog!
+  removeVariantFromStockBackLog(input: RelationInput!): StockBackLog!
+  setStoreOnStockBackLog(input: RelationInput!): StockBackLog!
+  setVariantOnStockBackLog(input: RelationInput!): StockBackLog!
+  removeStoreFromInvoice(input: RelationInput!): Invoice!
+  removeLineFromInvoice(input: RelationInput!): Invoice!
+  setStoreOnInvoice(input: RelationInput!): Invoice!
+  setLineOnInvoice(input: RelationInput!): Invoice!
 }
 
 input RelationsInput {
@@ -9725,6 +9980,52 @@ input CreateManyCartPriceRulesInput {
   cartPriceRules: [CreateCartPriceRules!]!
 }
 
+input DeleteManyStockBackLogsInput {
+  """Filter to find records to delete"""
+  filter: StockBackLogDeleteFilter!
+}
+
+input StockBackLogDeleteFilter {
+  and: [StockBackLogDeleteFilter!]
+  or: [StockBackLogDeleteFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  quantity: NumberFieldComparison
+}
+
+input UpdateOneStockBackLogInput {
+  """The id of the record to update"""
+  id: ID!
+
+  """The update to apply."""
+  update: UpdateStockBackLog!
+}
+
+input UpdateStockBackLog {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  quantity: Float
+}
+
+input UpdateManyStockBackLogsInput {
+  """Filter used to find fields to update"""
+  filter: StockBackLogUpdateFilter!
+
+  """The update to apply to all records found using the filter"""
+  update: UpdateStockBackLog!
+}
+
+input StockBackLogUpdateFilter {
+  and: [StockBackLogUpdateFilter!]
+  or: [StockBackLogUpdateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  quantity: NumberFieldComparison
+}
+
 type Subscription {
   deletedOneAsset(input: DeleteOneAssetSubscriptionFilterInput): AssetDeleteResponse!
   deletedManyAssets: DeleteManyResponse!
@@ -9921,6 +10222,16 @@ type Subscription {
   updatedOneDelivery(input: UpdateOneDeliverySubscriptionFilterInput): Delivery!
   updatedManyDeliveries: UpdateManyResponse!
   createdDelivery(input: CreateDeliverySubscriptionFilterInput): Delivery!
+  deletedOneStockBackLog(input: DeleteOneStockBackLogSubscriptionFilterInput): StockBackLogDeleteResponse!
+  deletedManyStockBackLogs: DeleteManyResponse!
+  updatedOneStockBackLog(input: UpdateOneStockBackLogSubscriptionFilterInput): StockBackLog!
+  updatedManyStockBackLogs: UpdateManyResponse!
+  createdStockBackLog(input: CreateStockBackLogSubscriptionFilterInput): StockBackLog!
+  deletedOneInvoice(input: DeleteOneInvoiceSubscriptionFilterInput): InvoiceDeleteResponse!
+  deletedManyInvoices: DeleteManyResponse!
+  updatedOneInvoice(input: UpdateOneInvoiceSubscriptionFilterInput): Invoice!
+  updatedManyInvoices: UpdateManyResponse!
+  createdInvoice(input: CreateInvoiceSubscriptionFilterInput): Invoice!
 }
 
 input DeleteOneAssetSubscriptionFilterInput {
@@ -10946,4 +11257,52 @@ input UpdateOneDeliverySubscriptionFilterInput {
 input CreateDeliverySubscriptionFilterInput {
   """Specify to filter the records returned."""
   filter: DeliverySubscriptionFilter!
+}
+
+input DeleteOneStockBackLogSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: StockBackLogSubscriptionFilter!
+}
+
+input StockBackLogSubscriptionFilter {
+  and: [StockBackLogSubscriptionFilter!]
+  or: [StockBackLogSubscriptionFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  quantity: NumberFieldComparison
+}
+
+input UpdateOneStockBackLogSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: StockBackLogSubscriptionFilter!
+}
+
+input CreateStockBackLogSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: StockBackLogSubscriptionFilter!
+}
+
+input DeleteOneInvoiceSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: InvoiceSubscriptionFilter!
+}
+
+input InvoiceSubscriptionFilter {
+  and: [InvoiceSubscriptionFilter!]
+  or: [InvoiceSubscriptionFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  type: StringFieldComparison
+}
+
+input UpdateOneInvoiceSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: InvoiceSubscriptionFilter!
+}
+
+input CreateInvoiceSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: InvoiceSubscriptionFilter!
 }

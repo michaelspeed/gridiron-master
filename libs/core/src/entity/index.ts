@@ -65,6 +65,7 @@ export * from './payment-method/payment-method.entity'
 export * from './cart/cartItem.entity'
 export * from './stock-movement/stock-back-log.entity'
 export * from './reviews/review.entity'
+export * from './invoice/Invoice.entity'
 
 
 // nestjsQuery

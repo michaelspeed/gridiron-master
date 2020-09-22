@@ -18,7 +18,6 @@ const PLUGIN_PROCESS_CONTEXT = 'GRIDIRON_PLUGIN_PROCESS_CONTEXT';
 export class PluginModule implements OnModuleInit, OnModuleDestroy {
 
     static forRoot(): DynamicModule {
-        console.log('CONFIG S2')
         return {
             module: PluginModule,
             providers: [{provide: PLUGIN_PROCESS_CONTEXT, useValue: PluginProcessContext.Main}],

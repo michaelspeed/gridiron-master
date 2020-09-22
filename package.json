@@ -24,7 +24,11 @@
     "copy:client": "copyfiles -a \"client/**/*\" dist",
     "copy:.nuxt": "copyfiles -a \".nuxt/**/*\" dist",
     "copy:config": "copyfiles nuxt.config.ts package.json package-lock.json dist",
-    "dev": "env NODE_ENV=development nodemon src/main.ts",
+    "dev:server": "env NODE_ENV=development nodemon src/main.ts",
+    "dev:worker": "env NODE_ENV=development nodemon src/main.worker.ts",
+    "run:server": "ts-node -r tsconfig-paths/register src/main.ts",
+    "run:worker": "ts-node -r tsconfig-paths/register src/main.worker.ts",
+    "dev": "concurrently yarn:run*",
     "generate": "graphql-codegen --config codegen.yml"
   },
   "dependencies": {
@@ -101,6 +105,7 @@
     "@typescript-eslint/eslint-plugin": "^2.23.0",
     "@typescript-eslint/parser": "^2.23.0",
     "babel-plugin-import": "^1.13.0",
+    "concurrently": "^5.3.0",
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.10.0",
     "eslint-plugin-import": "^2.20.1",

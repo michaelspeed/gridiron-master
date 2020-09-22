@@ -41,16 +41,9 @@ export class Refund extends BaseEntity {
     @Column({ nullable: true }) 
     reason: string;
 
-    // @FilterableField()
-    // @Column('varchar') 
-    // state: RefundState;
-
     @FilterableField()
     @Column({ nullable: true }) 
     transactionId: string;
-
-    // @EntityId()
-    // paymentId: ID;
 
     
 }

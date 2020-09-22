@@ -68,6 +68,7 @@ import {PaymentMethod} from "./payment-method/payment-method.entity";
 import {CartItem} from "./cart/cartItem.entity";
 import {StockBackLog} from "./stock-movement/stock-back-log.entity";
 import { Review } from './reviews/review.entity';
+import {Invoice} from "./invoice/Invoice.entity";
 
 export const coreEntityMap = {
     Address,
@@ -137,7 +138,8 @@ export const coreEntityMap = {
     PaymentMethod,
     CartItem,
     StockBackLog,
-    Review
+    Review,
+    Invoice
 }
 
 export const nestQueryDTOMap = {
