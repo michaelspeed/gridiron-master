@@ -48,6 +48,7 @@ import {ShopCartService} from "./services/shop/cart.service";
 import {ShopOrderService} from "./services/shop/order.service";
 import {ShopPaymentService} from "./services/shop/payment.service";
 import {ReviewSubscriber} from "./services/subscribers/ReviewSubscriber";
+import {StatisticsService} from "./services/admin/statistics.service";
 
 export const adminServices = [
     AdministratorService,
@@ -75,7 +76,8 @@ export const adminServices = [
     PromotionPriceVariantService,
     AccountsService,
     DeliveryService,
-    PaymentMethodService
+    PaymentMethodService,
+    StatisticsService
 ]
 
 export const globalServices = [

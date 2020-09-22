@@ -18,6 +18,7 @@ export * from './services/admin/order.service'
 export * from './services/admin/accounts.service'
 export * from './services/admin/delivery.service'
 export * from './services/admin/paymentMethod.service'
+export * from './services/admin/statistics.service'
 
 export * from './helpers/utils/get-entity-throw'
 

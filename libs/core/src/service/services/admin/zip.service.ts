@@ -19,7 +19,7 @@ export class ZipService {
 
     addZipToVendor(id: string, zips: string[]): Promise<Vendor> {
         return new Promise<Vendor>(async (resolve, reject) => {
-            const store = await this.connection.getRepository(Store).findOne({where:{vendor:{id}}, relations: ['vendor']})
+            const store = await this.connection.getRepository(Store).findOne({where:{id}, relations: ['vendor']})
             const allZips = []
             for (const singz of zips) {
                 const getzip = await this.connection.getRepository(Zip).findOne({where: {id: singz}})

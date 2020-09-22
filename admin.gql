@@ -6205,6 +6205,16 @@ type DeliverySignInsAggregateResponse {
   max: DeliverySignInsMaxAggregate
 }
 
+type DataSource {
+  sum: Float!
+  amount: Float!
+}
+
+type StatisticeDto {
+  labels: [String!]!
+  datasource: [DataSource!]!
+}
+
 type Query {
   GetAdministratorData: Administrator!
   GetAllAdministrator(search: String): [Administrator!]!
@@ -6817,6 +6827,7 @@ type Query {
   GetDeliveryStrandedCount: DeliveryStrandedCount!
   GetAllPaymentMethods: [PaymentMethod!]!
   GetDefaultPaymentMethods: PaymentMethod!
+  GetProductSaleData(storeId: String, type: String!, productId: ID!): StatisticeDto!
 }
 
 input AssetFilter {
