@@ -46,16 +46,24 @@ export class Invoice extends BaseEntity {
     @Column({type: "enum", enum: InvoiceEnum})
     type: InvoiceEnum
 
+    @FilterableField()
     @Column({type: "float", default: 0})
     total: number
 
+    @FilterableField()
     @Column({type: "float", default: 0})
     amount: number
 
+    @FilterableField()
     @Column({type: "float", default: 0})
     fees: number
 
+    @FilterableField()
     @Column({type: "float", default: 0})
     tax: number
+
+    @FilterableField()
+    @Column({default: false})
+    nulled: boolean
 
 }

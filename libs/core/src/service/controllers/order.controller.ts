@@ -8,15 +8,18 @@ import {asyncObservable} from "../../worker";
 import {ConfigService, Logger} from "../../config";
 import moment from "moment";
 import * as _ from "lodash";
-import {BillingAgreementEnum, InvoiceEnum, OrderStageType} from "../../enums";
+import {BillingAgreementEnum, InvoiceEnum, OrderStageType, RefundEnum} from "../../enums";
 import {
     BillingAgreement,
     DeliveryPool,
     DeliverySignIn,
     DeliveryStranded,
     Invoice,
-    OrderLine, ProductVariant,
-    Store, StoreBalance,
+    OrderLine,
+    ProductVariant,
+    Refund,
+    Store,
+    StoreBalance,
     Vendor,
     VendorPlans
 } from "../../entity";
@@ -310,7 +313,28 @@ export class OrderController {
                 }
                 break;
                 case OrderStageType.RETURNED: {
-
+                    const newRefund = new Refund()
+                    newRefund.line = line
+                    newRefund.stage = RefundEnum.INITIATED
+                    newRefund.save()
+                        .then(() => {
+                            observer.next({
+                                lineId: line.id,
+                                type: type
+                            })
+                        })
+                }
+                break;
+                case OrderStageType.RETURNEDREFUNDED: {
+                    const allInvoice = await this.connection.getRepository(Invoice).find({where:{line:{id: line.id}}})
+                    for (const allinv of allInvoice) {
+                        allinv.nulled = true
+                        await allinv.save()
+                    }
+                    observer.next({
+                        lineId: line.id,
+                        type: type
+                    })
                 }
                 break;
                 default:{

@@ -10,8 +10,14 @@ import {
     UpdateDateColumn
 } from 'typeorm';
 import {Field, ID, ObjectType, registerEnumType} from '@nestjs/graphql';
-import {FilterableField, FilterableRelation, PagingStrategies, Relation} from '@nestjs-query/query-graphql';
-import {DeliveryPool, Invoice, Order, OrderItem, ProductVariant, Store, TaxCategory, Vendor} from '..';
+import {
+    FilterableConnection,
+    FilterableField,
+    FilterableRelation,
+    PagingStrategies,
+    Relation
+} from '@nestjs-query/query-graphql';
+import {DeliveryPool, Invoice, Order, OrderItem, ProductVariant, Refund, Store, TaxCategory, Vendor} from '..';
 import GraphQLJSON from "graphql-type-json";
 import {OrderStageType} from "@gridiron/core/enums";
 
@@ -25,7 +31,8 @@ registerEnumType(OrderStageType, {
 @Relation('item', () => OrderItem, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @FilterableRelation('store', () => Store, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true, relationName: 'store'})
 @FilterableRelation('pool', () => DeliveryPool, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true, relationName: 'pool'})
-@FilterableRelation('invoice', () => Invoice, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true, relationName: 'invoice'})
+@FilterableRelation('refund', () => Refund, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true, relationName: 'refund'})
+@FilterableConnection('invoice', () => Invoice, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true, relationName: 'invoice'})
 export class OrderLine extends BaseEntity {
 
     @FilterableField(() => ID)
@@ -60,10 +67,15 @@ export class OrderLine extends BaseEntity {
     @ManyToOne(() => Store, vendor => vendor.line)
     store: Store
 
-    // @Field(() => Invoice)
+    // @Field(() => [Invoice])
     @ManyToOne(() => Invoice, invoice => invoice.line)
     invoice: Invoice[]
 
     @ManyToOne(() => DeliveryPool, pool => pool.lines)
     pool: DeliveryPool
+
+    // @Field(() => Refund)
+    @OneToOne(() => Refund, refund => refund.line)
+    @JoinColumn()
+    refund: Refund
 }

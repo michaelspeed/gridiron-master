@@ -51,6 +51,8 @@ import {ReviewSubscriber} from "./services/subscribers/ReviewSubscriber";
 import {StatisticsService} from "./services/admin/statistics.service";
 import {StockSubscriber} from "./services/subscribers/StockSubscriber";
 import {OrderController} from "./controllers/order.controller";
+import {RefundService} from "./services/admin/refund.service";
+import {RefundSubscriber} from "./services/subscribers/RefundSubscriber";
 
 export const adminServices = [
     AdministratorService,
@@ -79,7 +81,8 @@ export const adminServices = [
     AccountsService,
     DeliveryService,
     PaymentMethodService,
-    StatisticsService
+    StatisticsService,
+    RefundService
 ]
 
 export const globalServices = [
@@ -156,7 +159,8 @@ export class ServiceModule {
                             ZipSubscriber,
                             // OrderLineSubscriber,
                             ReviewSubscriber,
-                            StockSubscriber
+                            StockSubscriber,
+                            RefundSubscriber
                         ],
                         ...configService.dbConnectionOptions
                     }
