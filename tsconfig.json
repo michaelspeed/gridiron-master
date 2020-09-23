@@ -36,6 +36,12 @@
       ],
       "@gridiron/asset-server-plugin/*": [
         "libs/asset-server-plugin/src/*"
+      ],
+      "@gridiron/email-plugin": [
+        "libs/email-plugin/src"
+      ],
+      "@gridiron/email-plugin/*": [
+        "libs/email-plugin/src/*"
       ]
     }
   },

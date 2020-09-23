@@ -58,9 +58,10 @@
     "cookie-parser": "^1.4.5",
     "core-js": "^2.6.5",
     "dataloader": "^2.0.0",
+    "dateformat": "^3.0.3",
     "fast-cartesian": "^5.0.0",
     "file-type": "^14.4.0",
-    "fs-extra": "^9.0.0",
+    "fs-extra": "^9.0.1",
     "graphql": "^15.0.0",
     "graphql-iso-date": "^3.6.1",
     "graphql-relay": "^0.6.0",
@@ -69,13 +70,16 @@
     "graphql-tools": "^5.0.0",
     "graphql-type-json": "^0.3.1",
     "graphql-upload": "^11.0.0",
+    "handlebars": "^4.7.6",
     "http-proxy-middleware": "^1.0.3",
     "image-size": "^0.8.3",
     "lodash": "^4.17.20",
+    "mjml": "^4.7.0",
     "moment": "^2.26.0",
     "mysql": "^2.18.1",
     "nestjs-enlighten": "^0.0.4-beta",
     "nestjs-pino": "^1.2.0",
+    "nodemailer": "^6.4.11",
     "nuxt": "^2.14.0",
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",
@@ -141,7 +145,9 @@
       "@gridiron/core/(.*)": "<rootDir>/libs/core/src/$1",
       "@gridiron/core": "<rootDir>/libs/core/src",
       "@gridiron/asset-server-plugin/(.*)": "<rootDir>/libs/asset-server-plugin/src/$1",
-      "@gridiron/asset-server-plugin": "<rootDir>/libs/asset-server-plugin/src"
+      "@gridiron/asset-server-plugin": "<rootDir>/libs/asset-server-plugin/src",
+      "@gridiron/email-plugin/email-plugin/(.*)": "<rootDir>/libs/email-plugin/src/$1",
+      "@gridiron/email-plugin/email-plugin": "<rootDir>/libs/email-plugin/src"
     }
   }
 }

@@ -4,6 +4,7 @@ import {Connection} from "typeorm";
 import {ResetCode, User} from "../../../entity";
 import * as bcrypt from 'bcrypt';
 import {JwtService} from "@nestjs/jwt";
+import uniqid from 'uniqid'
 
 @Injectable()
 export class ShopUserService {

@@ -19,6 +19,15 @@
       "compilerOptions": {
         "tsConfigPath": "libs/asset-server-plugin/tsconfig.lib.json"
       }
+    },
+    "email-plugin": {
+      "type": "library",
+      "root": "libs/email-plugin",
+      "entryFile": "index",
+      "sourceRoot": "libs/email-plugin/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/email-plugin/tsconfig.lib.json"
+      }
     }
   },
   "compilerOptions": {

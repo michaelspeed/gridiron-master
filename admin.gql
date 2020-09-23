@@ -937,6 +937,7 @@ type User {
   reviews: [Review!]!
   address: [Address!]
   order: [Order!]
+  reset: [ResetCode!]
   orders(
     """Limit or page results."""
     paging: OffsetPaging = {limit: 10}
@@ -2760,6 +2761,14 @@ type Refund {
   line: OrderLine!
 }
 
+type ResetCode {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  code: String!
+  user: User!
+}
+
 type Country {
   id: ID!
   createdAt: DateTime!
@@ -3830,6 +3839,7 @@ type UserDeleteResponse {
   reviews: [Review!]
   address: [Address!]
   order: [Order!]
+  reset: [ResetCode!]
 }
 
 type UserCountAggregate {
@@ -6499,6 +6509,11 @@ type StatisticeDto {
   datasource: [DataSource!]!
 }
 
+type StatisticeProdDto {
+  labels: [String!]!
+  datasource: [DataSource!]!
+}
+
 type StockBackLogDeleteResponse {
   id: ID
   createdAt: DateTime
@@ -7270,6 +7285,9 @@ type Query {
   GetAllPaymentMethods: [PaymentMethod!]!
   GetDefaultPaymentMethods: PaymentMethod!
   GetProductSaleData(storeId: String, type: String!, productId: ID!): StatisticeDto!
+  GetStoreOrderData(storeId: String!, type: String!): StatisticeDto!
+  GetAdminOrderData(type: String!): StatisticeDto!
+  GetProductViews(type: String, productId: ID!): StatisticeProdDto!
   stockBackLog(id: ID!): StockBackLog
   stockBackLogs(
     """Limit or page results."""
@@ -8047,6 +8065,7 @@ type Mutation {
   setDeliveryOnUser(input: RelationInput!): User!
   setVendorOnUser(input: RelationInput!): User!
   setAdministratorOnUser(input: RelationInput!): User!
+  RequestResetCode(email: String!): ResetCode!
   removeZipsFromVendor(input: RelationsInput!): Vendor!
   removeAccountFromVendor(input: RelationInput!): Vendor!
   removeStoreFromVendor(input: RelationInput!): Vendor!

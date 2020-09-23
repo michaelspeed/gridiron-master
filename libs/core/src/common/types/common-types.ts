@@ -69,3 +69,5 @@ export interface ListQueryOptions<T extends GridIronEntity | BaseEntity> {
     sort?: NullOptionals<SortParameter<T>> | null;
     filter?: NullOptionals<FilterParameter<T>> | null;
 }
+
+export declare type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
