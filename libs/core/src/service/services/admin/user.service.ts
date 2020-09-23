@@ -1,8 +1,9 @@
 import {Injectable} from '@nestjs/common';
 import {InjectConnection} from '@nestjs/typeorm';
 import {Connection} from 'typeorm';
-import {User} from '../../../entity';
+import {ResetCode, User} from '../../../entity';
 import {JwtService} from '@nestjs/jwt';
+import uniqid from 'uniqid'
 
 @Injectable()
 export class UserService {
@@ -23,6 +24,17 @@ export class UserService {
             const decoded = await this.DecryptToken(token)
             const user = await this.connection.getRepository(User).findOne({where:{id: decoded.userId}, relations: ['administrator', 'vendor']})
             resolve(user)
+        })
+    }
+
+    async resetPassword(email: string): Promise<ResetCode> {
+        return new Promise<ResetCode>(async (resolve, reject) => {
+            const user = await this.connection.getRepository(User).findOne({where:{email:email}})
+            const resetcode = new ResetCode()
+            resetcode.user = user
+            resetcode.code = uniqid('reset-')
+            this.connection.getRepository(ResetCode).save(resetcode)
+                .then(value => resolve(value)).catch(e => reject(e))
         })
     }
 }

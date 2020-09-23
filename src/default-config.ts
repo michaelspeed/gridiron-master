@@ -47,5 +47,6 @@ export const DEF_CONFIG: GridIronConfig = {
         jobQueueStrategy: new InMemoryJobQueueStrategy(),
         pollInterval: 200,
     },
-    defaultTax: 10
+    defaultTax: 10,
+    flatFeeAmount: 2
 }

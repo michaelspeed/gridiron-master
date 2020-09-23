@@ -10,9 +10,24 @@ export class DataSource {
 }
 
 @ObjectType()
+export class ProdDataSource {
+    @Field()
+    sum: number
+}
+
+@ObjectType()
 export class StatisticeDto {
     @Field(() => [String])
     labels: string[]
     @Field(() => [DataSource])
     datasource: DataSource[]
+}
+
+
+@ObjectType()
+export class StatisticeProdDto {
+    @Field(() => [String])
+    labels: string[]
+    @Field(() => [DataSource])
+    datasource: ProdDataSource[]
 }

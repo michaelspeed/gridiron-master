@@ -52,6 +52,7 @@ export interface GridIronConfig {
     assetOptions?: AssetOptions
     jobQueueOptions?: JobQueueOptions
     defaultTax?: number
+    flatFeeAmount?: number
 }
 
 export interface RuntimeGridIronConfig extends Required<GridIronConfig>{

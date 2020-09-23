@@ -8303,6 +8303,8 @@ type Mutation {
   setUserOnAddress(input: RelationInput!): Address!
   removeStoreFromSettlements(input: RelationInput!): Settlements!
   setStoreOnSettlements(input: RelationInput!): Settlements!
+  CreateSettlement(storeId: ID!): Settlements!
+  UpdateSettlement(transactionId: String, settlementId: ID!): Settlements!
   updateOneOrderLine(input: UpdateOneOrderLineInput!): OrderLine!
   updateManyOrderLines(input: UpdateManyOrderLinesInput!): UpdateManyResponse!
   removeInvoicesFromOrderLine(input: RelationsInput!): OrderLine!

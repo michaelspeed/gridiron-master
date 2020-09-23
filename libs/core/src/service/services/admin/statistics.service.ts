@@ -1,7 +1,7 @@
 import {Injectable} from "@nestjs/common";
 import {InjectConnection} from "@nestjs/typeorm";
 import {Between, Connection} from "typeorm";
-import {OrderLine, Product} from "../../../entity";
+import {OrderLine, Product, View} from "../../../entity";
 import moment, {unitOfTime} from "moment";
 
 @Injectable()
@@ -101,6 +101,353 @@ export class StatisticsService {
                     labels: labelBuffers,
                     datasource: datasource
                 })
+            }
+        })
+    }
+
+    async getProductViews(productId: string, type: string = 'MONTH') {
+        return new Promise<any>(async (resolve, reject) => {
+            switch (type) {
+                case 'MONTH': {
+                    const adder = 'month'
+                    const now = moment()
+                    const ldate = moment().subtract(1, "month")
+                    let sdate = ldate
+                    const views = await this.connection.getRepository(View).find({
+                        where: {
+                            product:{
+                                id: productId
+                            },
+                            createdAt:Between(ldate.toDate(), now.toDate())
+                        }
+                    })
+                    const labelbuffers = []
+                    const datasource = []
+                    while (now.toDate() >= sdate.toDate()) {
+                        labelbuffers.push(sdate.format('DD MMM YYYY'))
+                        let sum = 0
+                        for (const vi of views) {
+                            if (moment(vi.createdAt).isSame(sdate, adder)) {
+                                sum = ++sum
+                            }
+                        }
+                        datasource.push({
+                            sum: sum
+                        })
+                        sdate = sdate.add(1, adder)
+                    }
+                    resolve({
+                        labels: labelbuffers,
+                        datasource: datasource
+                    })
+                }
+                break;
+                case 'YEAR': {
+                    const adder = 'year'
+                    const now = moment()
+                    const ldate = moment().subtract(1, "year")
+                    let sdate = ldate
+                    const views = await this.connection.getRepository(View).find({
+                        where: {
+                            product:{
+                                id: productId
+                            },
+                            createdAt:Between(ldate.toDate(), now.toDate())
+                        }
+                    })
+                    const labelbuffers = []
+                    const datasource = []
+                    while (now.toDate() >= sdate.toDate()) {
+                        labelbuffers.push(sdate.format('MMM'))
+                        let sum = 0
+                        for (const vi of views) {
+                            if (moment(vi.createdAt).isSame(sdate, adder)) {
+                                sum = ++sum
+                            }
+                        }
+                        datasource.push({
+                            sum: sum
+                        })
+                        sdate = sdate.add(1, adder)
+                    }
+                    resolve({
+                        labels: labelbuffers,
+                        datasource: datasource
+                    })
+                }
+                break;
+                default: {
+                    const adder = 'month'
+                    const now = moment()
+                    const ldate = moment().subtract(1, "month")
+                    let sdate = ldate
+                    const views = await this.connection.getRepository(View).find({
+                        where: {
+                            product:{
+                                id: productId
+                            },
+                            createdAt:Between(ldate.toDate(), now.toDate())
+                        }
+                    })
+                    const labelbuffers = []
+                    const datasource = []
+                    while (now.toDate() >= sdate.toDate()) {
+                        labelbuffers.push(sdate.format('DD MMM YYYY'))
+                        let sum = 0
+                        for (const vi of views) {
+                            if (moment(vi.createdAt).isSame(sdate, adder)) {
+                                sum = ++sum
+                            }
+                        }
+                        datasource.push({
+                            sum: sum
+                        })
+                        sdate = sdate.add(1, adder)
+                    }
+                    resolve({
+                        labels: labelbuffers,
+                        datasource: datasource
+                    })
+                }
+            }
+        })
+    }
+
+    async getStoreOrderStatistics(storeId: string, type: string = 'MONTH') {
+        return new Promise<any>(async (resolve, reject) => {
+            switch (type) {
+                case 'MONTH': {
+                    const adder = 'month'
+                    const now = moment()
+                    const ldate = moment().subtract(1, 'month')
+                    let sdate = ldate
+                    const orderLine = await this.connection.getRepository(OrderLine).find({
+                        where:{
+                            store:{
+                                id: storeId
+                            },
+                            createdAt: Between(ldate.toDate(), now.toDate())
+                        },
+                        relations: ['item']
+                    })
+                    const labelbuffers = []
+                    const datasource = []
+                    while (now.toDate() >= sdate.toDate()) {
+                        labelbuffers.push(sdate.format('DD MMM YYYY'))
+                        let sum = 0
+                        let amountCount = 0
+                        for (const item of orderLine) {
+                            if (moment(item.createdAt).isSame(sdate, adder)) {
+                                sum = ++sum
+                                const price: any = item.priceField
+                                amountCount = (price.price * item.item.quantity) + amountCount
+                            }
+                        }
+                        datasource.push({
+                            sum,
+                            amount: amountCount
+                        })
+                        sdate = sdate.add(1, adder)
+                    }
+                    resolve({
+                        labels: labelbuffers,
+                        datasource: datasource
+                    })
+                }
+                break;
+                case 'YEAR': {
+                    const adder = 'year'
+                    const now = moment()
+                    const ldate = moment().subtract(1, 'year')
+                    let sdate = ldate
+                    const orderLine = await this.connection.getRepository(OrderLine).find({
+                        where:{
+                            store:{
+                                id: storeId
+                            },
+                            createdAt: Between(ldate.toDate(), now.toDate())
+                        },
+                        relations: ['item']
+                    })
+                    const labelbuffers = []
+                    const datasource = []
+                    while (now.toDate() >= sdate.toDate()) {
+                        labelbuffers.push(sdate.format('DD MMM YYYY'))
+                        let sum = 0
+                        let amountCount = 0
+                        for (const item of orderLine) {
+                            if (moment(item.createdAt).isSame(sdate, adder)) {
+                                sum = ++sum
+                                const price: any = item.priceField
+                                amountCount = (price.price * item.item.quantity) + amountCount
+                            }
+                        }
+                        datasource.push({
+                            sum,
+                            amount: amountCount
+                        })
+                        sdate = sdate.add(1, adder)
+                    }
+                    resolve({
+                        labels: labelbuffers,
+                        datasource: datasource
+                    })
+                }
+                break;
+                default : {
+                    const adder = 'month'
+                    const now = moment()
+                    const ldate = moment().subtract(1, 'month')
+                    let sdate = ldate
+                    const orderLine = await this.connection.getRepository(OrderLine).find({
+                        where:{
+                            store:{
+                                id: storeId
+                            },
+                            createdAt: Between(ldate.toDate(), now.toDate())
+                        },
+                        relations: ['item']
+                    })
+                    const labelbuffers = []
+                    const datasource = []
+                    while (now.toDate() >= sdate.toDate()) {
+                        labelbuffers.push(sdate.format('DD MMM YYYY'))
+                        let sum = 0
+                        let amountCount = 0
+                        for (const item of orderLine) {
+                            if (moment(item.createdAt).isSame(sdate, adder)) {
+                                sum = ++sum
+                                const price: any = item.priceField
+                                amountCount = (price.price * item.item.quantity) + amountCount
+                            }
+                        }
+                        datasource.push({
+                            sum,
+                            amount: amountCount
+                        })
+                        sdate = sdate.add(1, adder)
+                    }
+                    resolve({
+                        labels: labelbuffers,
+                        datasource: datasource
+                    })
+                }
+                break
+            }
+        })
+    }
+
+    async getAdminOrderStatistics(type: string = 'MONTH') {
+        return new Promise<any>(async (resolve, reject) => {
+            switch (type) {
+                case 'MONTH': {
+                    const adder = 'month'
+                    const now = moment()
+                    const ldate = moment().subtract(1, 'month')
+                    let sdate = ldate
+                    const orderLine = await this.connection.getRepository(OrderLine).find({
+                        where:{
+                            createdAt: Between(ldate.toDate(), now.toDate())
+                        },
+                        relations: ['item']
+                    })
+                    const labelbuffers = []
+                    const datasource = []
+                    while (now.toDate() >= sdate.toDate()) {
+                        labelbuffers.push(sdate.format('DD MMM YYYY'))
+                        let sum = 0
+                        let amountCount = 0
+                        for (const item of orderLine) {
+                            if (moment(item.createdAt).isSame(sdate, adder)) {
+                                sum = ++sum
+                                const price: any = item.priceField
+                                amountCount = (price.price * item.item.quantity) + amountCount
+                            }
+                        }
+                        datasource.push({
+                            sum,
+                            amount: amountCount
+                        })
+                        sdate = sdate.add(1, adder)
+                    }
+                    resolve({
+                        labels: labelbuffers,
+                        datasource: datasource
+                    })
+                }
+                break;
+                case 'YEAR': {
+                    const adder = 'year'
+                    const now = moment()
+                    const ldate = moment().subtract(1, 'year')
+                    let sdate = ldate
+                    const orderLine = await this.connection.getRepository(OrderLine).find({
+                        where:{
+                            createdAt: Between(ldate.toDate(), now.toDate())
+                        },
+                        relations: ['item']
+                    })
+                    const labelbuffers = []
+                    const datasource = []
+                    while (now.toDate() >= sdate.toDate()) {
+                        labelbuffers.push(sdate.format('DD MMM YYYY'))
+                        let sum = 0
+                        let amountCount = 0
+                        for (const item of orderLine) {
+                            if (moment(item.createdAt).isSame(sdate, adder)) {
+                                sum = ++sum
+                                const price: any = item.priceField
+                                amountCount = (price.price * item.item.quantity) + amountCount
+                            }
+                        }
+                        datasource.push({
+                            sum,
+                            amount: amountCount
+                        })
+                        sdate = sdate.add(1, adder)
+                    }
+                    resolve({
+                        labels: labelbuffers,
+                        datasource: datasource
+                    })
+                }
+                break;
+                default : {
+                    const adder = 'month'
+                    const now = moment()
+                    const ldate = moment().subtract(1, 'month')
+                    let sdate = ldate
+                    const orderLine = await this.connection.getRepository(OrderLine).find({
+                        where:{
+                            createdAt: Between(ldate.toDate(), now.toDate())
+                        },
+                        relations: ['item']
+                    })
+                    const labelbuffers = []
+                    const datasource = []
+                    while (now.toDate() >= sdate.toDate()) {
+                        labelbuffers.push(sdate.format('DD MMM YYYY'))
+                        let sum = 0
+                        let amountCount = 0
+                        for (const item of orderLine) {
+                            if (moment(item.createdAt).isSame(sdate, adder)) {
+                                sum = ++sum
+                                const price: any = item.priceField
+                                amountCount = (price.price * item.item.quantity) + amountCount
+                            }
+                        }
+                        datasource.push({
+                            sum,
+                            amount: amountCount
+                        })
+                        sdate = sdate.add(1, adder)
+                    }
+                    resolve({
+                        labels: labelbuffers,
+                        datasource: datasource
+                    })
+                }
+                break
             }
         })
     }

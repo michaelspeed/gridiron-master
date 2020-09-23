@@ -20,6 +20,7 @@ export * from './services/admin/delivery.service'
 export * from './services/admin/paymentMethod.service'
 export * from './services/admin/statistics.service'
 export * from './services/admin/refund.service'
+export * from './services/admin/settlement.service'
 
 export * from './helpers/utils/get-entity-throw'
 
