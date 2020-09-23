@@ -326,8 +326,17 @@ export class OrderController {
                 }
                 break;
                 case OrderStageType.RETURNEDREFUNDED: {
+                    const store = await this.connection.getRepository(Store).findOne({where:{id: line.store.id}, relations:['vendor', 'balance']})
+                    const vendor = await this.connection.getRepository(Vendor).findOne({where:{id: store.vendor.id}, relations: ['license', 'license.plans']})
+                    const plan = await this.connection.getRepository(VendorPlans).findOne({where:{id: vendor.license.plans.id}})
+                    const storeBalance = await this.connection.getRepository(StoreBalance).findOne({where:{id: store.balance.id}})
                     const allInvoice = await this.connection.getRepository(Invoice).find({where:{line:{id: line.id}}})
                     for (const allinv of allInvoice) {
+                        if (allinv.type === InvoiceEnum.STORE) {
+                            storeBalance.balance = (storeBalance.balance - allinv.amount)
+                            storeBalance.balanceVolume = (storeBalance.balanceVolume - allinv.amount)
+                            await storeBalance.save()
+                        }
                         allinv.nulled = true
                         await allinv.save()
                     }

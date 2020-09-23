@@ -537,18 +537,22 @@ input OrderLineFilter {
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
   stage: StringFieldComparison
-  invoice: OrderLineFilterInvoiceFilter
+  refund: OrderLineFilterRefundFilter
   pool: OrderLineFilterDeliveryPoolFilter
   store: OrderLineFilterStoreFilter
+  invoice: OrderLineFilterInvoiceFilter
 }
 
-input OrderLineFilterInvoiceFilter {
-  and: [OrderLineFilterInvoiceFilter!]
-  or: [OrderLineFilterInvoiceFilter!]
+input OrderLineFilterRefundFilter {
+  and: [OrderLineFilterRefundFilter!]
+  or: [OrderLineFilterRefundFilter!]
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
-  type: StringFieldComparison
+  reason: StringFieldComparison
+  destination: StringFieldComparison
+  transactionId: StringFieldComparison
+  stage: StringFieldComparison
 }
 
 input OrderLineFilterDeliveryPoolFilter {
@@ -575,6 +579,20 @@ input OrderLineFilterStoreFilter {
   singleStore: BooleanFieldComparison
   rentalStore: BooleanFieldComparison
   channelMarkets: BooleanFieldComparison
+}
+
+input OrderLineFilterInvoiceFilter {
+  and: [OrderLineFilterInvoiceFilter!]
+  or: [OrderLineFilterInvoiceFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  type: StringFieldComparison
+  total: NumberFieldComparison
+  amount: NumberFieldComparison
+  fees: NumberFieldComparison
+  tax: NumberFieldComparison
+  nulled: BooleanFieldComparison
 }
 
 input OrderLineSort {
@@ -615,17 +633,106 @@ type OrderLine {
   updatedAt: DateTime!
   priceField: JSON!
   stage: String!
-  invoice: Invoice!
+  invoices(
+    """Limit or page results."""
+    paging: OffsetPaging = {limit: 10}
+
+    """Specify to filter the records returned."""
+    filter: InvoiceFilter = {}
+
+    """Specify to sort results."""
+    sorting: [InvoiceSort!] = []
+  ): [Invoice!]!
+  refund: Refund!
   pool: DeliveryPool!
   store: Store!
   item: OrderItem!
   order: Order!
+  invoicesAggregate(
+    """Filter to find records to aggregate on"""
+    filter: InvoiceAggregateFilter
+  ): OrderLineInvoicesAggregateResponse!
 }
 
 """
 The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
 """
 scalar JSON @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
+
+input InvoiceFilter {
+  and: [InvoiceFilter!]
+  or: [InvoiceFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  type: StringFieldComparison
+  total: NumberFieldComparison
+  amount: NumberFieldComparison
+  fees: NumberFieldComparison
+  tax: NumberFieldComparison
+  nulled: BooleanFieldComparison
+  store: InvoiceFilterStoreFilter
+  line: InvoiceFilterOrderLineFilter
+}
+
+input InvoiceFilterStoreFilter {
+  and: [InvoiceFilterStoreFilter!]
+  or: [InvoiceFilterStoreFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  storeName: StringFieldComparison
+  phoneNumber: StringFieldComparison
+  officialemail: StringFieldComparison
+  zipcode: StringFieldComparison
+  streetAddress1: StringFieldComparison
+  streetAddress2: StringFieldComparison
+  GSTIN: StringFieldComparison
+  singleStore: BooleanFieldComparison
+  rentalStore: BooleanFieldComparison
+  channelMarkets: BooleanFieldComparison
+}
+
+input InvoiceFilterOrderLineFilter {
+  and: [InvoiceFilterOrderLineFilter!]
+  or: [InvoiceFilterOrderLineFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  stage: StringFieldComparison
+}
+
+input InvoiceSort {
+  field: InvoiceSortFields!
+  direction: SortDirection!
+  nulls: SortNulls
+}
+
+enum InvoiceSortFields {
+  id
+  createdAt
+  updatedAt
+  type
+  total
+  amount
+  fees
+  tax
+  nulled
+}
+
+input InvoiceAggregateFilter {
+  and: [InvoiceAggregateFilter!]
+  or: [InvoiceAggregateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  type: StringFieldComparison
+  total: NumberFieldComparison
+  amount: NumberFieldComparison
+  fees: NumberFieldComparison
+  tax: NumberFieldComparison
+  nulled: BooleanFieldComparison
+}
 
 type Product {
   id: ID!
@@ -1338,6 +1445,11 @@ input StoreFilterInvoiceFilter {
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
   type: StringFieldComparison
+  total: NumberFieldComparison
+  amount: NumberFieldComparison
+  fees: NumberFieldComparison
+  tax: NumberFieldComparison
+  nulled: BooleanFieldComparison
 }
 
 input StoreFilterZipFilter {
@@ -1539,57 +1651,6 @@ enum StoreTypeEnum {
   VENDOR
 }
 
-input InvoiceFilter {
-  and: [InvoiceFilter!]
-  or: [InvoiceFilter!]
-  id: IDFilterComparison
-  createdAt: DateFieldComparison
-  updatedAt: DateFieldComparison
-  type: StringFieldComparison
-  store: InvoiceFilterStoreFilter
-  line: InvoiceFilterOrderLineFilter
-}
-
-input InvoiceFilterStoreFilter {
-  and: [InvoiceFilterStoreFilter!]
-  or: [InvoiceFilterStoreFilter!]
-  id: IDFilterComparison
-  createdAt: DateFieldComparison
-  updatedAt: DateFieldComparison
-  storeName: StringFieldComparison
-  phoneNumber: StringFieldComparison
-  officialemail: StringFieldComparison
-  zipcode: StringFieldComparison
-  streetAddress1: StringFieldComparison
-  streetAddress2: StringFieldComparison
-  GSTIN: StringFieldComparison
-  singleStore: BooleanFieldComparison
-  rentalStore: BooleanFieldComparison
-  channelMarkets: BooleanFieldComparison
-}
-
-input InvoiceFilterOrderLineFilter {
-  and: [InvoiceFilterOrderLineFilter!]
-  or: [InvoiceFilterOrderLineFilter!]
-  id: IDFilterComparison
-  createdAt: DateFieldComparison
-  updatedAt: DateFieldComparison
-  stage: StringFieldComparison
-}
-
-input InvoiceSort {
-  field: InvoiceSortFields!
-  direction: SortDirection!
-  nulls: SortNulls
-}
-
-enum InvoiceSortFields {
-  id
-  createdAt
-  updatedAt
-  type
-}
-
 input StockBackLogFilter {
   and: [StockBackLogFilter!]
   or: [StockBackLogFilter!]
@@ -1716,15 +1777,6 @@ enum StockKeepingSortFields {
   stockstatus
   sku
   type
-}
-
-input InvoiceAggregateFilter {
-  and: [InvoiceAggregateFilter!]
-  or: [InvoiceAggregateFilter!]
-  id: IDFilterComparison
-  createdAt: DateFieldComparison
-  updatedAt: DateFieldComparison
-  type: StringFieldComparison
 }
 
 input StockBackLogAggregateFilter {
@@ -2688,7 +2740,23 @@ type Invoice {
   createdAt: DateTime!
   updatedAt: DateTime!
   type: String!
+  total: Float!
+  amount: Float!
+  fees: Float!
+  tax: Float!
+  nulled: Boolean!
   store: Store!
+  line: OrderLine!
+}
+
+type Refund {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  reason: String!
+  destination: String!
+  transactionId: String!
+  stage: String!
   line: OrderLine!
 }
 
@@ -3260,6 +3328,25 @@ type StoreInvoicesCountAggregate {
   createdAt: Int
   updatedAt: Int
   type: Int
+  total: Int
+  amount: Int
+  fees: Int
+  tax: Int
+  nulled: Int
+}
+
+type StoreInvoicesSumAggregate {
+  total: Float
+  amount: Float
+  fees: Float
+  tax: Float
+}
+
+type StoreInvoicesAvgAggregate {
+  total: Float
+  amount: Float
+  fees: Float
+  tax: Float
 }
 
 type StoreInvoicesMinAggregate {
@@ -3267,6 +3354,10 @@ type StoreInvoicesMinAggregate {
   createdAt: DateTime
   updatedAt: DateTime
   type: String
+  total: Float
+  amount: Float
+  fees: Float
+  tax: Float
 }
 
 type StoreInvoicesMaxAggregate {
@@ -3274,10 +3365,16 @@ type StoreInvoicesMaxAggregate {
   createdAt: DateTime
   updatedAt: DateTime
   type: String
+  total: Float
+  amount: Float
+  fees: Float
+  tax: Float
 }
 
 type StoreInvoicesAggregateResponse {
   count: StoreInvoicesCountAggregate
+  sum: StoreInvoicesSumAggregate
+  avg: StoreInvoicesAvgAggregate
   min: StoreInvoicesMinAggregate
   max: StoreInvoicesMaxAggregate
 }
@@ -6091,6 +6188,62 @@ type OrderLineAggregateResponse {
   max: OrderLineMaxAggregate
 }
 
+type OrderLineInvoicesCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  type: Int
+  total: Int
+  amount: Int
+  fees: Int
+  tax: Int
+  nulled: Int
+}
+
+type OrderLineInvoicesSumAggregate {
+  total: Float
+  amount: Float
+  fees: Float
+  tax: Float
+}
+
+type OrderLineInvoicesAvgAggregate {
+  total: Float
+  amount: Float
+  fees: Float
+  tax: Float
+}
+
+type OrderLineInvoicesMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  type: String
+  total: Float
+  amount: Float
+  fees: Float
+  tax: Float
+}
+
+type OrderLineInvoicesMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  type: String
+  total: Float
+  amount: Float
+  fees: Float
+  tax: Float
+}
+
+type OrderLineInvoicesAggregateResponse {
+  count: OrderLineInvoicesCountAggregate
+  sum: OrderLineInvoicesSumAggregate
+  avg: OrderLineInvoicesAvgAggregate
+  min: OrderLineInvoicesMinAggregate
+  max: OrderLineInvoicesMaxAggregate
+}
+
 type OrderItemDeleteResponse {
   id: ID
   createdAt: DateTime
@@ -6395,6 +6548,11 @@ type InvoiceDeleteResponse {
   createdAt: DateTime
   updatedAt: DateTime
   type: String
+  total: Float
+  amount: Float
+  fees: Float
+  tax: Float
+  nulled: Boolean
 }
 
 type InvoiceCountAggregate {
@@ -6402,6 +6560,25 @@ type InvoiceCountAggregate {
   createdAt: Int
   updatedAt: Int
   type: Int
+  total: Int
+  amount: Int
+  fees: Int
+  tax: Int
+  nulled: Int
+}
+
+type InvoiceSumAggregate {
+  total: Float
+  amount: Float
+  fees: Float
+  tax: Float
+}
+
+type InvoiceAvgAggregate {
+  total: Float
+  amount: Float
+  fees: Float
+  tax: Float
 }
 
 type InvoiceMinAggregate {
@@ -6409,6 +6586,10 @@ type InvoiceMinAggregate {
   createdAt: DateTime
   updatedAt: DateTime
   type: String
+  total: Float
+  amount: Float
+  fees: Float
+  tax: Float
 }
 
 type InvoiceMaxAggregate {
@@ -6416,12 +6597,64 @@ type InvoiceMaxAggregate {
   createdAt: DateTime
   updatedAt: DateTime
   type: String
+  total: Float
+  amount: Float
+  fees: Float
+  tax: Float
 }
 
 type InvoiceAggregateResponse {
   count: InvoiceCountAggregate
+  sum: InvoiceSumAggregate
+  avg: InvoiceAvgAggregate
   min: InvoiceMinAggregate
   max: InvoiceMaxAggregate
+}
+
+type RefundDeleteResponse {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  reason: String
+  destination: String
+  transactionId: String
+  stage: String
+}
+
+type RefundCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  reason: Int
+  destination: Int
+  transactionId: Int
+  stage: Int
+}
+
+type RefundMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  reason: String
+  destination: String
+  transactionId: String
+  stage: String
+}
+
+type RefundMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  reason: String
+  destination: String
+  transactionId: String
+  stage: String
+}
+
+type RefundAggregateResponse {
+  count: RefundCountAggregate
+  min: RefundMinAggregate
+  max: RefundMaxAggregate
 }
 
 type Query {
@@ -7067,6 +7300,21 @@ type Query {
     """Filter to find records to aggregate on"""
     filter: InvoiceAggregateFilter
   ): InvoiceAggregateResponse!
+  refund(id: ID!): Refund
+  refunds(
+    """Limit or page results."""
+    paging: OffsetPaging = {limit: 10}
+
+    """Specify to filter the records returned."""
+    filter: RefundFilter = {}
+
+    """Specify to sort results."""
+    sorting: [RefundSort!] = []
+  ): [Refund!]!
+  refundAggregate(
+    """Filter to find records to aggregate on"""
+    filter: RefundAggregateFilter
+  ): RefundAggregateResponse!
 }
 
 input AssetFilter {
@@ -7656,6 +7904,56 @@ input DeliveryAggregateFilter {
   updatedAt: DateFieldComparison
 }
 
+input RefundFilter {
+  and: [RefundFilter!]
+  or: [RefundFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  reason: StringFieldComparison
+  destination: StringFieldComparison
+  transactionId: StringFieldComparison
+  stage: StringFieldComparison
+  line: RefundFilterOrderLineFilter
+}
+
+input RefundFilterOrderLineFilter {
+  and: [RefundFilterOrderLineFilter!]
+  or: [RefundFilterOrderLineFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  stage: StringFieldComparison
+}
+
+input RefundSort {
+  field: RefundSortFields!
+  direction: SortDirection!
+  nulls: SortNulls
+}
+
+enum RefundSortFields {
+  id
+  createdAt
+  updatedAt
+  reason
+  destination
+  transactionId
+  stage
+}
+
+input RefundAggregateFilter {
+  and: [RefundAggregateFilter!]
+  or: [RefundAggregateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  reason: StringFieldComparison
+  destination: StringFieldComparison
+  transactionId: StringFieldComparison
+  stage: StringFieldComparison
+}
+
 type Mutation {
   administratorLogin(password: String!, email: String!): AdministratorDto!
   createAdministrator(type: AdministratorEnum!, password: String!, phone: String!, email: String!, lname: String!, fname: String!): Administrator!
@@ -8007,12 +8305,14 @@ type Mutation {
   setStoreOnSettlements(input: RelationInput!): Settlements!
   updateOneOrderLine(input: UpdateOneOrderLineInput!): OrderLine!
   updateManyOrderLines(input: UpdateManyOrderLinesInput!): UpdateManyResponse!
-  removeInvoiceFromOrderLine(input: RelationInput!): OrderLine!
+  removeInvoicesFromOrderLine(input: RelationsInput!): OrderLine!
+  removeRefundFromOrderLine(input: RelationInput!): OrderLine!
   removePoolFromOrderLine(input: RelationInput!): OrderLine!
   removeStoreFromOrderLine(input: RelationInput!): OrderLine!
   removeItemFromOrderLine(input: RelationInput!): OrderLine!
   removeOrderFromOrderLine(input: RelationInput!): OrderLine!
-  setInvoiceOnOrderLine(input: RelationInput!): OrderLine!
+  addInvoicesToOrderLine(input: RelationsInput!): OrderLine!
+  setRefundOnOrderLine(input: RelationInput!): OrderLine!
   setPoolOnOrderLine(input: RelationInput!): OrderLine!
   setStoreOnOrderLine(input: RelationInput!): OrderLine!
   setItemOnOrderLine(input: RelationInput!): OrderLine!
@@ -8061,6 +8361,10 @@ type Mutation {
   removeLineFromInvoice(input: RelationInput!): Invoice!
   setStoreOnInvoice(input: RelationInput!): Invoice!
   setLineOnInvoice(input: RelationInput!): Invoice!
+  updateOneRefund(input: UpdateOneRefundInput!): Refund!
+  updateManyRefunds(input: UpdateManyRefundsInput!): UpdateManyResponse!
+  removeLineFromRefund(input: RelationInput!): Refund!
+  setLineOnRefund(input: RelationInput!): Refund!
 }
 
 input RelationsInput {
@@ -10026,6 +10330,44 @@ input StockBackLogUpdateFilter {
   quantity: NumberFieldComparison
 }
 
+input UpdateOneRefundInput {
+  """The id of the record to update"""
+  id: ID!
+
+  """The update to apply."""
+  update: UpdateRefund!
+}
+
+input UpdateRefund {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  reason: String
+  destination: String
+  transactionId: String
+  stage: String
+}
+
+input UpdateManyRefundsInput {
+  """Filter used to find fields to update"""
+  filter: RefundUpdateFilter!
+
+  """The update to apply to all records found using the filter"""
+  update: UpdateRefund!
+}
+
+input RefundUpdateFilter {
+  and: [RefundUpdateFilter!]
+  or: [RefundUpdateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  reason: StringFieldComparison
+  destination: StringFieldComparison
+  transactionId: StringFieldComparison
+  stage: StringFieldComparison
+}
+
 type Subscription {
   deletedOneAsset(input: DeleteOneAssetSubscriptionFilterInput): AssetDeleteResponse!
   deletedManyAssets: DeleteManyResponse!
@@ -10232,6 +10574,11 @@ type Subscription {
   updatedOneInvoice(input: UpdateOneInvoiceSubscriptionFilterInput): Invoice!
   updatedManyInvoices: UpdateManyResponse!
   createdInvoice(input: CreateInvoiceSubscriptionFilterInput): Invoice!
+  deletedOneRefund(input: DeleteOneRefundSubscriptionFilterInput): RefundDeleteResponse!
+  deletedManyRefunds: DeleteManyResponse!
+  updatedOneRefund(input: UpdateOneRefundSubscriptionFilterInput): Refund!
+  updatedManyRefunds: UpdateManyResponse!
+  createdRefund(input: CreateRefundSubscriptionFilterInput): Refund!
 }
 
 input DeleteOneAssetSubscriptionFilterInput {
@@ -11295,6 +11642,11 @@ input InvoiceSubscriptionFilter {
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
   type: StringFieldComparison
+  total: NumberFieldComparison
+  amount: NumberFieldComparison
+  fees: NumberFieldComparison
+  tax: NumberFieldComparison
+  nulled: BooleanFieldComparison
 }
 
 input UpdateOneInvoiceSubscriptionFilterInput {
@@ -11305,4 +11657,31 @@ input UpdateOneInvoiceSubscriptionFilterInput {
 input CreateInvoiceSubscriptionFilterInput {
   """Specify to filter the records returned."""
   filter: InvoiceSubscriptionFilter!
+}
+
+input DeleteOneRefundSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: RefundSubscriptionFilter!
+}
+
+input RefundSubscriptionFilter {
+  and: [RefundSubscriptionFilter!]
+  or: [RefundSubscriptionFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  reason: StringFieldComparison
+  destination: StringFieldComparison
+  transactionId: StringFieldComparison
+  stage: StringFieldComparison
+}
+
+input UpdateOneRefundSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: RefundSubscriptionFilter!
+}
+
+input CreateRefundSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: RefundSubscriptionFilter!
 }

@@ -53,6 +53,9 @@ import {StockSubscriber} from "./services/subscribers/StockSubscriber";
 import {OrderController} from "./controllers/order.controller";
 import {RefundService} from "./services/admin/refund.service";
 import {RefundSubscriber} from "./services/subscribers/RefundSubscriber";
+import {CollectionSubscriber} from "./services/subscribers/CollectionSubscriber";
+import {GlobalCollectionsService} from "./services/global/collection.service";
+import {CollectionController} from "./controllers/collection.controller";
 
 export const adminServices = [
     AdministratorService,
@@ -87,7 +90,9 @@ export const adminServices = [
 
 export const globalServices = [
     SessionService,
-    OrderLineSubscriber
+    OrderLineSubscriber,
+    CollectionSubscriber,
+    GlobalCollectionsService
 ]
 
 export const shopServices = [
@@ -139,7 +144,10 @@ export class ServiceCoreModule {
     constructor() {}
 }
 
-const workerController = [OrderController]
+const workerController = [
+    OrderController,
+    CollectionController
+]
 
 @Module({
     imports: [
