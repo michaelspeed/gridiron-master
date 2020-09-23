@@ -34,7 +34,7 @@ interface PoolInterface {
 export class OrderController {
     constructor(
         @InjectConnection() private connection: Connection,
-        private configService: ConfigService
+        private configService: ConfigService,
     ) {}
 
     @MessagePattern(OrderLineMessages.pattern)
@@ -344,6 +344,10 @@ export class OrderController {
                         lineId: line.id,
                         type: type
                     })
+                }
+                break;
+                case OrderStageType.PROCESSED: {
+
                 }
                 break;
                 default:{

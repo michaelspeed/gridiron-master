@@ -31,7 +31,6 @@
     }
   },
   "compilerOptions": {
-    "webpack": true,
-    "webpackConfigPath": "webpack.config.js"
+    "webpack": false
   }
 }

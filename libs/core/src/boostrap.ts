@@ -24,7 +24,7 @@ export async function BootstrapServer(userConfig: Partial<GridIronConfig>): Prom
         logger: new Logger()
     })
     DefaultLogger.restoreOriginalLogLevel()
-    app.useLogger(new Logger())
+    // app.useLogger(new Logger())
     app.enableCors({origin: '*'})
     app.useGlobalFilters(new NestEnlighten({ theme: 'theme-dark' }));
     await app.listen(port, hostname || '')

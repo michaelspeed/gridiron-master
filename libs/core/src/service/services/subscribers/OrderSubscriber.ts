@@ -4,7 +4,7 @@ import {InvoiceEnum, OrderStageType} from "../../../enums";
 import moment from "moment";
 import * as _ from 'lodash'
 import {DeliveryStranded} from "@gridiron/core/entity/delivery/delivery-stranded.entity";
-import {EventBus} from "../../../event-bus";
+import {EventBus, OrderLineProcessedEvent} from "../../../event-bus";
 import {OrderLineEvents} from "../../../event-bus";
 import {Injectable} from "@nestjs/common";
 
@@ -32,6 +32,13 @@ export class OrderLineSubscriber implements EntitySubscriberInterface<OrderLine>
         return new Promise(async (resolve, reject) => {
             if (event.entity) {
                 this.eventBus.publish(new OrderLineEvents(event.entity, event.entity.stage))
+                switch (event.entity.stage) {
+                    case OrderStageType.PROCESSED: {
+                        const olLine = await this.connection.getRepository(OrderLine).findOne({where:{id: event.entity.id}, relations: ['order', 'order.user']})
+                        this.eventBus.publish(new OrderLineProcessedEvent(olLine, olLine.order.user))
+                    }
+                    break;
+                }
                 /*switch (event.entity.stage) {
                     case OrderStageType.PACKAGED: {
                         const deliverySignIns = await getConnection().getRepository(DeliverySignIn)

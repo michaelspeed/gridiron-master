@@ -32,7 +32,6 @@ export function GridironPlugin(pluginMetadata: GridironPluginMetadata): ClassDec
             }
         }
         const nestModuleMetadata = pick(pluginMetadata, Object.values(MODULE_METADATA) as any)
-        console.log(nestModuleMetadata)
         Module(nestModuleMetadata)(target)
     }
 }
