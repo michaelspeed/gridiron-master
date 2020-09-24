@@ -39,4 +39,11 @@ export class StatisticResolver {
     ): Promise<StatisticeProdDto> {
         return this.statisticService.getProductViews(productId, type)
     }
+
+    @Query(() => StatisticeProdDto)
+    async GetAdminViews(
+        @Args('type', {nullable: true}) type: string,
+    ): Promise<StatisticeProdDto> {
+        return this.statisticService.getAdminViews(type)
+    }
 }

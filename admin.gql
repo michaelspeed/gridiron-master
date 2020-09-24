@@ -1437,6 +1437,7 @@ input StoreFilter {
   zip: StoreFilterZipFilter
   backlogs: StoreFilterStockBackLogFilter
   cart: StoreFilterCartItemFilter
+  settlement: StoreFilterSettlementsFilter
 }
 
 input StoreFilterInvoiceFilter {
@@ -1477,6 +1478,42 @@ input StoreFilterCartItemFilter {
   and: [StoreFilterCartItemFilter!]
   or: [StoreFilterCartItemFilter!]
   id: IDFilterComparison
+}
+
+input StoreFilterSettlementsFilter {
+  and: [StoreFilterSettlementsFilter!]
+  or: [StoreFilterSettlementsFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  amount: NumberFieldComparison
+  taxamount: NumberFieldComparison
+  finalamount: NumberFieldComparison
+  transactionID: StringFieldComparison
+  remarks: StringFieldComparison
+  type: SettlementTypeFilterComparison
+}
+
+input SettlementTypeFilterComparison {
+  is: Boolean
+  isNot: Boolean
+  eq: SettlementType
+  neq: SettlementType
+  gt: SettlementType
+  gte: SettlementType
+  lt: SettlementType
+  lte: SettlementType
+  like: SettlementType
+  notLike: SettlementType
+  iLike: SettlementType
+  notILike: SettlementType
+  in: [SettlementType!]
+  notIn: [SettlementType!]
+}
+
+enum SettlementType {
+  PROCESSING
+  PROCESSED
 }
 
 input StoreSort {
@@ -1590,11 +1627,11 @@ type Store {
     paging: OffsetPaging = {limit: 10}
 
     """Specify to filter the records returned."""
-    filter: SettlementsFilter = {}
+    filter: ProductVariantPriceFilter = {}
 
     """Specify to sort results."""
-    sorting: [SettlementsSort!] = []
-  ): [Settlements!]!
+    sorting: [ProductVariantPriceSort!] = []
+  ): [ProductVariantPrice!]!
   settlements(
     """Limit or page results."""
     paging: OffsetPaging = {limit: 10}
@@ -1635,7 +1672,7 @@ type Store {
   ): StoreCartsAggregateResponse!
   pricesAggregate(
     """Filter to find records to aggregate on"""
-    filter: SettlementsAggregateFilter
+    filter: ProductVariantPriceAggregateFilter
   ): StorePricesAggregateResponse!
   settlementsAggregate(
     """Filter to find records to aggregate on"""
@@ -1659,6 +1696,36 @@ input StockBackLogFilter {
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
   quantity: NumberFieldComparison
+  store: StockBackLogFilterStoreFilter
+  variant: StockBackLogFilterProductVariantPriceFilter
+}
+
+input StockBackLogFilterStoreFilter {
+  and: [StockBackLogFilterStoreFilter!]
+  or: [StockBackLogFilterStoreFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  storeName: StringFieldComparison
+  phoneNumber: StringFieldComparison
+  officialemail: StringFieldComparison
+  zipcode: StringFieldComparison
+  streetAddress1: StringFieldComparison
+  streetAddress2: StringFieldComparison
+  GSTIN: StringFieldComparison
+  singleStore: BooleanFieldComparison
+  rentalStore: BooleanFieldComparison
+  channelMarkets: BooleanFieldComparison
+}
+
+input StockBackLogFilterProductVariantPriceFilter {
+  and: [StockBackLogFilterProductVariantPriceFilter!]
+  or: [StockBackLogFilterProductVariantPriceFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  price: NumberFieldComparison
+  taxIncluded: BooleanFieldComparison
 }
 
 input StockBackLogSort {
@@ -1702,28 +1769,6 @@ input SettlementsFilter {
   transactionID: StringFieldComparison
   remarks: StringFieldComparison
   type: SettlementTypeFilterComparison
-}
-
-input SettlementTypeFilterComparison {
-  is: Boolean
-  isNot: Boolean
-  eq: SettlementType
-  neq: SettlementType
-  gt: SettlementType
-  gte: SettlementType
-  lt: SettlementType
-  lte: SettlementType
-  like: SettlementType
-  notLike: SettlementType
-  iLike: SettlementType
-  notILike: SettlementType
-  in: [SettlementType!]
-  notIn: [SettlementType!]
-}
-
-enum SettlementType {
-  PROCESSING
-  PROCESSED
 }
 
 input SettlementsSort {
@@ -2124,6 +2169,7 @@ type VendorLicense {
   id: ID!
   tenureStart: DateTime!
   tenureEnd: DateTime!
+  plans: VendorPlans!
   vendor: Vendor!
 }
 
@@ -2459,6 +2505,18 @@ input VendorFilter {
   vendorName: StringFieldComparison
   phoneNumber: StringFieldComparison
   email: StringFieldComparison
+  zip: VendorFilterZipFilter
+}
+
+input VendorFilterZipFilter {
+  and: [VendorFilterZipFilter!]
+  or: [VendorFilterZipFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  name: StringFieldComparison
+  slug: StringFieldComparison
+  code: NumberFieldComparison
 }
 
 input VendorSort {
@@ -3490,48 +3548,30 @@ type StorePricesCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
-  amount: Int
-  taxamount: Int
-  finalamount: Int
-  transactionID: Int
-  remarks: Int
-  type: Int
+  price: Int
+  taxIncluded: Int
 }
 
 type StorePricesSumAggregate {
-  amount: Float
-  taxamount: Float
-  finalamount: Float
+  price: Float
 }
 
 type StorePricesAvgAggregate {
-  amount: Float
-  taxamount: Float
-  finalamount: Float
+  price: Float
 }
 
 type StorePricesMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
-  amount: Float
-  taxamount: Float
-  finalamount: Float
-  transactionID: String
-  remarks: String
-  type: SettlementType
+  price: Float
 }
 
 type StorePricesMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
-  amount: Float
-  taxamount: Float
-  finalamount: Float
-  transactionID: String
-  remarks: String
-  type: SettlementType
+  price: Float
 }
 
 type StorePricesAggregateResponse {
@@ -7288,6 +7328,7 @@ type Query {
   GetStoreOrderData(storeId: String!, type: String!): StatisticeDto!
   GetAdminOrderData(type: String!): StatisticeDto!
   GetProductViews(type: String, productId: ID!): StatisticeProdDto!
+  GetAdminViews(type: String): StatisticeProdDto!
   stockBackLog(id: ID!): StockBackLog
   stockBackLogs(
     """Limit or page results."""
@@ -8232,7 +8273,9 @@ type Mutation {
   addLicencesToVendorPlans(input: RelationsInput!): VendorPlans!
   CreatePlan(tenureStrategy: VendorPlanTenure!, priceStrategy: VendorPlanPrice!, value: Float!, name: String!): VendorPlans!
   UpdatePlan(status: Boolean!, id: ID!): VendorPlans!
+  removePlansFromVendorLicense(input: RelationInput!): VendorLicense!
   removeVendorFromVendorLicense(input: RelationInput!): VendorLicense!
+  setPlansOnVendorLicense(input: RelationInput!): VendorLicense!
   setVendorOnVendorLicense(input: RelationInput!): VendorLicense!
   CreateVendorProdVariant(value: Float!, storeId: ID!, variantId: ID!): BillingAgreement!
   UpdateVendorProdVariant(value: Float!, id: ID!): BillingAgreement!

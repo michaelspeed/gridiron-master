@@ -6,6 +6,7 @@ import {Vendor, VendorPlans} from '../';
 @ObjectType('VendorLicense')
 @Entity({name: 'vendor-license'})
 @Relation('vendor', () => Vendor, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
+@Relation('plans', () => VendorPlans, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 export class VendorLicense extends BaseEntity {
     @FilterableField(() => ID)
     @PrimaryGeneratedColumn('uuid')

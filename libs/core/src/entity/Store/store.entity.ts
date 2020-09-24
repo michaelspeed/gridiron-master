@@ -44,11 +44,11 @@ registerEnumType(StoreTypeEnum, {
 @Relation('country', () => Country, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @Relation('balance', () => StoreBalance, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true, nullable: true})
 @Connection('sku', () => StockKeeping, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
-@Connection('settlement', () => Settlements, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
+@FilterableConnection('settlement', () => Settlements, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true, relationName: 'settlement'})
 @Connection('prices', () => ProductVariantPrice, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @FilterableConnection('cart', () => CartItem, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @FilterableConnection('backlogs', () => StockBackLog, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
-@FilterableConnection('zip', () => Zip, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
+@FilterableConnection('zip', () => Zip, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true, relationName: 'zip'})
 @FilterableConnection('invoices', () => Invoice, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true, relationName: 'invoices'})
 @Entity({name: 'store'})
 export class Store extends BaseEntity {

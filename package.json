@@ -16,8 +16,8 @@
     "start:nuxt": "nuxt",
     "launch": "node dist/src/main.js",
     "build-s": "run-s clean:dist compile:server compile:client copy:.nuxt copy:client copy:config",
-    "build-core": "nest build core",
-    "build": "tsc -p tsconfig.build.json",
+    "build": "nest build && nest build worker && cpy 'apps/gridiron-master/src/templates/' 'dist/apps/gridiron-master/apps/gridiron-master/src/templates'",
+    "build-all": "tsc -p tsconfig.build.json",
     "clean:dist": "rimraf dist",
     "compile:server": "tsc -p tsconfig.build.json",
     "compile:client": "cross-env mode=production nuxt build",
@@ -26,9 +26,10 @@
     "copy:config": "copyfiles nuxt.config.ts package.json package-lock.json dist",
     "dev:server": "env NODE_ENV=development nodemon src/main.ts",
     "dev:worker": "env NODE_ENV=development nodemon src/main.worker.ts",
-    "run:server": "ts-node -r tsconfig-paths/register src/main.ts",
-    "run:worker": "ts-node -r tsconfig-paths/register src/main.worker.ts",
+    "run:server": "ts-node -r tsconfig-paths/register apps/gridiron-master/src/main.ts",
+    "run:worker": "ts-node -r tsconfig-paths/register apps/worker/src/main.ts",
     "dev": "concurrently yarn:run*",
+    "cool": "nest start && nest start worker ",
     "generate": "graphql-codegen --config codegen.yml"
   },
   "dependencies": {
@@ -110,6 +111,7 @@
     "@typescript-eslint/parser": "^2.23.0",
     "babel-plugin-import": "^1.13.0",
     "concurrently": "^5.3.0",
+    "cpy-cli": "^3.1.1",
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.10.0",
     "eslint-plugin-import": "^2.20.1",
@@ -138,8 +140,8 @@
     "coverageDirectory": "./coverage",
     "testEnvironment": "node",
     "roots": [
-      "<rootDir>/src/",
-      "<rootDir>/libs/"
+      "<rootDir>/libs/",
+      "<rootDir>/apps/"
     ],
     "moduleNameMapper": {
       "@gridiron/core/(.*)": "<rootDir>/libs/core/src/$1",

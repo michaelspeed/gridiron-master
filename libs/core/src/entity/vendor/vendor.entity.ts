@@ -26,7 +26,7 @@ import {Accounts, OrderLine, Store, VendorLicense, Zip} from '../';
 @Relation('license', () => VendorLicense, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @Relation('store', () => Store, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @Relation('account', () => Store, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
-@Connection('zip', () => Zip, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
+@FilterableConnection('zip', () => Zip, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 export class Vendor extends BaseEntity {
     @FilterableField(() => ID)
     @PrimaryGeneratedColumn('uuid')

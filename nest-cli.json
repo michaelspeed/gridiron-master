@@ -1,6 +1,6 @@
 {
   "collection": "@nestjs/schematics",
-  "sourceRoot": "src",
+  "sourceRoot": "apps/gridiron-master/src",
   "projects": {
     "core": {
       "type": "library",
@@ -28,9 +28,30 @@
       "compilerOptions": {
         "tsConfigPath": "libs/email-plugin/tsconfig.lib.json"
       }
+    },
+    "gridiron-master": {
+      "type": "application",
+      "root": "apps/gridiron-master",
+      "entryFile": "main",
+      "sourceRoot": "apps/gridiron-master/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/gridiron-master/tsconfig.app.json"
+      }
+    },
+    "worker": {
+      "type": "application",
+      "root": "apps/worker",
+      "entryFile": "main",
+      "sourceRoot": "apps/worker/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/worker/tsconfig.app.json"
+      }
     }
   },
   "compilerOptions": {
-    "webpack": false
-  }
+    "webpack": false,
+    "tsConfigPath": "apps/gridiron-master/tsconfig.app.json"
+  },
+  "monorepo": true,
+  "root": "apps/gridiron-master"
 }

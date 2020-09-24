@@ -109,7 +109,7 @@ export class StatisticsService {
         return new Promise<any>(async (resolve, reject) => {
             switch (type) {
                 case 'MONTH': {
-                    const adder = 'month'
+                    const adder = 'day'
                     const now = moment()
                     const ldate = moment().subtract(1, "month")
                     let sdate = ldate
@@ -143,7 +143,7 @@ export class StatisticsService {
                 }
                 break;
                 case 'YEAR': {
-                    const adder = 'year'
+                    const adder = 'month'
                     const now = moment()
                     const ldate = moment().subtract(1, "year")
                     let sdate = ldate
@@ -177,7 +177,7 @@ export class StatisticsService {
                 }
                 break;
                 default: {
-                    const adder = 'month'
+                    const adder = 'day'
                     const now = moment()
                     const ldate = moment().subtract(1, "month")
                     let sdate = ldate
@@ -213,11 +213,111 @@ export class StatisticsService {
         })
     }
 
+
+    async getAdminViews(type: string = 'MONTH') {
+        return new Promise<any>(async (resolve, reject) => {
+            switch (type) {
+                case 'MONTH': {
+                    const adder = 'day'
+                    const now = moment()
+                    const ldate = moment().subtract(1, "month")
+                    let sdate = ldate
+                    const views = await this.connection.getRepository(View).find({
+                        where: {
+                            createdAt:Between(ldate.toDate(), now.toDate())
+                        }
+                    })
+                    const labelbuffers = []
+                    const datasource = []
+                    while (now.toDate() >= sdate.toDate()) {
+                        labelbuffers.push(sdate.format('DD MMM YYYY'))
+                        let sum = 0
+                        for (const vi of views) {
+                            if (moment(vi.createdAt).isSame(sdate, adder)) {
+                                sum = ++sum
+                            }
+                        }
+                        datasource.push({
+                            sum: sum
+                        })
+                        sdate = sdate.add(1, adder)
+                    }
+                    resolve({
+                        labels: labelbuffers,
+                        datasource: datasource
+                    })
+                }
+                break;
+                case 'YEAR': {
+                    const adder = 'month'
+                    const now = moment()
+                    const ldate = moment().subtract(1, "year")
+                    let sdate = ldate
+                    const views = await this.connection.getRepository(View).find({
+                        where: {
+                            createdAt:Between(ldate.toDate(), now.toDate())
+                        }
+                    })
+                    const labelbuffers = []
+                    const datasource = []
+                    while (now.toDate() >= sdate.toDate()) {
+                        labelbuffers.push(sdate.format('MMM'))
+                        let sum = 0
+                        for (const vi of views) {
+                            if (moment(vi.createdAt).isSame(sdate, adder)) {
+                                sum = ++sum
+                            }
+                        }
+                        datasource.push({
+                            sum: sum
+                        })
+                        sdate = sdate.add(1, adder)
+                    }
+                    resolve({
+                        labels: labelbuffers,
+                        datasource: datasource
+                    })
+                }
+                break;
+                default: {
+                    const adder = 'day'
+                    const now = moment()
+                    const ldate = moment().subtract(1, "month")
+                    let sdate = ldate
+                    const views = await this.connection.getRepository(View).find({
+                        where: {
+                            createdAt:Between(ldate.toDate(), now.toDate())
+                        }
+                    })
+                    const labelbuffers = []
+                    const datasource = []
+                    while (now.toDate() >= sdate.toDate()) {
+                        labelbuffers.push(sdate.format('DD MMM YYYY'))
+                        let sum = 0
+                        for (const vi of views) {
+                            if (moment(vi.createdAt).isSame(sdate, adder)) {
+                                sum = ++sum
+                            }
+                        }
+                        datasource.push({
+                            sum: sum
+                        })
+                        sdate = sdate.add(1, adder)
+                    }
+                    resolve({
+                        labels: labelbuffers,
+                        datasource: datasource
+                    })
+                }
+            }
+        })
+    }
+
     async getStoreOrderStatistics(storeId: string, type: string = 'MONTH') {
         return new Promise<any>(async (resolve, reject) => {
             switch (type) {
                 case 'MONTH': {
-                    const adder = 'month'
+                    const adder = 'day'
                     const now = moment()
                     const ldate = moment().subtract(1, 'month')
                     let sdate = ldate
@@ -256,7 +356,7 @@ export class StatisticsService {
                 }
                 break;
                 case 'YEAR': {
-                    const adder = 'year'
+                    const adder = 'month'
                     const now = moment()
                     const ldate = moment().subtract(1, 'year')
                     let sdate = ldate
@@ -295,7 +395,7 @@ export class StatisticsService {
                 }
                 break;
                 default : {
-                    const adder = 'month'
+                    const adder = 'day'
                     const now = moment()
                     const ldate = moment().subtract(1, 'month')
                     let sdate = ldate
@@ -341,7 +441,7 @@ export class StatisticsService {
         return new Promise<any>(async (resolve, reject) => {
             switch (type) {
                 case 'MONTH': {
-                    const adder = 'month'
+                    const adder = 'day'
                     const now = moment()
                     const ldate = moment().subtract(1, 'month')
                     let sdate = ldate
@@ -377,7 +477,7 @@ export class StatisticsService {
                 }
                 break;
                 case 'YEAR': {
-                    const adder = 'year'
+                    const adder = 'month'
                     const now = moment()
                     const ldate = moment().subtract(1, 'year')
                     let sdate = ldate
@@ -413,7 +513,7 @@ export class StatisticsService {
                 }
                 break;
                 default : {
-                    const adder = 'month'
+                    const adder = 'day'
                     const now = moment()
                     const ldate = moment().subtract(1, 'month')
                     let sdate = ldate
