@@ -2,7 +2,7 @@ import {Field, ID, ObjectType, registerEnumType} from "@nestjs/graphql";
 import {
     BaseEntity,
     Column,
-    CreateDateColumn,
+    CreateDateColumn, DeleteDateColumn,
     Entity,
     ManyToOne,
     PrimaryGeneratedColumn,
@@ -33,6 +33,10 @@ export class Invoice extends BaseEntity {
     @FilterableField()
     @UpdateDateColumn()
     updatedAt: Date;
+
+    @FilterableField()
+    @DeleteDateColumn()
+    deletedAt?: Date;
 
     // @Field(() => OrderLine)
     @ManyToOne(() => OrderLine, line => line.invoice)

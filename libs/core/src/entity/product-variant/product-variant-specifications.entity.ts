@@ -1,5 +1,14 @@
 import {Field, ID, ObjectType} from '@nestjs/graphql';
-import {BaseEntity, Column, CreateDateColumn, Entity, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn} from 'typeorm';
+import {
+    BaseEntity,
+    Column,
+    CreateDateColumn,
+    DeleteDateColumn,
+    Entity,
+    OneToOne,
+    PrimaryGeneratedColumn,
+    UpdateDateColumn
+} from 'typeorm';
 import {FilterableField, PagingStrategies, Relation} from '@nestjs-query/query-graphql';
 import {ProductVariant} from '../';
 import GraphQLJSON from 'graphql-type-json';
@@ -19,6 +28,10 @@ export class ProductVariantSpecifications extends BaseEntity {
     @FilterableField()
     @UpdateDateColumn()
     updatedAt: Date;
+
+    @FilterableField()
+    @DeleteDateColumn()
+    deletedAt?: Date;
 
     @Field(() => GraphQLJSON)
     @Column('simple-json')

@@ -6,6 +6,7 @@ type Administrator {
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
+  deletedAt: DateTime!
   firstName: String!
   lastName: String!
   emailAddress: String!
@@ -27,6 +28,7 @@ type Asset {
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
+  deletedAt: DateTime!
   name: String!
   type: String!
   mimeType: String!
@@ -47,6 +49,7 @@ type Collection {
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
+  deletedAt: DateTime!
   isRoot: Boolean!
   inMenu: Boolean!
   position: Float!
@@ -59,6 +62,7 @@ type FacetValue {
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
+  deletedAt: DateTime!
   code: String!
 }
 
@@ -66,14 +70,17 @@ type Order {
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
+  deletedAt: DateTime!
   totalPrice: Float!
   address: String!
+  mode: String!
 }
 
 type OrderLine {
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
+  deletedAt: DateTime!
   priceField: JSON!
   stage: String!
 }
@@ -87,9 +94,11 @@ type Product {
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
+  deletedAt: DateTime!
   productName: String!
   slug: String!
   description: String!
+  viewcode: [String!]!
 }
 
 type User {
@@ -111,8 +120,10 @@ type User {
   delivery: Delivery
   cart: Cart
   view: [View!]!
+  reviews: [Review!]!
   address: [Address!]
   order: [Order!]
+  reset: [ResetCode!]
 }
 
 type Vendor {
@@ -155,7 +166,18 @@ type ProductVariant {
   enabled: Boolean!
   sku: String!
   name: String!
+  rating: Float!
   trackInventory: Boolean!
+  viewcode: [String!]!
+}
+
+type ProductVariantPrice {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  price: Float!
+  taxIncluded: Boolean!
 }
 
 type Cart {
@@ -164,12 +186,15 @@ type Cart {
 
 type View {
   id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type BillingAgreementRequest {
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
+  deletedAt: DateTime!
   value: Float!
   state: BillingAgreementState!
 }
@@ -184,6 +209,7 @@ type Page {
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
+  deletedAt: DateTime!
   title: String!
   targetId: String!
   single: JSON
@@ -208,6 +234,7 @@ type Delivery {
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
+  deletedAt: DateTime!
   user: User!
   signIn: [DeliverySignIn!]!
 }
@@ -216,6 +243,7 @@ type DeliveryPool {
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
+  deletedAt: DateTime!
   signIn: DeliverySignIn!
   lines: [OrderLine!]!
 }
@@ -232,14 +260,55 @@ type DeliverySignIn {
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
+  deletedAt: DateTime!
   delivery: Delivery!
   pool: DeliveryPool!
+}
+
+type PaymentMethod {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  api: String!
+  secretKey: String!
+  enabled: Boolean!
+}
+
+type CartItem {
+  id: ID!
+  quantity: Float!
+  cart: Cart!
+  variant: ProductVariant!
+  store: Store!
+  price: ProductVariantPrice!
+}
+
+type Review {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  stars: Int!
+  text: String!
+  user: User!
+  variant: ProductVariant!
+}
+
+type ResetCode {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  code: String!
+  user: User!
 }
 
 type Address {
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
+  deletedAt: DateTime!
   fullName: String!
   addressLine: String!
   city: String!
@@ -262,6 +331,7 @@ type AssetCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
   name: Int
   type: Int
   mimeType: Int
@@ -288,6 +358,7 @@ type AssetMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   name: String
   type: String
   mimeType: String
@@ -302,6 +373,7 @@ type AssetMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   name: String
   type: String
   mimeType: String
@@ -316,6 +388,7 @@ type AssetFeaturedsCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
   productName: Int
   slug: Int
   description: Int
@@ -325,6 +398,7 @@ type AssetFeaturedsMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   productName: String
   slug: String
   description: String
@@ -334,6 +408,7 @@ type AssetFeaturedsMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   productName: String
   slug: String
   description: String
@@ -343,24 +418,28 @@ type AssetProductAssetsCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
 }
 
 type AssetProductAssetsMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
 }
 
 type AssetProductAssetsMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
 }
 
 type RoleCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
   code: Int
   description: Int
 }
@@ -369,6 +448,7 @@ type RoleMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   code: String
   description: String
 }
@@ -377,6 +457,7 @@ type RoleMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   code: String
   description: String
 }
@@ -385,6 +466,7 @@ type CollectionCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
   isRoot: Int
   inMenu: Int
   position: Int
@@ -405,6 +487,7 @@ type CollectionMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   position: Float
   name: String
   description: String
@@ -414,6 +497,7 @@ type CollectionMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   position: Float
   name: String
   description: String
@@ -423,6 +507,7 @@ type CollectionChildrenCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
   isRoot: Int
   inMenu: Int
   position: Int
@@ -443,6 +528,7 @@ type CollectionChildrenMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   position: Float
   name: String
   description: String
@@ -452,6 +538,7 @@ type CollectionChildrenMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   position: Float
   name: String
   description: String
@@ -461,6 +548,7 @@ type CollectionProductsCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
   productName: Int
   slug: Int
   description: Int
@@ -470,6 +558,7 @@ type CollectionProductsMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   productName: String
   slug: String
   description: String
@@ -479,6 +568,7 @@ type CollectionProductsMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   productName: String
   slug: String
   description: String
@@ -488,6 +578,7 @@ type CollectionAgreementsCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
   value: Int
 }
 
@@ -503,6 +594,7 @@ type CollectionAgreementsMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   value: Float
 }
 
@@ -510,6 +602,7 @@ type CollectionAgreementsMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   value: Float
 }
 
@@ -586,84 +679,171 @@ type StoreMaxAggregate {
   GSTIN: String
 }
 
-type StoreLinesCountAggregate {
+type StoreInvoicesCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
-  stage: Int
+  deletedAt: Int
+  type: Int
+  total: Int
+  amount: Int
+  fees: Int
+  tax: Int
+  nulled: Int
 }
 
-type StoreLinesMinAggregate {
+type StoreInvoicesSumAggregate {
+  total: Float
+  amount: Float
+  fees: Float
+  tax: Float
+}
+
+type StoreInvoicesAvgAggregate {
+  total: Float
+  amount: Float
+  fees: Float
+  tax: Float
+}
+
+type StoreInvoicesMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
-  stage: String
+  deletedAt: DateTime
+  type: String
+  total: Float
+  amount: Float
+  fees: Float
+  tax: Float
 }
 
-type StoreLinesMaxAggregate {
+type StoreInvoicesMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
-  stage: String
+  deletedAt: DateTime
+  type: String
+  total: Float
+  amount: Float
+  fees: Float
+  tax: Float
+}
+
+type StoreZipsCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  name: Int
+  slug: Int
+  code: Int
+}
+
+type StoreZipsSumAggregate {
+  code: Float
+}
+
+type StoreZipsAvgAggregate {
+  code: Float
+}
+
+type StoreZipsMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  name: String
+  slug: String
+  code: Float
+}
+
+type StoreZipsMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  name: String
+  slug: String
+  code: Float
+}
+
+type StoreBacklogsCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  quantity: Int
+}
+
+type StoreBacklogsSumAggregate {
+  quantity: Float
+}
+
+type StoreBacklogsAvgAggregate {
+  quantity: Float
+}
+
+type StoreBacklogsMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  quantity: Float
+}
+
+type StoreBacklogsMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  quantity: Float
+}
+
+type StoreCartsCountAggregate {
+  id: Int
+}
+
+type StoreCartsMinAggregate {
+  id: ID
+}
+
+type StoreCartsMaxAggregate {
+  id: ID
 }
 
 type StorePricesCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
-  amount: Int
-  taxamount: Int
-  finalamount: Int
-  transactionID: Int
-  remarks: Int
-  type: Int
+  deletedAt: Int
+  price: Int
+  taxIncluded: Int
 }
 
 type StorePricesSumAggregate {
-  amount: Float
-  taxamount: Float
-  finalamount: Float
+  price: Float
 }
 
 type StorePricesAvgAggregate {
-  amount: Float
-  taxamount: Float
-  finalamount: Float
+  price: Float
 }
 
 type StorePricesMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
-  amount: Float
-  taxamount: Float
-  finalamount: Float
-  transactionID: String
-  remarks: String
-  type: SettlementType
-}
-
-enum SettlementType {
-  PROCESSING
-  PROCESSED
+  deletedAt: DateTime
+  price: Float
 }
 
 type StorePricesMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
-  amount: Float
-  taxamount: Float
-  finalamount: Float
-  transactionID: String
-  remarks: String
-  type: SettlementType
+  deletedAt: DateTime
+  price: Float
 }
 
 type StoreSettlementsCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
   amount: Int
   taxamount: Int
   finalamount: Int
@@ -688,6 +868,7 @@ type StoreSettlementsMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   amount: Float
   taxamount: Float
   finalamount: Float
@@ -696,10 +877,16 @@ type StoreSettlementsMinAggregate {
   type: SettlementType
 }
 
+enum SettlementType {
+  PROCESSING
+  PROCESSED
+}
+
 type StoreSettlementsMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   amount: Float
   taxamount: Float
   finalamount: Float
@@ -847,6 +1034,7 @@ type TaxRateVariantsCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
   price: Int
   taxIncluded: Int
 }
@@ -863,6 +1051,7 @@ type TaxRateVariantsMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   price: Float
 }
 
@@ -870,6 +1059,7 @@ type TaxRateVariantsMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   price: Float
 }
 
@@ -923,6 +1113,7 @@ type UserOrdersCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
   totalPrice: Int
   address: Int
 }
@@ -939,6 +1130,7 @@ type UserOrdersMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   totalPrice: Float
   address: String
 }
@@ -947,6 +1139,7 @@ type UserOrdersMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   totalPrice: Float
   address: String
 }
@@ -955,6 +1148,7 @@ type UserAddressesCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
   fullName: Int
   addressLine: Int
   city: Int
@@ -972,6 +1166,7 @@ type UserAddressesMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   fullName: String
   addressLine: String
   city: String
@@ -987,6 +1182,7 @@ type UserAddressesMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   fullName: String
   addressLine: String
   city: String
@@ -1085,6 +1281,7 @@ type ZoneMembersCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
   code: Int
   name: Int
   enabled: Int
@@ -1094,6 +1291,7 @@ type ZoneMembersMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   code: String
   name: String
 }
@@ -1102,6 +1300,7 @@ type ZoneMembersMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   code: String
   name: String
 }
@@ -1185,6 +1384,7 @@ type CountryCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
   code: Int
   name: Int
   enabled: Int
@@ -1194,6 +1394,7 @@ type CountryMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   code: String
   name: String
 }
@@ -1202,6 +1403,7 @@ type CountryMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   code: String
   name: String
 }
@@ -1300,6 +1502,7 @@ type FacetCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
   name: Int
   isPrivate: Int
   code: Int
@@ -1309,6 +1512,7 @@ type FacetMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   name: String
   code: String
 }
@@ -1317,6 +1521,7 @@ type FacetMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   name: String
   code: String
 }
@@ -1325,6 +1530,7 @@ type FacetProductsCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
   productName: Int
   slug: Int
   description: Int
@@ -1334,6 +1540,7 @@ type FacetProductsMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   productName: String
   slug: String
   description: String
@@ -1343,6 +1550,7 @@ type FacetProductsMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   productName: String
   slug: String
   description: String
@@ -1352,6 +1560,7 @@ type FacetValuesCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
   code: Int
 }
 
@@ -1359,6 +1568,7 @@ type FacetValuesMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   code: String
 }
 
@@ -1366,6 +1576,7 @@ type FacetValuesMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   code: String
 }
 
@@ -1373,6 +1584,7 @@ type FacetValueCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
   code: Int
 }
 
@@ -1380,6 +1592,7 @@ type FacetValueMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   code: String
 }
 
@@ -1387,6 +1600,7 @@ type FacetValueMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   code: String
 }
 
@@ -1394,6 +1608,7 @@ type FacetValueProductsCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
   productName: Int
   slug: Int
   description: Int
@@ -1403,6 +1618,7 @@ type FacetValueProductsMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   productName: String
   slug: String
   description: String
@@ -1412,6 +1628,7 @@ type FacetValueProductsMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   productName: String
   slug: String
   description: String
@@ -1421,6 +1638,7 @@ type ProductCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
   productName: Int
   slug: Int
   description: Int
@@ -1430,6 +1648,7 @@ type ProductMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   productName: String
   slug: String
   description: String
@@ -1439,6 +1658,7 @@ type ProductMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   productName: String
   slug: String
   description: String
@@ -1448,6 +1668,7 @@ type ProductOptionsCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
   name: Int
   code: Int
 }
@@ -1456,6 +1677,7 @@ type ProductOptionsMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   name: String
   code: String
 }
@@ -1464,6 +1686,7 @@ type ProductOptionsMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   name: String
   code: String
 }
@@ -1472,6 +1695,7 @@ type ProductFacetsCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
   code: Int
 }
 
@@ -1479,6 +1703,7 @@ type ProductFacetsMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   code: String
 }
 
@@ -1486,6 +1711,7 @@ type ProductFacetsMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   code: String
 }
 
@@ -1498,15 +1724,18 @@ type ProductVariantsCountAggregate {
   enabled: Int
   sku: Int
   name: Int
+  rating: Int
   trackInventory: Int
 }
 
 type ProductVariantsSumAggregate {
   dum_price: Float
+  rating: Float
 }
 
 type ProductVariantsAvgAggregate {
   dum_price: Float
+  rating: Float
 }
 
 type ProductVariantsMinAggregate {
@@ -1517,6 +1746,7 @@ type ProductVariantsMinAggregate {
   dum_price: Float
   sku: String
   name: String
+  rating: Float
 }
 
 type ProductVariantsMaxAggregate {
@@ -1527,24 +1757,28 @@ type ProductVariantsMaxAggregate {
   dum_price: Float
   sku: String
   name: String
+  rating: Float
 }
 
 type ProductAssetsCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
 }
 
 type ProductAssetsMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
 }
 
 type ProductAssetsMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
 }
 
 type ProductVariantCountAggregate {
@@ -1556,15 +1790,18 @@ type ProductVariantCountAggregate {
   enabled: Int
   sku: Int
   name: Int
+  rating: Int
   trackInventory: Int
 }
 
 type ProductVariantSumAggregate {
   dum_price: Float
+  rating: Float
 }
 
 type ProductVariantAvgAggregate {
   dum_price: Float
+  rating: Float
 }
 
 type ProductVariantMinAggregate {
@@ -1575,6 +1812,7 @@ type ProductVariantMinAggregate {
   dum_price: Float
   sku: String
   name: String
+  rating: Float
 }
 
 type ProductVariantMaxAggregate {
@@ -1585,12 +1823,14 @@ type ProductVariantMaxAggregate {
   dum_price: Float
   sku: String
   name: String
+  rating: Float
 }
 
 type ProductVariantLinesCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
   quantity: Int
 }
 
@@ -1606,6 +1846,7 @@ type ProductVariantLinesMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   quantity: Float
 }
 
@@ -1613,6 +1854,7 @@ type ProductVariantLinesMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   quantity: Float
 }
 
@@ -1668,6 +1910,7 @@ type ProductVariantAgreementsCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
   value: Int
 }
 
@@ -1683,6 +1926,7 @@ type ProductVariantAgreementsMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   value: Float
 }
 
@@ -1690,6 +1934,7 @@ type ProductVariantAgreementsMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   value: Float
 }
 
@@ -1697,6 +1942,7 @@ type ProductVariantPricesCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
   price: Int
   taxIncluded: Int
 }
@@ -1713,6 +1959,7 @@ type ProductVariantPricesMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   price: Float
 }
 
@@ -1720,6 +1967,7 @@ type ProductVariantPricesMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   price: Float
 }
 
@@ -1727,6 +1975,7 @@ type ProductOptionCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
   name: Int
   code: Int
 }
@@ -1735,6 +1984,7 @@ type ProductOptionMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   name: String
   code: String
 }
@@ -1743,6 +1993,7 @@ type ProductOptionMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   name: String
   code: String
 }
@@ -1756,15 +2007,18 @@ type ProductOptionVariantsCountAggregate {
   enabled: Int
   sku: Int
   name: Int
+  rating: Int
   trackInventory: Int
 }
 
 type ProductOptionVariantsSumAggregate {
   dum_price: Float
+  rating: Float
 }
 
 type ProductOptionVariantsAvgAggregate {
   dum_price: Float
+  rating: Float
 }
 
 type ProductOptionVariantsMinAggregate {
@@ -1775,6 +2029,7 @@ type ProductOptionVariantsMinAggregate {
   dum_price: Float
   sku: String
   name: String
+  rating: Float
 }
 
 type ProductOptionVariantsMaxAggregate {
@@ -1785,12 +2040,14 @@ type ProductOptionVariantsMaxAggregate {
   dum_price: Float
   sku: String
   name: String
+  rating: Float
 }
 
 type ProductOptionGroupCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
   name: Int
   code: Int
 }
@@ -1799,6 +2056,7 @@ type ProductOptionGroupMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   name: String
   code: String
 }
@@ -1807,6 +2065,7 @@ type ProductOptionGroupMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   name: String
   code: String
 }
@@ -1815,6 +2074,7 @@ type ProductOptionGroupOptionsCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
   name: Int
   code: Int
 }
@@ -1823,6 +2083,7 @@ type ProductOptionGroupOptionsMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   name: String
   code: String
 }
@@ -1831,6 +2092,7 @@ type ProductOptionGroupOptionsMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   name: String
   code: String
 }
@@ -1839,6 +2101,7 @@ type ProductVariantPriceCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
   price: Int
   taxIncluded: Int
 }
@@ -1855,6 +2118,7 @@ type ProductVariantPriceMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   price: Float
 }
 
@@ -1862,49 +2126,86 @@ type ProductVariantPriceMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   price: Float
+}
+
+type ProductVariantPriceBacklogsCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  quantity: Int
+}
+
+type ProductVariantPriceBacklogsSumAggregate {
+  quantity: Float
+}
+
+type ProductVariantPriceBacklogsAvgAggregate {
+  quantity: Float
+}
+
+type ProductVariantPriceBacklogsMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  quantity: Float
+}
+
+type ProductVariantPriceBacklogsMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  quantity: Float
 }
 
 type ProductVariantAssetCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
 }
 
 type ProductVariantAssetMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
 }
 
 type ProductVariantAssetMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
 }
 
 type ProductAssetCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
 }
 
 type ProductAssetMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
 }
 
 type ProductAssetMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
 }
 
 type VendorPlansCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
   isActive: Int
   name: Int
   planValue: Int
@@ -1922,6 +2223,7 @@ type VendorPlansMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   name: String
   planValue: Float
 }
@@ -1930,42 +2232,49 @@ type VendorPlansMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   name: String
   planValue: Float
 }
 
 type VendorPlansLicencesCountAggregate {
   id: Int
+  deletedAt: Int
   tenureStart: Int
   tenureEnd: Int
 }
 
 type VendorPlansLicencesMinAggregate {
   id: ID
+  deletedAt: DateTime
   tenureStart: DateTime
   tenureEnd: DateTime
 }
 
 type VendorPlansLicencesMaxAggregate {
   id: ID
+  deletedAt: DateTime
   tenureStart: DateTime
   tenureEnd: DateTime
 }
 
 type VendorLicenseCountAggregate {
   id: Int
+  deletedAt: Int
   tenureStart: Int
   tenureEnd: Int
 }
 
 type VendorLicenseMinAggregate {
   id: ID
+  deletedAt: DateTime
   tenureStart: DateTime
   tenureEnd: DateTime
 }
 
 type VendorLicenseMaxAggregate {
   id: ID
+  deletedAt: DateTime
   tenureStart: DateTime
   tenureEnd: DateTime
 }
@@ -2200,6 +2509,7 @@ type OrderCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
   totalPrice: Int
   address: Int
 }
@@ -2216,6 +2526,7 @@ type OrderMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   totalPrice: Float
   address: String
 }
@@ -2224,6 +2535,7 @@ type OrderMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   totalPrice: Float
   address: String
 }
@@ -2232,6 +2544,7 @@ type OrderLinesCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
   stage: Int
 }
 
@@ -2239,6 +2552,7 @@ type OrderLinesMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   stage: String
 }
 
@@ -2246,6 +2560,7 @@ type OrderLinesMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   stage: String
 }
 
@@ -2282,6 +2597,48 @@ type ZipMaxAggregate {
   name: String
   slug: String
   code: Float
+}
+
+type ZipStoresCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  storeName: Int
+  phoneNumber: Int
+  officialemail: Int
+  zipcode: Int
+  streetAddress1: Int
+  streetAddress2: Int
+  GSTIN: Int
+  singleStore: Int
+  rentalStore: Int
+  channelMarkets: Int
+}
+
+type ZipStoresMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  storeName: String
+  phoneNumber: String
+  officialemail: String
+  zipcode: String
+  streetAddress1: String
+  streetAddress2: String
+  GSTIN: String
+}
+
+type ZipStoresMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  storeName: String
+  phoneNumber: String
+  officialemail: String
+  zipcode: String
+  streetAddress1: String
+  streetAddress2: String
+  GSTIN: String
 }
 
 type ZipVendorsCountAggregate {
@@ -2369,6 +2726,7 @@ type PageCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
   title: Int
   targetId: Int
   pageType: Int
@@ -2379,6 +2737,7 @@ type PageMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   title: String
   targetId: String
   pageType: PageType
@@ -2389,6 +2748,7 @@ type PageMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   title: String
   targetId: String
   pageType: PageType
@@ -2399,6 +2759,7 @@ type AddressCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
   fullName: Int
   addressLine: Int
   city: Int
@@ -2416,6 +2777,7 @@ type AddressMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   fullName: String
   addressLine: String
   city: String
@@ -2431,6 +2793,7 @@ type AddressMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   fullName: String
   addressLine: String
   city: String
@@ -2446,6 +2809,7 @@ type SettlementsCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
   amount: Int
   taxamount: Int
   finalamount: Int
@@ -2470,6 +2834,7 @@ type SettlementsMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   amount: Float
   taxamount: Float
   finalamount: Float
@@ -2482,6 +2847,7 @@ type SettlementsMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   amount: Float
   taxamount: Float
   finalamount: Float
@@ -2504,6 +2870,7 @@ type OrderLineCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
   stage: Int
 }
 
@@ -2511,6 +2878,7 @@ type OrderLineMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   stage: String
 }
 
@@ -2518,13 +2886,66 @@ type OrderLineMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   stage: String
+}
+
+type OrderLineInvoicesCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  deletedAt: Int
+  type: Int
+  total: Int
+  amount: Int
+  fees: Int
+  tax: Int
+  nulled: Int
+}
+
+type OrderLineInvoicesSumAggregate {
+  total: Float
+  amount: Float
+  fees: Float
+  tax: Float
+}
+
+type OrderLineInvoicesAvgAggregate {
+  total: Float
+  amount: Float
+  fees: Float
+  tax: Float
+}
+
+type OrderLineInvoicesMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+  type: String
+  total: Float
+  amount: Float
+  fees: Float
+  tax: Float
+}
+
+type OrderLineInvoicesMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+  type: String
+  total: Float
+  amount: Float
+  fees: Float
+  tax: Float
 }
 
 type OrderItemCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
   quantity: Int
 }
 
@@ -2540,6 +2961,7 @@ type OrderItemMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   quantity: Float
 }
 
@@ -2547,6 +2969,7 @@ type OrderItemMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   quantity: Float
 }
 
@@ -2554,6 +2977,7 @@ type PromotionVariantPriceCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
   priceType: Int
   value: Int
   forever: Int
@@ -2574,6 +2998,7 @@ type PromotionVariantPriceMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   priceType: String
   value: Float
   startsAt: DateTime
@@ -2584,6 +3009,7 @@ type PromotionVariantPriceMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   priceType: String
   value: Float
   startsAt: DateTime
@@ -2594,6 +3020,7 @@ type CartPriceRulesCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
   priceType: Int
   value: Int
 }
@@ -2610,6 +3037,7 @@ type CartPriceRulesMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   priceType: String
   value: Float
 }
@@ -2618,6 +3046,7 @@ type CartPriceRulesMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   priceType: String
   value: Float
 }
@@ -2626,54 +3055,253 @@ type AccountCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
 }
 
 type AccountMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
 }
 
 type AccountMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
 }
 
 type DeliveryCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
 }
 
 type DeliveryMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
 }
 
 type DeliveryMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
 }
 
 type DeliverySignInsCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
 }
 
 type DeliverySignInsMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
 }
 
 type DeliverySignInsMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
+}
+
+type DataSource {
+  sum: Float!
+  amount: Float!
+}
+
+type ProdDataSource {
+  sum: Float!
+}
+
+type StockBackLogCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  quantity: Int
+}
+
+type StockBackLogSumAggregate {
+  quantity: Float
+}
+
+type StockBackLogAvgAggregate {
+  quantity: Float
+}
+
+type StockBackLogMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  quantity: Float
+}
+
+type StockBackLogMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  quantity: Float
+}
+
+type InvoiceCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  deletedAt: Int
+  type: Int
+  total: Int
+  amount: Int
+  fees: Int
+  tax: Int
+  nulled: Int
+}
+
+type InvoiceSumAggregate {
+  total: Float
+  amount: Float
+  fees: Float
+  tax: Float
+}
+
+type InvoiceAvgAggregate {
+  total: Float
+  amount: Float
+  fees: Float
+  tax: Float
+}
+
+type InvoiceMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+  type: String
+  total: Float
+  amount: Float
+  fees: Float
+  tax: Float
+}
+
+type InvoiceMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+  type: String
+  total: Float
+  amount: Float
+  fees: Float
+  tax: Float
+}
+
+type RefundCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  deletedAt: Int
+  reason: Int
+  destination: Int
+  transactionId: Int
+  stage: Int
+}
+
+type RefundMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+  reason: String
+  destination: String
+  transactionId: String
+  stage: String
+}
+
+type RefundMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+  reason: String
+  destination: String
+  transactionId: String
+  stage: String
+}
+
+type PaymentCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  deletedAt: Int
+  amount: Int
+  errorMessage: Int
+  transactionId: Int
+}
+
+type PaymentSumAggregate {
+  amount: Float
+}
+
+type PaymentAvgAggregate {
+  amount: Float
+}
+
+type PaymentMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+  amount: Float
+  errorMessage: String
+  transactionId: String
+}
+
+type PaymentMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+  amount: Float
+  errorMessage: String
+  transactionId: String
+}
+
+type ViewCodeCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  deletedAt: Int
+  name: Int
+  value: Int
+  description: Int
+}
+
+type ViewCodeMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+  name: String
+  value: String
+  description: String
+}
+
+type ViewCodeMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+  name: String
+  value: String
+  description: String
 }
 
 type Query {
@@ -2686,6 +3314,8 @@ type Query {
   getHomePage: Page!
   getSingleProductVariant(id: ID!): ProductVariant!
   singProductInfo(id: ID!): Product!
+  singProductPrice(id: ID!): ProductVariant!
+  GetStocksAndZipAvailability(zipf: Int!, variantId: ID!): [ProductVariantPrice!]!
   getProductVariantByProduct(id: ID!): [ProductVariant!]!
   getProductAsset(prodId: ID, variantId: ID): Asset!
   GetDefaultStore: Store!
@@ -2693,13 +3323,30 @@ type Query {
   GetUserAddress: [Address!]!
   GetAllSearch: [Search!]!
   queryFacet(collection: ID, id: ID!): [Product!]!
+  GetFacetDocument(id: ID!): FacetValue!
+  GetCart(id: ID!): Cart!
+  getPaymentCodes: PaymentMethod!
+  getMyOrders: [Order!]!
+  getSingleOrder(id: ID!): Order!
 }
 
 type Mutation {
+  ShiftProductVariant(prodId: String!, name: String!): ProductVariant!
+  creteReview(stars: Float!, varId: String!, text: String!): Review!
+  createView(variant: String!, id: String!): View!
   CreateUser(lname: String!, fname: String!, phone: String!, password: String!, email: String!): UserResponse!
   LoginUser(password: String!, email: String!): UserResponse!
   UpdateAccountInfo(lname: String!, fname: String!, phone: String!): User!
+  RequestResetCode(email: String!): ResetCode!
   CreateNewAddress(type: AddressType!, phoneNumber: String!, postalCode: String!, landmark: String!, state: String!, city: String!, addressLine: String!, fullName: String!): Address!
   UpdateNewAddress(id: ID!, type: AddressType!, phoneNumber: String!, postalCode: String!, landmark: String!, state: String!, city: String!, addressLine: String!, fullName: String!): Address!
   RegisterSearch(search: String!): Search!
+  addToCart(quantity: Int!, price: ID!, store: ID!, variant: ID!, userId: ID!): CartItem!
+  removeCartItem(cartId: ID!): CartItem!
+  createShopOrder(transaction: String, orderLineDto: [CartItemDto!]!, address: String!): Order!
+}
+
+input CartItemDto {
+  priceId: String!
+  quantity: Float!
 }

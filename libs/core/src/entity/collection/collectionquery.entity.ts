@@ -1,6 +1,7 @@
 import {Field, ID, ObjectType} from "@nestjs/graphql";
 import {Connection, FilterableField, PagingStrategies, Relation} from "@nestjs-query/query-graphql";
 import {BillingAgreement, Product, ProductQuery, Seo} from "@gridiron/core";
+import {DeleteDateColumn} from "typeorm";
 
 @ObjectType('Collection')
 @Connection('agreements', () => BillingAgreement, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
@@ -17,6 +18,10 @@ export class CollectionQuery {
 
     @FilterableField()
     updatedAt: Date;
+
+    @FilterableField()
+    @DeleteDateColumn()
+    deletedAt?: Date;
 
     @FilterableField()
     isRoot: boolean;

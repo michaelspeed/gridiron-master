@@ -17,6 +17,7 @@ export class ProductService {
             prod.productName = name
             prod.description = desc
             prod.slug = slug
+            prod.viewcode = []
             prod.featuredAsset = await this.connection.getRepository(Asset).findOne({where: {id: featured}})
             let prodFacet: FacetValue[] = []
             for (const facetId of facets) {
@@ -49,7 +50,7 @@ export class ProductService {
         })
     }
 
-    updateProduct(id: string, name: string, desc: string, assets:string[], facets: string[], featured: string): Promise<Product> {
+    updateProduct(id: string, name: string, desc: string, assets:string[], facets: string[], featured: string, viewcode: string[]): Promise<Product> {
         return new Promise<Product>(async (resolve, reject) => {
             const prod = await Product.findOne({where: {id}})
             prod.productName = name
@@ -62,6 +63,7 @@ export class ProductService {
             }
             prod.assets = []
             prod.facets = prodFacet
+            prod.viewcode = viewcode
             this.connection.getRepository(Product).save(prod).then(async (value) => {
                 for (const assetId of assets) {
                     const ass = await this.connection.getRepository(Asset).findOne({where:{id: assetId}})

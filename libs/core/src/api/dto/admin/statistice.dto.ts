@@ -28,6 +28,6 @@ export class StatisticeDto {
 export class StatisticeProdDto {
     @Field(() => [String])
     labels: string[]
-    @Field(() => [DataSource])
+    @Field(() => [ProdDataSource])
     datasource: ProdDataSource[]
 }

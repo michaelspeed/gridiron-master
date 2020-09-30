@@ -1,7 +1,7 @@
 import {
     BaseEntity,
     Column,
-    CreateDateColumn,
+    CreateDateColumn, DeleteDateColumn,
     Entity,
     JoinTable,
     ManyToMany,
@@ -34,6 +34,10 @@ export class Product extends BaseEntity {
     @FilterableField()
     @UpdateDateColumn()
     updatedAt: Date;
+
+    @FilterableField()
+    @DeleteDateColumn()
+    deletedAt?: Date;
 
     @Column({ default: true })
     enabled: boolean;
@@ -77,4 +81,8 @@ export class Product extends BaseEntity {
 
     @OneToMany(() => View, view => view.product)
     views: View[]
+
+    @Field(() => [String])
+    @Column("simple-array")
+    viewcode: string[]
 }

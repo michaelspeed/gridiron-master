@@ -2,7 +2,7 @@ import {ID, ObjectType} from "@nestjs/graphql";
 import {
     BaseEntity,
     Column,
-    CreateDateColumn,
+    CreateDateColumn, DeleteDateColumn,
     Entity, JoinColumn,
     OneToOne,
     PrimaryGeneratedColumn,
@@ -28,6 +28,10 @@ export class CartPrice extends BaseEntity {
     @FilterableField()
     @UpdateDateColumn()
     updatedAt: Date;
+
+    @FilterableField()
+    @DeleteDateColumn()
+    deletedAt?: Date;
 
     @FilterableField()
     @Column({type: "enum", enum: PricePromoType, default: PricePromoType.PERCENTAGE})

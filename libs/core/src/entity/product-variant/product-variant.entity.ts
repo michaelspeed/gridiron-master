@@ -1,7 +1,7 @@
 import {
     BaseEntity,
     Column,
-    CreateDateColumn,
+    CreateDateColumn, DeleteDateColumn,
     Entity, JoinColumn,
     JoinTable,
     ManyToMany,
@@ -56,8 +56,8 @@ export class ProductVariant extends BaseEntity {
     updatedAt: Date;
 
     @FilterableField()
-    @Column({ type: Date, nullable: true })
-    deletedAt: Date | null;
+    @DeleteDateColumn()
+    deletedAt?: Date;
 
     @FilterableField()
     @Column({default: 0})
@@ -126,5 +126,9 @@ export class ProductVariant extends BaseEntity {
     // @Field(() => [Review])
     @OneToMany(() => Review, rev => rev.variant)
     reviews: Review[]
+
+    @Field(() => [String])
+    @Column("simple-array")
+    viewcode: string[]
 
 }

@@ -65,6 +65,8 @@ import {StatisticResolver} from "./resolvers/admin/statistic.resolver";
 import {StockBackLogResolver} from "./resolvers/admin/stock-back-log.resolver";
 import {InvoiceResolver} from "./resolvers/admin/invoice.resolver";
 import {RefundResolver} from "./resolvers/admin/refund.resolver";
+import {PaymentResolver} from "./resolvers/admin/payment.resolver";
+import {ViewCodesResolver} from "./resolvers/admin/view-codes.resolver";
 
 const adminResolvers = [
     AdministratorResolver,
@@ -112,7 +114,9 @@ const adminResolvers = [
     StatisticResolver,
     StockBackLogResolver,
     InvoiceResolver,
-    RefundResolver
+    RefundResolver,
+    PaymentResolver,
+    ViewCodesResolver
 ]
 
 const shopResolvers = [

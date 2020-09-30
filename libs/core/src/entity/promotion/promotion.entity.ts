@@ -1,4 +1,12 @@
-import {BaseEntity, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn} from 'typeorm';
+import {
+    BaseEntity,
+    Column,
+    CreateDateColumn,
+    DeleteDateColumn,
+    Entity,
+    PrimaryGeneratedColumn,
+    UpdateDateColumn
+} from 'typeorm';
 import {ID, ObjectType} from '@nestjs/graphql';
 import {FilterableField} from '@nestjs-query/query-graphql';
 
@@ -18,8 +26,8 @@ export class Promotion extends BaseEntity {
     updatedAt: Date;
 
     @FilterableField()
-    @Column({ type: Date, nullable: true })
-    deletedAt: Date | null;
+    @DeleteDateColumn()
+    deletedAt?: Date;
 
 
     @FilterableField()

@@ -2,7 +2,7 @@ import {ID, ObjectType, registerEnumType} from "@nestjs/graphql";
 import {
     BaseEntity,
     Column,
-    CreateDateColumn,
+    CreateDateColumn, DeleteDateColumn,
     Entity, ManyToOne,
     OneToMany,
     PrimaryGeneratedColumn,
@@ -31,6 +31,10 @@ export class Settlements extends BaseEntity {
     @FilterableField()
     @UpdateDateColumn()
     updatedAt: Date;
+
+    @FilterableField()
+    @DeleteDateColumn()
+    deletedAt?: Date;
 
     @FilterableField()
     @Column({default: 0, type: "float"})

@@ -1,4 +1,12 @@
-import {BaseEntity, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn} from "typeorm";
+import {
+    BaseEntity,
+    Column,
+    CreateDateColumn,
+    DeleteDateColumn,
+    Entity,
+    PrimaryGeneratedColumn,
+    UpdateDateColumn
+} from "typeorm";
 import {FilterableField} from "@nestjs-query/query-graphql";
 import {Field, ID, ObjectType, registerEnumType} from "@nestjs/graphql";
 import {PageCategory, PageType} from "../../enums";
@@ -27,6 +35,10 @@ export class Page extends BaseEntity {
     @FilterableField()
     @UpdateDateColumn()
     updatedAt: Date;
+
+    @FilterableField()
+    @DeleteDateColumn()
+    deletedAt?: Date;
 
     @FilterableField()
     @Column({default: ''})

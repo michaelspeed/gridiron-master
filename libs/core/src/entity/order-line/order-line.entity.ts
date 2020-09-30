@@ -1,6 +1,6 @@
 import {
     BaseEntity, Column,
-    CreateDateColumn,
+    CreateDateColumn, DeleteDateColumn,
     Entity,
     JoinColumn,
     ManyToOne,
@@ -46,6 +46,10 @@ export class OrderLine extends BaseEntity {
     @FilterableField()
     @UpdateDateColumn()
     updatedAt: Date;
+
+    @FilterableField()
+    @DeleteDateColumn()
+    deletedAt?: Date;
 
     @Field(() => GraphQLJSON)
     @Column("simple-json")

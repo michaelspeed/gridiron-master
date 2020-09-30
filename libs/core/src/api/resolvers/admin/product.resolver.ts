@@ -48,7 +48,8 @@ export class ProductResolver extends CRUDResolver(Product, {
         @Args('featured', {type: () => String}) featured: string,
         @Args('asset', {type: () => [String]}) asset: string[],
         @Args('facet', {type: () => [String]}) facet: string[],
+        @Args('viewcode', {type: () => [String]}) viewcode: string[],
     ): Promise<Product> {
-        return this.productService.updateProduct(id, name, desc, asset, facet, featured)
+        return this.productService.updateProduct(id, name, desc, asset, facet, featured, viewcode)
     }
 }
