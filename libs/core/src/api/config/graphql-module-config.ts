@@ -55,6 +55,7 @@ async function configureAdminGraphQLOptions(
             maxFileSize: configService.assetOptions.uploadMaxFileSize,
         },
         typePaths: options.typePaths,
+        // typePaths: [],
         playground: options.playground || false,
         debug: options.debug || false,
         context: (req: any) => req,

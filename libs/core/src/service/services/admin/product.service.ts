@@ -1,15 +1,22 @@
 import {Injectable} from '@nestjs/common';
 import {Asset, Collection, FacetValue, Product, ProductAsset} from '../../../entity';
 import {InjectConnection} from '@nestjs/typeorm';
-import {Connection} from 'typeorm';
+import {Connection, EntitySubscriberInterface, EventSubscriber, UpdateEvent} from 'typeorm';
 import {EventBus, ProductEvents} from '../../../event-bus';
 
 @Injectable()
-export class ProductService {
+@EventSubscriber()
+export class ProductService implements EntitySubscriberInterface<Product>{
     constructor(
         @InjectConnection() private connection: Connection,
         private eventBus: EventBus
-    ) {}
+    ) {
+        connection.subscribers.push(this)
+    }
+
+    listenTo(): Function | string {
+        return Product
+    }
 
     createProduct(name: string, desc: string, slug: string, assets:string[], facets: string[], featured: string): Promise<Product> {
         return new Promise<Product>(async (resolve, reject) => {

@@ -72,6 +72,7 @@ import {Invoice} from "./invoice/Invoice.entity";
 import {Refund} from "./refund/refund.entity";
 import {ResetCode} from "./reset-code/reset-code.entity";
 import {ViewCodes} from "./view-codes/view-codes.entity";
+import {Hsn} from "./hsn/hsn.entity";
 
 export const coreEntityMap = {
     Address,
@@ -93,6 +94,7 @@ export const coreEntityMap = {
     FacetValue,
     Fulfillment,
     GlobalSettings,
+    Hsn,
     HistoryEntry,
     OrderHistoryEntry,
     Order,

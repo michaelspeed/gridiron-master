@@ -3304,6 +3304,104 @@ type ViewCodeMaxAggregate {
   description: String
 }
 
+type HsnCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  deletedAt: Int
+  code: Int
+  value: Int
+}
+
+type HsnSumAggregate {
+  value: Float
+}
+
+type HsnAvgAggregate {
+  value: Float
+}
+
+type HsnMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+  code: String
+  value: Float
+}
+
+type HsnMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+  code: String
+  value: Float
+}
+
+type HsnPricesCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  deletedAt: Int
+  price: Int
+  taxIncluded: Int
+}
+
+type HsnPricesSumAggregate {
+  price: Float
+}
+
+type HsnPricesAvgAggregate {
+  price: Float
+}
+
+type HsnPricesMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+  price: Float
+}
+
+type HsnPricesMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+  price: Float
+}
+
+type HsnProdsCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  deletedAt: Int
+  productName: Int
+  slug: Int
+  description: Int
+}
+
+type HsnProdsMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+  productName: String
+  slug: String
+  description: String
+}
+
+type HsnProdsMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+  productName: String
+  slug: String
+  description: String
+}
+
 type Query {
   GetMenu: MenuResponseTypes!
   getAllCollection: [Collection!]!

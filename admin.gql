@@ -816,6 +816,7 @@ type Product {
     """Specify to sort results."""
     sorting: [ProductAssetSort!] = []
   ): [ProductAsset!]!
+  hsn: Hsn
   collection: Collection
   featuredAsset: Asset!
   optionsAggregate(
@@ -2934,6 +2935,43 @@ type ViewCode {
   name: String!
   value: String!
   description: String!
+}
+
+type Hsn {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  code: String!
+  value: Float!
+  prices(
+    """Limit or page results."""
+    paging: OffsetPaging = {limit: 10}
+
+    """Specify to filter the records returned."""
+    filter: ProductVariantPriceFilter = {}
+
+    """Specify to sort results."""
+    sorting: [ProductVariantPriceSort!] = []
+  ): [ProductVariantPrice!]!
+  prods(
+    """Limit or page results."""
+    paging: OffsetPaging = {limit: 10}
+
+    """Specify to filter the records returned."""
+    filter: ProductFilter = {}
+
+    """Specify to sort results."""
+    sorting: [ProductSort!] = []
+  ): [Product!]!
+  pricesAggregate(
+    """Filter to find records to aggregate on"""
+    filter: ProductVariantPriceAggregateFilter
+  ): HsnPricesAggregateResponse!
+  prodsAggregate(
+    """Filter to find records to aggregate on"""
+    filter: ProductAggregateFilter
+  ): HsnProdsAggregateResponse!
 }
 
 type Country {
@@ -7113,6 +7151,135 @@ type ViewCodeAggregateResponse {
   max: ViewCodeMaxAggregate
 }
 
+type HsnDeleteResponse {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+  code: String
+  value: Float
+}
+
+type HsnCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  deletedAt: Int
+  code: Int
+  value: Int
+}
+
+type HsnSumAggregate {
+  value: Float
+}
+
+type HsnAvgAggregate {
+  value: Float
+}
+
+type HsnMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+  code: String
+  value: Float
+}
+
+type HsnMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+  code: String
+  value: Float
+}
+
+type HsnAggregateResponse {
+  count: HsnCountAggregate
+  sum: HsnSumAggregate
+  avg: HsnAvgAggregate
+  min: HsnMinAggregate
+  max: HsnMaxAggregate
+}
+
+type HsnPricesCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  deletedAt: Int
+  price: Int
+  taxIncluded: Int
+}
+
+type HsnPricesSumAggregate {
+  price: Float
+}
+
+type HsnPricesAvgAggregate {
+  price: Float
+}
+
+type HsnPricesMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+  price: Float
+}
+
+type HsnPricesMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+  price: Float
+}
+
+type HsnPricesAggregateResponse {
+  count: HsnPricesCountAggregate
+  sum: HsnPricesSumAggregate
+  avg: HsnPricesAvgAggregate
+  min: HsnPricesMinAggregate
+  max: HsnPricesMaxAggregate
+}
+
+type HsnProdsCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  deletedAt: Int
+  productName: Int
+  slug: Int
+  description: Int
+}
+
+type HsnProdsMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+  productName: String
+  slug: String
+  description: String
+}
+
+type HsnProdsMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+  productName: String
+  slug: String
+  description: String
+}
+
+type HsnProdsAggregateResponse {
+  count: HsnProdsCountAggregate
+  min: HsnProdsMinAggregate
+  max: HsnProdsMaxAggregate
+}
+
 type Query {
   GetAdministratorData: Administrator!
   GetAllAdministrator(search: String): [Administrator!]!
@@ -7928,6 +8095,24 @@ type Query {
     """Filter to find records to aggregate on"""
     filter: ViewCodeAggregateFilter
   ): ViewCodeAggregateResponse!
+  hsn(
+    """The id of the record to find."""
+    id: ID!
+  ): Hsn
+  hsns(
+    """Limit or page results."""
+    paging: OffsetPaging = {limit: 10}
+
+    """Specify to filter the records returned."""
+    filter: HsnFilter = {}
+
+    """Specify to sort results."""
+    sorting: [HsnSort!] = []
+  ): [Hsn!]!
+  hsnAggregate(
+    """Filter to find records to aggregate on"""
+    filter: HsnAggregateFilter
+  ): HsnAggregateResponse!
 }
 
 input AssetFilter {
@@ -8683,6 +8868,68 @@ input ViewCodeAggregateFilter {
   description: StringFieldComparison
 }
 
+input HsnFilter {
+  and: [HsnFilter!]
+  or: [HsnFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
+  code: StringFieldComparison
+  value: NumberFieldComparison
+  price: HsnFilterProductVariantPriceFilter
+  prod: HsnFilterProductFilter
+}
+
+input HsnFilterProductVariantPriceFilter {
+  and: [HsnFilterProductVariantPriceFilter!]
+  or: [HsnFilterProductVariantPriceFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
+  price: NumberFieldComparison
+  taxIncluded: BooleanFieldComparison
+}
+
+input HsnFilterProductFilter {
+  and: [HsnFilterProductFilter!]
+  or: [HsnFilterProductFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
+  productName: StringFieldComparison
+  slug: StringFieldComparison
+  description: StringFieldComparison
+}
+
+input HsnSort {
+  field: HsnSortFields!
+  direction: SortDirection!
+  nulls: SortNulls
+}
+
+enum HsnSortFields {
+  id
+  createdAt
+  updatedAt
+  deletedAt
+  code
+  value
+}
+
+input HsnAggregateFilter {
+  and: [HsnAggregateFilter!]
+  or: [HsnAggregateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
+  code: StringFieldComparison
+  value: NumberFieldComparison
+}
+
 type Mutation {
   administratorLogin(password: String!, email: String!): AdministratorDto!
   createAdministrator(type: AdministratorEnum!, password: String!, phone: String!, email: String!, lname: String!, fname: String!): Administrator!
@@ -8856,12 +9103,14 @@ type Mutation {
   removeFacetsFromProduct(input: RelationsInput!): Product!
   removeVariantsFromProduct(input: RelationsInput!): Product!
   removeAssetsFromProduct(input: RelationsInput!): Product!
+  removeHsnFromProduct(input: RelationInput!): Product!
   removeCollectionFromProduct(input: RelationInput!): Product!
   removeFeaturedAssetFromProduct(input: RelationInput!): Product!
   addOptionsToProduct(input: RelationsInput!): Product!
   addFacetsToProduct(input: RelationsInput!): Product!
   addVariantsToProduct(input: RelationsInput!): Product!
   addAssetsToProduct(input: RelationsInput!): Product!
+  setHsnOnProduct(input: RelationInput!): Product!
   setCollectionOnProduct(input: RelationInput!): Product!
   setFeaturedAssetOnProduct(input: RelationInput!): Product!
   CreateProduct(facet: [String!]!, asset: [String!]!, featured: String!, slug: String!, desc: String!, name: String!): Product!
@@ -9106,6 +9355,16 @@ type Mutation {
   setOrderOnPayment(input: RelationInput!): Payment!
   createOneViewCode(input: CreateOneViewCodeInput!): ViewCode!
   createManyViewCodes(input: CreateManyViewCodesInput!): [ViewCode!]!
+  deleteOneHsn(input: DeleteOneInput!): HsnDeleteResponse!
+  deleteManyHsns(input: DeleteManyHsnsInput!): DeleteManyResponse!
+  updateOneHsn(input: UpdateOneHsnInput!): Hsn!
+  updateManyHsns(input: UpdateManyHsnsInput!): UpdateManyResponse!
+  createOneHsn(input: CreateOneHsnInput!): Hsn!
+  createManyHsns(input: CreateManyHsnsInput!): [Hsn!]!
+  removePricesFromHsn(input: RelationsInput!): Hsn!
+  removeProdsFromHsn(input: RelationsInput!): Hsn!
+  addPricesToHsn(input: RelationsInput!): Hsn!
+  addProdsToHsn(input: RelationsInput!): Hsn!
 }
 
 input DeleteOneInput {
@@ -11209,6 +11468,77 @@ input CreateManyViewCodesInput {
   viewCodes: [CreateViewCode!]!
 }
 
+input DeleteManyHsnsInput {
+  """Filter to find records to delete"""
+  filter: HsnDeleteFilter!
+}
+
+input HsnDeleteFilter {
+  and: [HsnDeleteFilter!]
+  or: [HsnDeleteFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
+  code: StringFieldComparison
+  value: NumberFieldComparison
+}
+
+input UpdateOneHsnInput {
+  """The id of the record to update"""
+  id: ID!
+
+  """The update to apply."""
+  update: UpdateHsn!
+}
+
+input UpdateHsn {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+  code: String
+  value: Float
+}
+
+input UpdateManyHsnsInput {
+  """Filter used to find fields to update"""
+  filter: HsnUpdateFilter!
+
+  """The update to apply to all records found using the filter"""
+  update: UpdateHsn!
+}
+
+input HsnUpdateFilter {
+  and: [HsnUpdateFilter!]
+  or: [HsnUpdateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
+  code: StringFieldComparison
+  value: NumberFieldComparison
+}
+
+input CreateOneHsnInput {
+  """The record to create"""
+  hsn: CreateHsn!
+}
+
+input CreateHsn {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+  code: String
+  value: Float
+}
+
+input CreateManyHsnsInput {
+  """Array of records to create"""
+  hsns: [CreateHsn!]!
+}
+
 type Subscription {
   deletedOneAsset(input: DeleteOneAssetSubscriptionFilterInput): AssetDeleteResponse!
   deletedManyAssets: DeleteManyResponse!
@@ -11430,6 +11760,11 @@ type Subscription {
   updatedOneViewCode(input: UpdateOneViewCodeSubscriptionFilterInput): ViewCode!
   updatedManyViewCodes: UpdateManyResponse!
   createdViewCode(input: CreateViewCodeSubscriptionFilterInput): ViewCode!
+  deletedOneHsn(input: DeleteOneHsnSubscriptionFilterInput): HsnDeleteResponse!
+  deletedManyHsns: DeleteManyResponse!
+  updatedOneHsn(input: UpdateOneHsnSubscriptionFilterInput): Hsn!
+  updatedManyHsns: UpdateManyResponse!
+  createdHsn(input: CreateHsnSubscriptionFilterInput): Hsn!
 }
 
 input DeleteOneAssetSubscriptionFilterInput {
@@ -12615,4 +12950,30 @@ input UpdateOneViewCodeSubscriptionFilterInput {
 input CreateViewCodeSubscriptionFilterInput {
   """Specify to filter the records returned."""
   filter: ViewCodeSubscriptionFilter!
+}
+
+input DeleteOneHsnSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: HsnSubscriptionFilter!
+}
+
+input HsnSubscriptionFilter {
+  and: [HsnSubscriptionFilter!]
+  or: [HsnSubscriptionFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
+  code: StringFieldComparison
+  value: NumberFieldComparison
+}
+
+input UpdateOneHsnSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: HsnSubscriptionFilter!
+}
+
+input CreateHsnSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: HsnSubscriptionFilter!
 }

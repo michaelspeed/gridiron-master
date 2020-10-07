@@ -67,6 +67,7 @@ import {InvoiceResolver} from "./resolvers/admin/invoice.resolver";
 import {RefundResolver} from "./resolvers/admin/refund.resolver";
 import {PaymentResolver} from "./resolvers/admin/payment.resolver";
 import {ViewCodesResolver} from "./resolvers/admin/view-codes.resolver";
+import {HsnResolver} from "./resolvers/admin/hsn.resolver";
 
 const adminResolvers = [
     AdministratorResolver,
@@ -116,7 +117,8 @@ const adminResolvers = [
     InvoiceResolver,
     RefundResolver,
     PaymentResolver,
-    ViewCodesResolver
+    ViewCodesResolver,
+    HsnResolver
 ]
 
 const shopResolvers = [

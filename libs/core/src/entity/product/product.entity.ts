@@ -12,7 +12,7 @@ import {
 } from 'typeorm';
 import {Field, ID, ObjectType} from '@nestjs/graphql';
 import {Connection, FilterableField, PagingStrategies, Relation} from '@nestjs-query/query-graphql';
-import {Asset, Collection, Facet, FacetValue, ProductAsset, ProductOptionGroup, ProductVariant, View} from '../';
+import {Asset, Collection, Facet, FacetValue, ProductAsset, ProductOptionGroup, ProductVariant, View, Hsn} from '../';
 
 @ObjectType('Product')
 @Entity({name: 'product'})
@@ -22,6 +22,7 @@ import {Asset, Collection, Facet, FacetValue, ProductAsset, ProductOptionGroup, 
 @Connection('options', () => ProductOptionGroup, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @Relation('featuredAsset', () => Asset, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @Relation('collection', () => Collection, {nullable: true, pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
+@Relation('hsn', () => Hsn, {nullable: true, pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 export class Product extends BaseEntity {
     @FilterableField(() => ID)
     @PrimaryGeneratedColumn('uuid')
@@ -53,6 +54,10 @@ export class Product extends BaseEntity {
     @FilterableField()
     @Column("longtext")
     description: string;
+
+    // @Field(() => Hsn, {nullable: true})
+    @ManyToOne(type => Hsn, hsn => hsn.prod)
+    hsn: Hsn
 
     // @Field(() => Collection, {nullable: true})
     @ManyToOne(type => Collection, col => col.products)
