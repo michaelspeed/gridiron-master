@@ -107,8 +107,7 @@ export class ProductVariantsService {
             const variantPrice = await this.connection.getRepository(ProductVariantPrice).findOne({where: {id: variantPriceId}})
             variantPrice.price = price
             variantPrice.taxIncluded = included
-            console.log(await this.connection.getRepository(TaxRate).findOne({where:{id: taxId}}))
-            variantPrice.tax = await this.connection.getRepository(TaxRate).findOne({where:{id: taxId}})
+            // variantPrice.tax = await this.connection.getRepository(TaxRate).findOne({where:{id: taxId}})
             this.connection.getRepository(ProductVariantPrice).save(variantPrice)
                 .then(value => resolve(value)).catch(error => reject(error))
         })
@@ -150,8 +149,10 @@ export class ProductVariantsService {
             if (store) {
                 newprice.price = price
                 newprice.taxIncluded = included
-                newprice.tax = await this.connection.getRepository(TaxRate).findOne({where: {id: taxId}})
-                newprice.variant = await this.connection.getRepository(ProductVariant).findOne({where:{id: prodvaraintId}})
+                // newprice.tax = await this.connection.getRepository(TaxRate).findOne({where: {id: taxId}})
+                const variant = await this.connection.getRepository(ProductVariant).findOne({where:{id: prodvaraintId}, relations: ['product', 'product.hsn']})
+                newprice.variant = variant
+                newprice.hsn = variant.product.hsn
                 newprice.store = store
                 this.connection.getRepository(ProductVariantPrice)
                     .save(newprice).then(value => resolve(value)).catch(error => reject(error))
@@ -159,8 +160,10 @@ export class ProductVariantsService {
                 const newStore = await this.connection.getRepository(Store).findOne({where: {type: StoreTypeEnum.DEFAULT}})
                 newprice.price = price
                 newprice.taxIncluded = included
-                newprice.tax = await this.connection.getRepository(TaxRate).findOne({where: {id: taxId}})
-                newprice.variant = await this.connection.getRepository(ProductVariant).findOne({where:{id: prodvaraintId}})
+                const variant = await this.connection.getRepository(ProductVariant).findOne({where:{id: prodvaraintId}, relations: ['product', 'product.hsn']})
+                // newprice.tax = await this.connection.getRepository(TaxRate).findOne({where: {id: taxId}})
+                newprice.variant = variant
+                newprice.hsn = variant.product.hsn
                 newprice.store = newStore
                 this.connection.getRepository(ProductVariantPrice)
                     .save(newprice).then(value => resolve(value)).catch(error => reject(error))
