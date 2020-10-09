@@ -1,6 +1,6 @@
 import {
     BaseEntity, Column,
-    CreateDateColumn,
+    CreateDateColumn, DeleteDateColumn,
     Entity,
     JoinColumn,
     ManyToOne,
@@ -10,8 +10,14 @@ import {
     UpdateDateColumn
 } from 'typeorm';
 import {Field, ID, ObjectType, registerEnumType} from '@nestjs/graphql';
-import {FilterableField, FilterableRelation, PagingStrategies, Relation} from '@nestjs-query/query-graphql';
-import {DeliveryPool, Order, OrderItem, ProductVariant, Store, TaxCategory, Vendor} from '..';
+import {
+    FilterableConnection,
+    FilterableField,
+    FilterableRelation,
+    PagingStrategies,
+    Relation
+} from '@nestjs-query/query-graphql';
+import {DeliveryPool, Invoice, Order, OrderItem, ProductVariant, Refund, Store, TaxCategory, Vendor} from '..';
 import GraphQLJSON from "graphql-type-json";
 import {OrderStageType} from "@gridiron/core/enums";
 
@@ -25,6 +31,8 @@ registerEnumType(OrderStageType, {
 @Relation('item', () => OrderItem, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @FilterableRelation('store', () => Store, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true, relationName: 'store'})
 @FilterableRelation('pool', () => DeliveryPool, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true, relationName: 'pool'})
+@FilterableRelation('refund', () => Refund, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true, relationName: 'refund'})
+@FilterableConnection('invoice', () => Invoice, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true, relationName: 'invoice'})
 export class OrderLine extends BaseEntity {
 
     @FilterableField(() => ID)
@@ -39,6 +47,10 @@ export class OrderLine extends BaseEntity {
     @UpdateDateColumn()
     updatedAt: Date;
 
+    @FilterableField()
+    @DeleteDateColumn()
+    deletedAt?: Date;
+
     @Field(() => GraphQLJSON)
     @Column("simple-json")
     priceField: JSON
@@ -50,15 +62,24 @@ export class OrderLine extends BaseEntity {
     @ManyToOne(() => Order, order => order.line)
     order: Order
 
-    @Field(() => OrderItem)
+    // @Field(() => OrderItem)
     @OneToOne(() => OrderItem, item => item)
     @JoinColumn()
     item: OrderItem
 
-    @Field(() => Store)
+    // @Field(() => Store)
     @ManyToOne(() => Store, vendor => vendor.line)
     store: Store
 
+    // @Field(() => [Invoice])
+    @ManyToOne(() => Invoice, invoice => invoice.line)
+    invoice: Invoice[]
+
     @ManyToOne(() => DeliveryPool, pool => pool.lines)
     pool: DeliveryPool
+
+    // @Field(() => Refund)
+    @OneToOne(() => Refund, refund => refund.line)
+    @JoinColumn()
+    refund: Refund
 }

@@ -20,16 +20,16 @@ import {
 import {
     BillingAgreement,
     CartItem,
-    Country,
+    Country, Invoice,
     OrderLine,
     ProductVariantPrice, StockBackLog,
     StockKeeping,
     TaxCategory,
     Vendor, Zip,
-    Zone
+    Zone,
+    Settlements,
+    StoreBalance
 } from '..';
-import {StoreBalance} from "./storeBalance.entity";
-import {Settlements} from "../settlement/settlement.entity";
 
 export enum StoreTypeEnum {
     DEFAULT = 'default',
@@ -44,10 +44,12 @@ registerEnumType(StoreTypeEnum, {
 @Relation('country', () => Country, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @Relation('balance', () => StoreBalance, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true, nullable: true})
 @Connection('sku', () => StockKeeping, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
-@Connection('settlement', () => Settlements, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
-@Connection('prices', () => Settlements, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
+@FilterableConnection('settlement', () => Settlements, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true, relationName: 'settlement'})
+@Connection('prices', () => ProductVariantPrice, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @FilterableConnection('cart', () => CartItem, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @FilterableConnection('backlogs', () => StockBackLog, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
+@FilterableConnection('zip', () => Zip, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true, relationName: 'zip'})
+@FilterableConnection('invoices', () => Invoice, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true, relationName: 'invoices'})
 @Entity({name: 'store'})
 export class Store extends BaseEntity {
     @FilterableField(() => ID)
@@ -115,7 +117,7 @@ export class Store extends BaseEntity {
     @OneToMany(type1 => TaxCategory, taxc => taxc.store)
     taxCategory: TaxCategory[]
 
-    @Field(() => Vendor, {nullable: true})
+    // @Field(() => Vendor, {nullable: true})
     @OneToOne(type1 => Vendor, vendor => vendor.store)
     vendor: Vendor
 
@@ -138,16 +140,19 @@ export class Store extends BaseEntity {
     @OneToMany(() => OrderLine, line => line.store)
     line: OrderLine[]
 
-    @Field(() => [CartItem])
+    // @Field(() => [CartItem])
     @OneToMany(() => CartItem, item => item.store)
     cart: CartItem[]
 
-    @Field(() => StockBackLog)
+    // @Field(() => StockBackLog)
     @OneToMany(() => StockBackLog, backlog => backlog.store)
     backlogs: StockBackLog[]
 
-    @Field(() => Zip, {nullable: true})
-    @ManyToMany(() => Zip, zip => zip.vendors)
+    // @Field(() => Zip, {nullable: true})
+    @ManyToMany(() => Zip, zip => zip.store)
     @JoinTable()
     zip: Zip[]
+
+    @OneToMany(() => Invoice, invoice => invoice.store)
+    invoices: Invoice[]
 }

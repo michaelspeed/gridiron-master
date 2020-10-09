@@ -48,6 +48,15 @@ import {ShopCartService} from "./services/shop/cart.service";
 import {ShopOrderService} from "./services/shop/order.service";
 import {ShopPaymentService} from "./services/shop/payment.service";
 import {ReviewSubscriber} from "./services/subscribers/ReviewSubscriber";
+import {StatisticsService} from "./services/admin/statistics.service";
+import {StockSubscriber} from "./services/subscribers/StockSubscriber";
+import {OrderController} from "./controllers/order.controller";
+import {RefundService} from "./services/admin/refund.service";
+import {RefundSubscriber} from "./services/subscribers/RefundSubscriber";
+import {CollectionSubscriber} from "./services/subscribers/CollectionSubscriber";
+import {GlobalCollectionsService} from "./services/global/collection.service";
+import {CollectionController} from "./controllers/collection.controller";
+import {SettlementService} from "./services/admin/settlement.service";
 
 export const adminServices = [
     AdministratorService,
@@ -75,11 +84,17 @@ export const adminServices = [
     PromotionPriceVariantService,
     AccountsService,
     DeliveryService,
-    PaymentMethodService
+    PaymentMethodService,
+    StatisticsService,
+    RefundService,
+    SettlementService
 ]
 
 export const globalServices = [
-    SessionService
+    SessionService,
+    OrderLineSubscriber,
+    CollectionSubscriber,
+    GlobalCollectionsService
 ]
 
 export const shopServices = [
@@ -131,7 +146,10 @@ export class ServiceCoreModule {
     constructor() {}
 }
 
-const workerController = []
+const workerController = [
+    OrderController,
+    CollectionController
+]
 
 @Module({
     imports: [
@@ -149,8 +167,10 @@ export class ServiceModule {
                     return {
                         subscribers: [
                             ZipSubscriber,
-                            OrderLineSubscriber,
-                            ReviewSubscriber
+                            // OrderLineSubscriber,
+                            ReviewSubscriber,
+                            StockSubscriber,
+                            RefundSubscriber
                         ],
                         ...configService.dbConnectionOptions
                     }

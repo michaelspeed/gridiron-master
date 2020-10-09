@@ -18,6 +18,9 @@ export * from './services/admin/order.service'
 export * from './services/admin/accounts.service'
 export * from './services/admin/delivery.service'
 export * from './services/admin/paymentMethod.service'
+export * from './services/admin/statistics.service'
+export * from './services/admin/refund.service'
+export * from './services/admin/settlement.service'
 
 export * from './helpers/utils/get-entity-throw'
 
@@ -32,3 +35,6 @@ export * from './services/shop/address.service'
 export * from './services/shop/search.service'
 export * from './services/shop/facet.service'
 export * from './services/shop/cart.service'
+
+export * from './controllers/order.controller'
+export * from './services/global/collection.service'

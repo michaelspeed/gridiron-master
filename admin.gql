@@ -6,6 +6,7 @@ type Administrator {
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
+  deletedAt: DateTime!
   firstName: String!
   lastName: String!
   emailAddress: String!
@@ -27,6 +28,7 @@ type Asset {
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
+  deletedAt: DateTime!
   name: String!
   type: String!
   mimeType: String!
@@ -85,6 +87,7 @@ input ProductFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   productName: StringFieldComparison
   slug: StringFieldComparison
   description: StringFieldComparison
@@ -154,6 +157,7 @@ enum ProductSortFields {
   id
   createdAt
   updatedAt
+  deletedAt
   productName
   slug
   description
@@ -177,6 +181,7 @@ input ProductAssetFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
 }
 
 input ProductAssetSort {
@@ -189,6 +194,7 @@ enum ProductAssetSortFields {
   id
   createdAt
   updatedAt
+  deletedAt
 }
 
 input ProductAggregateFilter {
@@ -197,6 +203,7 @@ input ProductAggregateFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   productName: StringFieldComparison
   slug: StringFieldComparison
   description: StringFieldComparison
@@ -208,6 +215,7 @@ input ProductAssetAggregateFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
 }
 
 type Channel {
@@ -225,6 +233,7 @@ type Collection {
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
+  deletedAt: DateTime!
   isRoot: Boolean!
   inMenu: Boolean!
   position: Float!
@@ -284,6 +293,7 @@ input CollectionFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   isRoot: BooleanFieldComparison
   inMenu: BooleanFieldComparison
   position: NumberFieldComparison
@@ -327,6 +337,7 @@ enum CollectionSortFields {
   id
   createdAt
   updatedAt
+  deletedAt
   isRoot
   inMenu
   position
@@ -341,6 +352,7 @@ input BillingAgreementFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   value: NumberFieldComparison
   store: BillingAgreementFilterStoreFilter
   variant: BillingAgreementFilterProductVariantFilter
@@ -375,6 +387,7 @@ input BillingAgreementFilterProductVariantFilter {
   enabled: BooleanFieldComparison
   sku: StringFieldComparison
   name: StringFieldComparison
+  rating: NumberFieldComparison
   trackInventory: BooleanFieldComparison
 }
 
@@ -388,6 +401,7 @@ enum BillingAgreementSortFields {
   id
   createdAt
   updatedAt
+  deletedAt
   value
 }
 
@@ -397,6 +411,7 @@ input CollectionAggregateFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   isRoot: BooleanFieldComparison
   inMenu: BooleanFieldComparison
   position: NumberFieldComparison
@@ -411,6 +426,7 @@ input BillingAgreementAggregateFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   value: NumberFieldComparison
 }
 
@@ -418,6 +434,7 @@ type Facet {
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
+  deletedAt: DateTime!
   name: String!
   isPrivate: Boolean!
   code: String!
@@ -457,6 +474,7 @@ input FacetValueFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   code: StringFieldComparison
 }
 
@@ -470,6 +488,7 @@ enum FacetValueSortFields {
   id
   createdAt
   updatedAt
+  deletedAt
   code
 }
 
@@ -479,6 +498,7 @@ input FacetValueAggregateFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   code: StringFieldComparison
 }
 
@@ -486,6 +506,7 @@ type FacetValue {
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
+  deletedAt: DateTime!
   code: String!
   products(
     """Limit or page results."""
@@ -508,8 +529,10 @@ type Order {
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
+  deletedAt: DateTime!
   totalPrice: Float!
   address: String!
+  mode: String!
   lines(
     """Limit or page results."""
     paging: OffsetPaging = {limit: 10}
@@ -534,9 +557,25 @@ input OrderLineFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   stage: StringFieldComparison
+  refund: OrderLineFilterRefundFilter
   pool: OrderLineFilterDeliveryPoolFilter
   store: OrderLineFilterStoreFilter
+  invoice: OrderLineFilterInvoiceFilter
+}
+
+input OrderLineFilterRefundFilter {
+  and: [OrderLineFilterRefundFilter!]
+  or: [OrderLineFilterRefundFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
+  reason: StringFieldComparison
+  destination: StringFieldComparison
+  transactionId: StringFieldComparison
+  stage: StringFieldComparison
 }
 
 input OrderLineFilterDeliveryPoolFilter {
@@ -545,6 +584,7 @@ input OrderLineFilterDeliveryPoolFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
 }
 
 input OrderLineFilterStoreFilter {
@@ -565,6 +605,21 @@ input OrderLineFilterStoreFilter {
   channelMarkets: BooleanFieldComparison
 }
 
+input OrderLineFilterInvoiceFilter {
+  and: [OrderLineFilterInvoiceFilter!]
+  or: [OrderLineFilterInvoiceFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
+  type: StringFieldComparison
+  total: NumberFieldComparison
+  amount: NumberFieldComparison
+  fees: NumberFieldComparison
+  tax: NumberFieldComparison
+  nulled: BooleanFieldComparison
+}
+
 input OrderLineSort {
   field: OrderLineSortFields!
   direction: SortDirection!
@@ -575,6 +630,7 @@ enum OrderLineSortFields {
   id
   createdAt
   updatedAt
+  deletedAt
   stage
 }
 
@@ -584,6 +640,7 @@ input OrderLineAggregateFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   stage: StringFieldComparison
 }
 
@@ -591,22 +648,39 @@ type OrderItem {
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
+  deletedAt: DateTime!
   quantity: Float!
+  productVariant: ProductVariant!
   line: OrderLine!
   taxCategory: TaxRate!
-  productVariant: ProductVariant!
 }
 
 type OrderLine {
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
+  deletedAt: DateTime!
   priceField: JSON!
   stage: String!
+  invoices(
+    """Limit or page results."""
+    paging: OffsetPaging = {limit: 10}
+
+    """Specify to filter the records returned."""
+    filter: InvoiceFilter = {}
+
+    """Specify to sort results."""
+    sorting: [InvoiceSort!] = []
+  ): [Invoice!]!
+  refund: Refund!
   pool: DeliveryPool!
   store: Store!
   item: OrderItem!
   order: Order!
+  invoicesAggregate(
+    """Filter to find records to aggregate on"""
+    filter: InvoiceAggregateFilter
+  ): OrderLineInvoicesAggregateResponse!
 }
 
 """
@@ -614,13 +688,94 @@ The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://
 """
 scalar JSON @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
 
+input InvoiceFilter {
+  and: [InvoiceFilter!]
+  or: [InvoiceFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
+  type: StringFieldComparison
+  total: NumberFieldComparison
+  amount: NumberFieldComparison
+  fees: NumberFieldComparison
+  tax: NumberFieldComparison
+  nulled: BooleanFieldComparison
+  store: InvoiceFilterStoreFilter
+  line: InvoiceFilterOrderLineFilter
+}
+
+input InvoiceFilterStoreFilter {
+  and: [InvoiceFilterStoreFilter!]
+  or: [InvoiceFilterStoreFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  storeName: StringFieldComparison
+  phoneNumber: StringFieldComparison
+  officialemail: StringFieldComparison
+  zipcode: StringFieldComparison
+  streetAddress1: StringFieldComparison
+  streetAddress2: StringFieldComparison
+  GSTIN: StringFieldComparison
+  singleStore: BooleanFieldComparison
+  rentalStore: BooleanFieldComparison
+  channelMarkets: BooleanFieldComparison
+}
+
+input InvoiceFilterOrderLineFilter {
+  and: [InvoiceFilterOrderLineFilter!]
+  or: [InvoiceFilterOrderLineFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
+  stage: StringFieldComparison
+}
+
+input InvoiceSort {
+  field: InvoiceSortFields!
+  direction: SortDirection!
+  nulls: SortNulls
+}
+
+enum InvoiceSortFields {
+  id
+  createdAt
+  updatedAt
+  deletedAt
+  type
+  total
+  amount
+  fees
+  tax
+  nulled
+}
+
+input InvoiceAggregateFilter {
+  and: [InvoiceAggregateFilter!]
+  or: [InvoiceAggregateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
+  type: StringFieldComparison
+  total: NumberFieldComparison
+  amount: NumberFieldComparison
+  fees: NumberFieldComparison
+  tax: NumberFieldComparison
+  nulled: BooleanFieldComparison
+}
+
 type Product {
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
+  deletedAt: DateTime!
   productName: String!
   slug: String!
   description: String!
+  viewcode: [String!]!
   options(
     """Limit or page results."""
     paging: OffsetPaging = {limit: 10}
@@ -661,6 +816,7 @@ type Product {
     """Specify to sort results."""
     sorting: [ProductAssetSort!] = []
   ): [ProductAsset!]!
+  hsn: Hsn
   collection: Collection
   featuredAsset: Asset!
   optionsAggregate(
@@ -687,6 +843,7 @@ input ProductOptionGroupFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   name: StringFieldComparison
   code: StringFieldComparison
 }
@@ -701,6 +858,7 @@ enum ProductOptionGroupSortFields {
   id
   createdAt
   updatedAt
+  deletedAt
   name
   code
 }
@@ -716,6 +874,7 @@ input ProductVariantFilter {
   enabled: BooleanFieldComparison
   sku: StringFieldComparison
   name: StringFieldComparison
+  rating: NumberFieldComparison
   trackInventory: BooleanFieldComparison
   line: ProductVariantFilterOrderItemFilter
   agreements: ProductVariantFilterBillingAgreementFilter
@@ -728,6 +887,7 @@ input ProductVariantFilterOrderItemFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   quantity: NumberFieldComparison
 }
 
@@ -737,6 +897,7 @@ input ProductVariantFilterBillingAgreementFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   value: NumberFieldComparison
 }
 
@@ -746,6 +907,7 @@ input ProductVariantFilterProductVariantPriceFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   price: NumberFieldComparison
   taxIncluded: BooleanFieldComparison
 }
@@ -765,6 +927,7 @@ enum ProductVariantSortFields {
   enabled
   sku
   name
+  rating
   trackInventory
 }
 
@@ -774,6 +937,7 @@ input ProductOptionGroupAggregateFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   name: StringFieldComparison
   code: StringFieldComparison
 }
@@ -789,6 +953,7 @@ input ProductVariantAggregateFilter {
   enabled: BooleanFieldComparison
   sku: StringFieldComparison
   name: StringFieldComparison
+  rating: NumberFieldComparison
   trackInventory: BooleanFieldComparison
 }
 
@@ -811,8 +976,10 @@ type User {
   delivery: Delivery
   cart: Cart
   view: [View!]!
+  reviews: [Review!]!
   address: [Address!]
   order: [Order!]
+  reset: [ResetCode!]
   orders(
     """Limit or page results."""
     paging: OffsetPaging = {limit: 10}
@@ -849,6 +1016,7 @@ input OrderFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   totalPrice: NumberFieldComparison
   address: StringFieldComparison
   line: OrderFilterOrderLineFilter
@@ -860,6 +1028,7 @@ input OrderFilterOrderLineFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   stage: StringFieldComparison
 }
 
@@ -873,6 +1042,7 @@ enum OrderSortFields {
   id
   createdAt
   updatedAt
+  deletedAt
   totalPrice
   address
 }
@@ -883,6 +1053,7 @@ input AddressFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   fullName: StringFieldComparison
   addressLine: StringFieldComparison
   city: StringFieldComparison
@@ -928,6 +1099,7 @@ enum AddressSortFields {
   id
   createdAt
   updatedAt
+  deletedAt
   fullName
   addressLine
   city
@@ -947,6 +1119,7 @@ input OrderAggregateFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   totalPrice: NumberFieldComparison
   address: StringFieldComparison
 }
@@ -957,6 +1130,7 @@ input AddressAggregateFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   fullName: StringFieldComparison
   addressLine: StringFieldComparison
   city: StringFieldComparison
@@ -1006,7 +1180,26 @@ input ZipFilter {
   name: StringFieldComparison
   slug: StringFieldComparison
   code: NumberFieldComparison
+  store: ZipFilterStoreFilter
   vendors: ZipFilterVendorFilter
+}
+
+input ZipFilterStoreFilter {
+  and: [ZipFilterStoreFilter!]
+  or: [ZipFilterStoreFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  storeName: StringFieldComparison
+  phoneNumber: StringFieldComparison
+  officialemail: StringFieldComparison
+  zipcode: StringFieldComparison
+  streetAddress1: StringFieldComparison
+  streetAddress2: StringFieldComparison
+  GSTIN: StringFieldComparison
+  singleStore: BooleanFieldComparison
+  rentalStore: BooleanFieldComparison
+  channelMarkets: BooleanFieldComparison
 }
 
 input ZipFilterVendorFilter {
@@ -1135,6 +1328,7 @@ input ProductVariantPriceFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   price: NumberFieldComparison
   taxIncluded: BooleanFieldComparison
   store: ProductVariantPriceFilterStoreFilter
@@ -1170,6 +1364,7 @@ input ProductVariantPriceFilterProductVariantFilter {
   enabled: BooleanFieldComparison
   sku: StringFieldComparison
   name: StringFieldComparison
+  rating: NumberFieldComparison
   trackInventory: BooleanFieldComparison
 }
 
@@ -1183,6 +1378,7 @@ enum ProductVariantPriceSortFields {
   id
   createdAt
   updatedAt
+  deletedAt
   price
   taxIncluded
 }
@@ -1193,6 +1389,7 @@ input ProductVariantPriceAggregateFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   price: NumberFieldComparison
   taxIncluded: BooleanFieldComparison
 }
@@ -1252,6 +1449,7 @@ input CountryFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   code: StringFieldComparison
   name: StringFieldComparison
   enabled: BooleanFieldComparison
@@ -1267,6 +1465,7 @@ enum CountrySortFields {
   id
   createdAt
   updatedAt
+  deletedAt
   code
   name
   enabled
@@ -1288,16 +1487,89 @@ input StoreFilter {
   singleStore: BooleanFieldComparison
   rentalStore: BooleanFieldComparison
   channelMarkets: BooleanFieldComparison
-  line: StoreFilterOrderLineFilter
+  invoices: StoreFilterInvoiceFilter
+  zip: StoreFilterZipFilter
+  backlogs: StoreFilterStockBackLogFilter
+  cart: StoreFilterCartItemFilter
+  settlement: StoreFilterSettlementsFilter
 }
 
-input StoreFilterOrderLineFilter {
-  and: [StoreFilterOrderLineFilter!]
-  or: [StoreFilterOrderLineFilter!]
+input StoreFilterInvoiceFilter {
+  and: [StoreFilterInvoiceFilter!]
+  or: [StoreFilterInvoiceFilter!]
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
-  stage: StringFieldComparison
+  deletedAt: DateFieldComparison
+  type: StringFieldComparison
+  total: NumberFieldComparison
+  amount: NumberFieldComparison
+  fees: NumberFieldComparison
+  tax: NumberFieldComparison
+  nulled: BooleanFieldComparison
+}
+
+input StoreFilterZipFilter {
+  and: [StoreFilterZipFilter!]
+  or: [StoreFilterZipFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  name: StringFieldComparison
+  slug: StringFieldComparison
+  code: NumberFieldComparison
+}
+
+input StoreFilterStockBackLogFilter {
+  and: [StoreFilterStockBackLogFilter!]
+  or: [StoreFilterStockBackLogFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  quantity: NumberFieldComparison
+}
+
+input StoreFilterCartItemFilter {
+  and: [StoreFilterCartItemFilter!]
+  or: [StoreFilterCartItemFilter!]
+  id: IDFilterComparison
+}
+
+input StoreFilterSettlementsFilter {
+  and: [StoreFilterSettlementsFilter!]
+  or: [StoreFilterSettlementsFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
+  amount: NumberFieldComparison
+  taxamount: NumberFieldComparison
+  finalamount: NumberFieldComparison
+  transactionID: StringFieldComparison
+  remarks: StringFieldComparison
+  type: SettlementTypeFilterComparison
+}
+
+input SettlementTypeFilterComparison {
+  is: Boolean
+  isNot: Boolean
+  eq: SettlementType
+  neq: SettlementType
+  gt: SettlementType
+  gte: SettlementType
+  lt: SettlementType
+  lte: SettlementType
+  like: SettlementType
+  notLike: SettlementType
+  iLike: SettlementType
+  notILike: SettlementType
+  in: [SettlementType!]
+  notIn: [SettlementType!]
+}
+
+enum SettlementType {
+  PROCESSING
+  PROCESSED
 }
 
 input StoreSort {
@@ -1328,6 +1600,7 @@ input CountryAggregateFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   code: StringFieldComparison
   name: StringFieldComparison
   enabled: BooleanFieldComparison
@@ -1351,32 +1624,6 @@ input StoreAggregateFilter {
   channelMarkets: BooleanFieldComparison
 }
 
-type StoreBalance {
-  id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  balance: Float!
-  balanceVolume: Float!
-}
-
-type Settlements {
-  id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  amount: Float!
-  taxamount: Float!
-  finalamount: Float!
-  transactionID: String!
-  remarks: String!
-  type: SettlementType!
-  store: Store!
-}
-
-enum SettlementType {
-  PROCESSING
-  PROCESSED
-}
-
 type Store {
   id: ID!
   createdAt: DateTime!
@@ -1392,26 +1639,56 @@ type Store {
   rentalStore: Boolean!
   channelMarkets: Boolean!
   type: StoreTypeEnum!
-  lines(
+  invoices(
     """Limit or page results."""
     paging: OffsetPaging = {limit: 10}
 
     """Specify to filter the records returned."""
-    filter: OrderLineFilter = {}
+    filter: InvoiceFilter = {}
 
     """Specify to sort results."""
-    sorting: [OrderLineSort!] = []
-  ): [OrderLine!]!
+    sorting: [InvoiceSort!] = []
+  ): [Invoice!]!
+  zips(
+    """Limit or page results."""
+    paging: OffsetPaging = {limit: 10}
+
+    """Specify to filter the records returned."""
+    filter: ZipFilter = {}
+
+    """Specify to sort results."""
+    sorting: [ZipSort!] = []
+  ): [Zip!]!
+  backlogs(
+    """Limit or page results."""
+    paging: OffsetPaging = {limit: 10}
+
+    """Specify to filter the records returned."""
+    filter: StockBackLogFilter = {}
+
+    """Specify to sort results."""
+    sorting: [StockBackLogSort!] = []
+  ): [StockBackLog!]!
+  carts(
+    """Limit or page results."""
+    paging: OffsetPaging = {limit: 10}
+
+    """Specify to filter the records returned."""
+    filter: CartItemFilter = {}
+
+    """Specify to sort results."""
+    sorting: [CartItemSort!] = []
+  ): [CartItem!]!
   prices(
     """Limit or page results."""
     paging: OffsetPaging = {limit: 10}
 
     """Specify to filter the records returned."""
-    filter: SettlementsFilter = {}
+    filter: ProductVariantPriceFilter = {}
 
     """Specify to sort results."""
-    sorting: [SettlementsSort!] = []
-  ): [Settlements!]!
+    sorting: [ProductVariantPriceSort!] = []
+  ): [ProductVariantPrice!]!
   settlements(
     """Limit or page results."""
     paging: OffsetPaging = {limit: 10}
@@ -1434,13 +1711,25 @@ type Store {
   ): [StockKeeping!]!
   balance: StoreBalance
   country: Country!
-  linesAggregate(
+  invoicesAggregate(
     """Filter to find records to aggregate on"""
-    filter: OrderLineAggregateFilter
-  ): StoreLinesAggregateResponse!
+    filter: InvoiceAggregateFilter
+  ): StoreInvoicesAggregateResponse!
+  zipsAggregate(
+    """Filter to find records to aggregate on"""
+    filter: ZipAggregateFilter
+  ): StoreZipsAggregateResponse!
+  backlogsAggregate(
+    """Filter to find records to aggregate on"""
+    filter: StockBackLogAggregateFilter
+  ): StoreBacklogsAggregateResponse!
+  cartsAggregate(
+    """Filter to find records to aggregate on"""
+    filter: CartItemAggregateFilter
+  ): StoreCartsAggregateResponse!
   pricesAggregate(
     """Filter to find records to aggregate on"""
-    filter: SettlementsAggregateFilter
+    filter: ProductVariantPriceAggregateFilter
   ): StorePricesAggregateResponse!
   settlementsAggregate(
     """Filter to find records to aggregate on"""
@@ -1457,35 +1746,88 @@ enum StoreTypeEnum {
   VENDOR
 }
 
+input StockBackLogFilter {
+  and: [StockBackLogFilter!]
+  or: [StockBackLogFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  quantity: NumberFieldComparison
+  store: StockBackLogFilterStoreFilter
+  variant: StockBackLogFilterProductVariantPriceFilter
+}
+
+input StockBackLogFilterStoreFilter {
+  and: [StockBackLogFilterStoreFilter!]
+  or: [StockBackLogFilterStoreFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  storeName: StringFieldComparison
+  phoneNumber: StringFieldComparison
+  officialemail: StringFieldComparison
+  zipcode: StringFieldComparison
+  streetAddress1: StringFieldComparison
+  streetAddress2: StringFieldComparison
+  GSTIN: StringFieldComparison
+  singleStore: BooleanFieldComparison
+  rentalStore: BooleanFieldComparison
+  channelMarkets: BooleanFieldComparison
+}
+
+input StockBackLogFilterProductVariantPriceFilter {
+  and: [StockBackLogFilterProductVariantPriceFilter!]
+  or: [StockBackLogFilterProductVariantPriceFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
+  price: NumberFieldComparison
+  taxIncluded: BooleanFieldComparison
+}
+
+input StockBackLogSort {
+  field: StockBackLogSortFields!
+  direction: SortDirection!
+  nulls: SortNulls
+}
+
+enum StockBackLogSortFields {
+  id
+  createdAt
+  updatedAt
+  quantity
+}
+
+input CartItemFilter {
+  and: [CartItemFilter!]
+  or: [CartItemFilter!]
+  id: IDFilterComparison
+}
+
+input CartItemSort {
+  field: CartItemSortFields!
+  direction: SortDirection!
+  nulls: SortNulls
+}
+
+enum CartItemSortFields {
+  id
+}
+
 input SettlementsFilter {
   and: [SettlementsFilter!]
   or: [SettlementsFilter!]
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   amount: NumberFieldComparison
   taxamount: NumberFieldComparison
   finalamount: NumberFieldComparison
   transactionID: StringFieldComparison
   remarks: StringFieldComparison
   type: SettlementTypeFilterComparison
-}
-
-input SettlementTypeFilterComparison {
-  is: Boolean
-  isNot: Boolean
-  eq: SettlementType
-  neq: SettlementType
-  gt: SettlementType
-  gte: SettlementType
-  lt: SettlementType
-  lte: SettlementType
-  like: SettlementType
-  notLike: SettlementType
-  iLike: SettlementType
-  notILike: SettlementType
-  in: [SettlementType!]
-  notIn: [SettlementType!]
 }
 
 input SettlementsSort {
@@ -1498,6 +1840,7 @@ enum SettlementsSortFields {
   id
   createdAt
   updatedAt
+  deletedAt
   amount
   taxamount
   finalamount
@@ -1542,12 +1885,28 @@ enum StockKeepingSortFields {
   type
 }
 
+input StockBackLogAggregateFilter {
+  and: [StockBackLogAggregateFilter!]
+  or: [StockBackLogAggregateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  quantity: NumberFieldComparison
+}
+
+input CartItemAggregateFilter {
+  and: [CartItemAggregateFilter!]
+  or: [CartItemAggregateFilter!]
+  id: IDFilterComparison
+}
+
 input SettlementsAggregateFilter {
   and: [SettlementsAggregateFilter!]
   or: [SettlementsAggregateFilter!]
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   amount: NumberFieldComparison
   taxamount: NumberFieldComparison
   finalamount: NumberFieldComparison
@@ -1576,6 +1935,7 @@ type Role {
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
+  deletedAt: DateTime!
   code: String!
   description: String!
   permissions: [Permission!]!
@@ -1645,8 +2005,365 @@ type ProductAsset {
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
+  deletedAt: DateTime!
   asset: Asset!
   product: Product!
+}
+
+type ProductVariant {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  dum_price: Float!
+  enabled: Boolean!
+  sku: String!
+  name: String!
+  rating: Float!
+  trackInventory: Boolean!
+  viewcode: [String!]!
+  lines(
+    """Limit or page results."""
+    paging: OffsetPaging = {limit: 10}
+
+    """Specify to filter the records returned."""
+    filter: OrderItemFilter = {}
+
+    """Specify to sort results."""
+    sorting: [OrderItemSort!] = []
+  ): [OrderItem!]!
+  stocks(
+    """Limit or page results."""
+    paging: OffsetPaging = {limit: 10}
+
+    """Specify to filter the records returned."""
+    filter: StockKeepingFilter = {}
+
+    """Specify to sort results."""
+    sorting: [StockKeepingSort!] = []
+  ): [StockKeeping!]!
+  agreements(
+    """Limit or page results."""
+    paging: OffsetPaging = {limit: 10}
+
+    """Specify to filter the records returned."""
+    filter: BillingAgreementFilter = {}
+
+    """Specify to sort results."""
+    sorting: [BillingAgreementSort!] = []
+  ): [BillingAgreement!]
+  prices(
+    """Limit or page results."""
+    paging: OffsetPaging = {limit: 10}
+
+    """Specify to filter the records returned."""
+    filter: ProductVariantPriceFilter = {}
+
+    """Specify to sort results."""
+    sorting: [ProductVariantPriceSort!] = []
+  ): [ProductVariantPrice!]
+  seo: Seo
+  specs: ProductVariantSpecs
+  asset: ProductVariantAsset
+  product: Product!
+  linesAggregate(
+    """Filter to find records to aggregate on"""
+    filter: OrderItemAggregateFilter
+  ): ProductVariantLinesAggregateResponse!
+  stocksAggregate(
+    """Filter to find records to aggregate on"""
+    filter: StockKeepingAggregateFilter
+  ): ProductVariantStocksAggregateResponse!
+  agreementsAggregate(
+    """Filter to find records to aggregate on"""
+    filter: BillingAgreementAggregateFilter
+  ): ProductVariantAgreementsAggregateResponse!
+  pricesAggregate(
+    """Filter to find records to aggregate on"""
+    filter: ProductVariantPriceAggregateFilter
+  ): ProductVariantPricesAggregateResponse!
+}
+
+input OrderItemFilter {
+  and: [OrderItemFilter!]
+  or: [OrderItemFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
+  quantity: NumberFieldComparison
+}
+
+input OrderItemSort {
+  field: OrderItemSortFields!
+  direction: SortDirection!
+  nulls: SortNulls
+}
+
+enum OrderItemSortFields {
+  id
+  createdAt
+  updatedAt
+  deletedAt
+  quantity
+}
+
+input OrderItemAggregateFilter {
+  and: [OrderItemAggregateFilter!]
+  or: [OrderItemAggregateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
+  quantity: NumberFieldComparison
+}
+
+type ProductVariantAsset {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  asset: Asset!
+  variant: ProductVariant!
+}
+
+type ProductVariantPrice {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  price: Float!
+  taxIncluded: Boolean!
+  backlogs(
+    """Limit or page results."""
+    paging: OffsetPaging = {limit: 10}
+
+    """Specify to filter the records returned."""
+    filter: StockBackLogFilter = {}
+
+    """Specify to sort results."""
+    sorting: [StockBackLogSort!] = []
+  ): [StockBackLog!]
+  promoprice: PromotionVariantPrice
+  store: Store!
+  tax: TaxRate
+  variant: ProductVariant!
+  backlogsAggregate(
+    """Filter to find records to aggregate on"""
+    filter: StockBackLogAggregateFilter
+  ): ProductVariantPriceBacklogsAggregateResponse!
+}
+
+type ProductOption {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  name: String!
+  code: String!
+  variants(
+    """Limit or page results."""
+    paging: OffsetPaging = {limit: 10}
+
+    """Specify to filter the records returned."""
+    filter: ProductVariantFilter = {}
+
+    """Specify to sort results."""
+    sorting: [ProductVariantSort!] = []
+  ): [ProductVariant!]!
+  group: ProductOptionGroup!
+  variantsAggregate(
+    """Filter to find records to aggregate on"""
+    filter: ProductVariantAggregateFilter
+  ): ProductOptionVariantsAggregateResponse!
+}
+
+type ProductOptionGroup {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  name: String!
+  code: String!
+  options(
+    """Limit or page results."""
+    paging: OffsetPaging = {limit: 10}
+
+    """Specify to filter the records returned."""
+    filter: ProductOptionFilter = {}
+
+    """Specify to sort results."""
+    sorting: [ProductOptionSort!] = []
+  ): [ProductOption!]!
+  product: Product!
+  optionsAggregate(
+    """Filter to find records to aggregate on"""
+    filter: ProductOptionAggregateFilter
+  ): ProductOptionGroupOptionsAggregateResponse!
+}
+
+input ProductOptionFilter {
+  and: [ProductOptionFilter!]
+  or: [ProductOptionFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
+  name: StringFieldComparison
+  code: StringFieldComparison
+}
+
+input ProductOptionSort {
+  field: ProductOptionSortFields!
+  direction: SortDirection!
+  nulls: SortNulls
+}
+
+enum ProductOptionSortFields {
+  id
+  createdAt
+  updatedAt
+  deletedAt
+  name
+  code
+}
+
+input ProductOptionAggregateFilter {
+  and: [ProductOptionAggregateFilter!]
+  or: [ProductOptionAggregateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
+  name: StringFieldComparison
+  code: StringFieldComparison
+}
+
+type VendorLicense {
+  id: ID!
+  deletedAt: DateTime!
+  tenureStart: DateTime!
+  tenureEnd: DateTime!
+  plans: VendorPlans!
+  vendor: Vendor!
+}
+
+type VendorPlans {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  isActive: Boolean!
+  name: String!
+  planValue: Float!
+  priceStrategy: String!
+  tenureStrategy: VendorPlanTenure!
+  licences(
+    """Limit or page results."""
+    paging: OffsetPaging = {limit: 10}
+
+    """Specify to filter the records returned."""
+    filter: VendorLicenseFilter = {}
+
+    """Specify to sort results."""
+    sorting: [VendorLicenseSort!] = []
+  ): [VendorLicense!]!
+  licencesAggregate(
+    """Filter to find records to aggregate on"""
+    filter: VendorLicenseAggregateFilter
+  ): VendorPlansLicencesAggregateResponse!
+}
+
+enum VendorPlanTenure {
+  MONTHLY
+  HALFYEARLY
+  ANNUAL
+}
+
+input VendorLicenseFilter {
+  and: [VendorLicenseFilter!]
+  or: [VendorLicenseFilter!]
+  id: IDFilterComparison
+  deletedAt: DateFieldComparison
+  tenureStart: DateFieldComparison
+  tenureEnd: DateFieldComparison
+}
+
+input VendorLicenseSort {
+  field: VendorLicenseSortFields!
+  direction: SortDirection!
+  nulls: SortNulls
+}
+
+enum VendorLicenseSortFields {
+  id
+  deletedAt
+  tenureStart
+  tenureEnd
+}
+
+input VendorLicenseAggregateFilter {
+  and: [VendorLicenseAggregateFilter!]
+  or: [VendorLicenseAggregateFilter!]
+  id: IDFilterComparison
+  deletedAt: DateFieldComparison
+  tenureStart: DateFieldComparison
+  tenureEnd: DateFieldComparison
+}
+
+type BillingAgreement {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  value: Float!
+  type: BillingAgreementEnum!
+  state: BillingAgreementState!
+  variant: ProductVariant!
+  collection: Collection
+  store: Store!
+  request: [BillingAgreementRequest!]!
+}
+
+enum BillingAgreementEnum {
+  PLANBASE
+  COLLECTIONBASE
+  COMISSIONBASE
+  PRODCOMMISSION
+}
+
+enum BillingAgreementState {
+  APPROVED
+  PENDING
+  REJECTED
+}
+
+type ProductVariantSpecs {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  specs: JSON!
+  variant: ProductVariant!
+}
+
+type Cart {
+  id: ID!
+}
+
+type View {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type BillingAgreementRequest {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  value: Float!
+  state: BillingAgreementState!
 }
 
 type StockKeeping {
@@ -1800,324 +2517,6 @@ input StockMovementAggregateFilter {
   quantity: NumberFieldComparison
 }
 
-type ProductVariant {
-  id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  deletedAt: DateTime!
-  dum_price: Float!
-  enabled: Boolean!
-  sku: String!
-  name: String!
-  trackInventory: Boolean!
-  lines(
-    """Limit or page results."""
-    paging: OffsetPaging = {limit: 10}
-
-    """Specify to filter the records returned."""
-    filter: OrderItemFilter = {}
-
-    """Specify to sort results."""
-    sorting: [OrderItemSort!] = []
-  ): [OrderItem!]!
-  stocks(
-    """Limit or page results."""
-    paging: OffsetPaging = {limit: 10}
-
-    """Specify to filter the records returned."""
-    filter: StockKeepingFilter = {}
-
-    """Specify to sort results."""
-    sorting: [StockKeepingSort!] = []
-  ): [StockKeeping!]!
-  agreements(
-    """Limit or page results."""
-    paging: OffsetPaging = {limit: 10}
-
-    """Specify to filter the records returned."""
-    filter: BillingAgreementFilter = {}
-
-    """Specify to sort results."""
-    sorting: [BillingAgreementSort!] = []
-  ): [BillingAgreement!]
-  prices(
-    """Limit or page results."""
-    paging: OffsetPaging = {limit: 10}
-
-    """Specify to filter the records returned."""
-    filter: ProductVariantPriceFilter = {}
-
-    """Specify to sort results."""
-    sorting: [ProductVariantPriceSort!] = []
-  ): [ProductVariantPrice!]
-  seo: Seo
-  specs: ProductVariantSpecs
-  asset: ProductVariantAsset
-  product: Product!
-  linesAggregate(
-    """Filter to find records to aggregate on"""
-    filter: OrderItemAggregateFilter
-  ): ProductVariantLinesAggregateResponse!
-  stocksAggregate(
-    """Filter to find records to aggregate on"""
-    filter: StockKeepingAggregateFilter
-  ): ProductVariantStocksAggregateResponse!
-  agreementsAggregate(
-    """Filter to find records to aggregate on"""
-    filter: BillingAgreementAggregateFilter
-  ): ProductVariantAgreementsAggregateResponse!
-  pricesAggregate(
-    """Filter to find records to aggregate on"""
-    filter: ProductVariantPriceAggregateFilter
-  ): ProductVariantPricesAggregateResponse!
-}
-
-input OrderItemFilter {
-  and: [OrderItemFilter!]
-  or: [OrderItemFilter!]
-  id: IDFilterComparison
-  createdAt: DateFieldComparison
-  updatedAt: DateFieldComparison
-  quantity: NumberFieldComparison
-}
-
-input OrderItemSort {
-  field: OrderItemSortFields!
-  direction: SortDirection!
-  nulls: SortNulls
-}
-
-enum OrderItemSortFields {
-  id
-  createdAt
-  updatedAt
-  quantity
-}
-
-input OrderItemAggregateFilter {
-  and: [OrderItemAggregateFilter!]
-  or: [OrderItemAggregateFilter!]
-  id: IDFilterComparison
-  createdAt: DateFieldComparison
-  updatedAt: DateFieldComparison
-  quantity: NumberFieldComparison
-}
-
-type ProductVariantAsset {
-  id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  asset: Asset!
-  variant: ProductVariant!
-}
-
-type ProductVariantPrice {
-  id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  price: Float!
-  taxIncluded: Boolean!
-  promoprice: PromotionVariantPrice
-  store: Store!
-  tax: TaxRate
-  variant: ProductVariant!
-}
-
-type ProductOption {
-  id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  name: String!
-  code: String!
-  variants(
-    """Limit or page results."""
-    paging: OffsetPaging = {limit: 10}
-
-    """Specify to filter the records returned."""
-    filter: ProductVariantFilter = {}
-
-    """Specify to sort results."""
-    sorting: [ProductVariantSort!] = []
-  ): [ProductVariant!]!
-  group: ProductOptionGroup!
-  variantsAggregate(
-    """Filter to find records to aggregate on"""
-    filter: ProductVariantAggregateFilter
-  ): ProductOptionVariantsAggregateResponse!
-}
-
-type ProductOptionGroup {
-  id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  name: String!
-  code: String!
-  options(
-    """Limit or page results."""
-    paging: OffsetPaging = {limit: 10}
-
-    """Specify to filter the records returned."""
-    filter: ProductOptionFilter = {}
-
-    """Specify to sort results."""
-    sorting: [ProductOptionSort!] = []
-  ): [ProductOption!]!
-  product: Product!
-  optionsAggregate(
-    """Filter to find records to aggregate on"""
-    filter: ProductOptionAggregateFilter
-  ): ProductOptionGroupOptionsAggregateResponse!
-}
-
-input ProductOptionFilter {
-  and: [ProductOptionFilter!]
-  or: [ProductOptionFilter!]
-  id: IDFilterComparison
-  createdAt: DateFieldComparison
-  updatedAt: DateFieldComparison
-  name: StringFieldComparison
-  code: StringFieldComparison
-}
-
-input ProductOptionSort {
-  field: ProductOptionSortFields!
-  direction: SortDirection!
-  nulls: SortNulls
-}
-
-enum ProductOptionSortFields {
-  id
-  createdAt
-  updatedAt
-  name
-  code
-}
-
-input ProductOptionAggregateFilter {
-  and: [ProductOptionAggregateFilter!]
-  or: [ProductOptionAggregateFilter!]
-  id: IDFilterComparison
-  createdAt: DateFieldComparison
-  updatedAt: DateFieldComparison
-  name: StringFieldComparison
-  code: StringFieldComparison
-}
-
-type VendorLicense {
-  id: ID!
-  tenureStart: DateTime!
-  tenureEnd: DateTime!
-  vendor: Vendor!
-}
-
-type VendorPlans {
-  id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  isActive: Boolean!
-  name: String!
-  planValue: Float!
-  priceStrategy: String!
-  tenureStrategy: VendorPlanTenure!
-  licences(
-    """Limit or page results."""
-    paging: OffsetPaging = {limit: 10}
-
-    """Specify to filter the records returned."""
-    filter: VendorLicenseFilter = {}
-
-    """Specify to sort results."""
-    sorting: [VendorLicenseSort!] = []
-  ): [VendorLicense!]!
-  licencesAggregate(
-    """Filter to find records to aggregate on"""
-    filter: VendorLicenseAggregateFilter
-  ): VendorPlansLicencesAggregateResponse!
-}
-
-enum VendorPlanTenure {
-  MONTHLY
-  HALFYEARLY
-  ANNUAL
-}
-
-input VendorLicenseFilter {
-  and: [VendorLicenseFilter!]
-  or: [VendorLicenseFilter!]
-  id: IDFilterComparison
-  tenureStart: DateFieldComparison
-  tenureEnd: DateFieldComparison
-}
-
-input VendorLicenseSort {
-  field: VendorLicenseSortFields!
-  direction: SortDirection!
-  nulls: SortNulls
-}
-
-enum VendorLicenseSortFields {
-  id
-  tenureStart
-  tenureEnd
-}
-
-input VendorLicenseAggregateFilter {
-  and: [VendorLicenseAggregateFilter!]
-  or: [VendorLicenseAggregateFilter!]
-  id: IDFilterComparison
-  tenureStart: DateFieldComparison
-  tenureEnd: DateFieldComparison
-}
-
-type BillingAgreement {
-  id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  value: Float!
-  type: BillingAgreementEnum!
-  state: BillingAgreementState!
-  variant: ProductVariant!
-  collection: Collection
-  store: Store!
-  request: [BillingAgreementRequest!]!
-}
-
-enum BillingAgreementEnum {
-  PLANBASE
-  COLLECTIONBASE
-  COMISSIONBASE
-  PRODCOMMISSION
-}
-
-enum BillingAgreementState {
-  APPROVED
-  PENDING
-  REJECTED
-}
-
-type ProductVariantSpecs {
-  id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  specs: JSON!
-}
-
-type Cart {
-  id: ID!
-}
-
-type View {
-  id: ID!
-}
-
-type BillingAgreementRequest {
-  id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  value: Float!
-  state: BillingAgreementState!
-}
-
 type Cancellation {
   id: ID!
   createdAt: DateTime!
@@ -2149,6 +2548,16 @@ type Zip {
   name: String!
   slug: String!
   code: Float!
+  stores(
+    """Limit or page results."""
+    paging: OffsetPaging = {limit: 10}
+
+    """Specify to filter the records returned."""
+    filter: StoreFilter = {}
+
+    """Specify to sort results."""
+    sorting: [StoreSort!] = []
+  ): [Store!]!
   vendors(
     """Limit or page results."""
     paging: OffsetPaging = {limit: 10}
@@ -2159,6 +2568,10 @@ type Zip {
     """Specify to sort results."""
     sorting: [VendorSort!] = []
   ): [Vendor!]!
+  storesAggregate(
+    """Filter to find records to aggregate on"""
+    filter: StoreAggregateFilter
+  ): ZipStoresAggregateResponse!
   vendorsAggregate(
     """Filter to find records to aggregate on"""
     filter: VendorAggregateFilter
@@ -2174,6 +2587,18 @@ input VendorFilter {
   vendorName: StringFieldComparison
   phoneNumber: StringFieldComparison
   email: StringFieldComparison
+  zip: VendorFilterZipFilter
+}
+
+input VendorFilterZipFilter {
+  and: [VendorFilterZipFilter!]
+  or: [VendorFilterZipFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  name: StringFieldComparison
+  slug: StringFieldComparison
+  code: NumberFieldComparison
 }
 
 input VendorSort {
@@ -2267,6 +2692,7 @@ type Page {
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
+  deletedAt: DateTime!
   title: String!
   targetId: String!
   single: JSON
@@ -2287,10 +2713,33 @@ enum PageCategory {
   PRODVARIANT
 }
 
+type StoreBalance {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  balance: Float!
+  balanceVolume: Float!
+}
+
+type Settlements {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  amount: Float!
+  taxamount: Float!
+  finalamount: Float!
+  transactionID: String!
+  remarks: String!
+  type: SettlementType!
+  store: Store!
+}
+
 type Delivery {
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
+  deletedAt: DateTime!
   user: User
   signIn: [DeliverySignIn!]!
   signIns(
@@ -2315,6 +2764,7 @@ input DeliverySignInFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
 }
 
 input DeliverySignInSort {
@@ -2327,6 +2777,7 @@ enum DeliverySignInSortFields {
   id
   createdAt
   updatedAt
+  deletedAt
 }
 
 input DeliverySignInAggregateFilter {
@@ -2335,12 +2786,14 @@ input DeliverySignInAggregateFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
 }
 
 type DeliveryPool {
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
+  deletedAt: DateTime!
   signIn: DeliverySignIn!
   lines: [OrderLine!]!
 }
@@ -2349,6 +2802,7 @@ type PromotionVariantPrice {
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
+  deletedAt: DateTime!
   priceType: String!
   value: Float!
   forever: Boolean!
@@ -2362,6 +2816,7 @@ type CartPriceRules {
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
+  deletedAt: DateTime!
   priceType: String!
   value: Float!
   collection: Collection
@@ -2371,6 +2826,7 @@ type Account {
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
+  deletedAt: DateTime!
   currentBalance: Float!
   totalVolumeBalance: Float!
   vendor: Vendor!
@@ -2380,6 +2836,7 @@ type DeliverySignIn {
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
+  deletedAt: DateTime!
   delivery: Delivery!
   pool: DeliveryPool!
 }
@@ -2388,24 +2845,140 @@ type Payment {
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
+  deletedAt: DateTime!
   amount: Float!
-  errorMessage: String!
-  transactionId: String!
+  errorMessage: String
+  transactionId: String
+  order: Order!
 }
 
 type PaymentMethod {
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
+  deletedAt: DateTime!
   api: String!
   secretKey: String!
   enabled: Boolean!
+}
+
+type CartItem {
+  id: ID!
+  quantity: Float!
+  cart: Cart!
+  variant: ProductVariant!
+  store: Store!
+  price: ProductVariantPrice!
+}
+
+type StockBackLog {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  quantity: Float!
+  store: Store
+  variant: ProductVariantPrice
+}
+
+type Review {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  stars: Int!
+  text: String!
+  user: User!
+  variant: ProductVariant!
+}
+
+type Invoice {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  type: String!
+  total: Float!
+  amount: Float!
+  fees: Float!
+  tax: Float!
+  nulled: Boolean!
+  store: Store!
+  line: OrderLine!
+}
+
+type Refund {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  reason: String!
+  destination: String!
+  transactionId: String!
+  stage: String!
+  line: OrderLine!
+}
+
+type ResetCode {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  code: String!
+  user: User!
+}
+
+type ViewCode {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  name: String!
+  value: String!
+  description: String!
+}
+
+type Hsn {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  code: String!
+  value: Float!
+  prices(
+    """Limit or page results."""
+    paging: OffsetPaging = {limit: 10}
+
+    """Specify to filter the records returned."""
+    filter: ProductVariantPriceFilter = {}
+
+    """Specify to sort results."""
+    sorting: [ProductVariantPriceSort!] = []
+  ): [ProductVariantPrice!]!
+  prods(
+    """Limit or page results."""
+    paging: OffsetPaging = {limit: 10}
+
+    """Specify to filter the records returned."""
+    filter: ProductFilter = {}
+
+    """Specify to sort results."""
+    sorting: [ProductSort!] = []
+  ): [Product!]!
+  pricesAggregate(
+    """Filter to find records to aggregate on"""
+    filter: ProductVariantPriceAggregateFilter
+  ): HsnPricesAggregateResponse!
+  prodsAggregate(
+    """Filter to find records to aggregate on"""
+    filter: ProductAggregateFilter
+  ): HsnProdsAggregateResponse!
 }
 
 type Country {
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
+  deletedAt: DateTime!
   code: String!
   name: String!
   enabled: Boolean!
@@ -2474,6 +3047,7 @@ type Address {
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
+  deletedAt: DateTime!
   fullName: String!
   addressLine: String!
   city: String!
@@ -2503,6 +3077,7 @@ type AssetDeleteResponse {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   name: String
   type: String
   mimeType: String
@@ -2523,6 +3098,7 @@ type AssetCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
   name: Int
   type: Int
   mimeType: Int
@@ -2549,6 +3125,7 @@ type AssetMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   name: String
   type: String
   mimeType: String
@@ -2563,6 +3140,7 @@ type AssetMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   name: String
   type: String
   mimeType: String
@@ -2585,6 +3163,7 @@ type AssetFeaturedsCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
   productName: Int
   slug: Int
   description: Int
@@ -2594,6 +3173,7 @@ type AssetFeaturedsMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   productName: String
   slug: String
   description: String
@@ -2603,6 +3183,7 @@ type AssetFeaturedsMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   productName: String
   slug: String
   description: String
@@ -2618,18 +3199,21 @@ type AssetProductAssetsCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
 }
 
 type AssetProductAssetsMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
 }
 
 type AssetProductAssetsMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
 }
 
 type AssetProductAssetsAggregateResponse {
@@ -2642,6 +3226,7 @@ type RoleDeleteResponse {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   code: String
   description: String
   permissions: [Permission!]
@@ -2652,6 +3237,7 @@ type RoleCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
   code: Int
   description: Int
 }
@@ -2660,6 +3246,7 @@ type RoleMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   code: String
   description: String
 }
@@ -2668,6 +3255,7 @@ type RoleMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   code: String
   description: String
 }
@@ -2682,6 +3270,7 @@ type CollectionDeleteResponse {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   isRoot: Boolean
   inMenu: Boolean
   position: Float
@@ -2694,6 +3283,7 @@ type CollectionCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
   isRoot: Int
   inMenu: Int
   position: Int
@@ -2714,6 +3304,7 @@ type CollectionMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   position: Float
   name: String
   description: String
@@ -2723,6 +3314,7 @@ type CollectionMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   position: Float
   name: String
   description: String
@@ -2740,6 +3332,7 @@ type CollectionChildrenCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
   isRoot: Int
   inMenu: Int
   position: Int
@@ -2760,6 +3353,7 @@ type CollectionChildrenMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   position: Float
   name: String
   description: String
@@ -2769,6 +3363,7 @@ type CollectionChildrenMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   position: Float
   name: String
   description: String
@@ -2786,6 +3381,7 @@ type CollectionProductsCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
   productName: Int
   slug: Int
   description: Int
@@ -2795,6 +3391,7 @@ type CollectionProductsMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   productName: String
   slug: String
   description: String
@@ -2804,6 +3401,7 @@ type CollectionProductsMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   productName: String
   slug: String
   description: String
@@ -2819,6 +3417,7 @@ type CollectionAgreementsCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
   value: Int
 }
 
@@ -2834,6 +3433,7 @@ type CollectionAgreementsMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   value: Float
 }
 
@@ -2841,6 +3441,7 @@ type CollectionAgreementsMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   value: Float
 }
 
@@ -2965,79 +3566,194 @@ type StoreAggregateResponse {
   max: StoreMaxAggregate
 }
 
-type StoreLinesCountAggregate {
+type StoreInvoicesCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
-  stage: Int
+  deletedAt: Int
+  type: Int
+  total: Int
+  amount: Int
+  fees: Int
+  tax: Int
+  nulled: Int
 }
 
-type StoreLinesMinAggregate {
+type StoreInvoicesSumAggregate {
+  total: Float
+  amount: Float
+  fees: Float
+  tax: Float
+}
+
+type StoreInvoicesAvgAggregate {
+  total: Float
+  amount: Float
+  fees: Float
+  tax: Float
+}
+
+type StoreInvoicesMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
-  stage: String
+  deletedAt: DateTime
+  type: String
+  total: Float
+  amount: Float
+  fees: Float
+  tax: Float
 }
 
-type StoreLinesMaxAggregate {
+type StoreInvoicesMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
-  stage: String
+  deletedAt: DateTime
+  type: String
+  total: Float
+  amount: Float
+  fees: Float
+  tax: Float
 }
 
-type StoreLinesAggregateResponse {
-  count: StoreLinesCountAggregate
-  min: StoreLinesMinAggregate
-  max: StoreLinesMaxAggregate
+type StoreInvoicesAggregateResponse {
+  count: StoreInvoicesCountAggregate
+  sum: StoreInvoicesSumAggregate
+  avg: StoreInvoicesAvgAggregate
+  min: StoreInvoicesMinAggregate
+  max: StoreInvoicesMaxAggregate
+}
+
+type StoreZipsCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  name: Int
+  slug: Int
+  code: Int
+}
+
+type StoreZipsSumAggregate {
+  code: Float
+}
+
+type StoreZipsAvgAggregate {
+  code: Float
+}
+
+type StoreZipsMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  name: String
+  slug: String
+  code: Float
+}
+
+type StoreZipsMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  name: String
+  slug: String
+  code: Float
+}
+
+type StoreZipsAggregateResponse {
+  count: StoreZipsCountAggregate
+  sum: StoreZipsSumAggregate
+  avg: StoreZipsAvgAggregate
+  min: StoreZipsMinAggregate
+  max: StoreZipsMaxAggregate
+}
+
+type StoreBacklogsCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  quantity: Int
+}
+
+type StoreBacklogsSumAggregate {
+  quantity: Float
+}
+
+type StoreBacklogsAvgAggregate {
+  quantity: Float
+}
+
+type StoreBacklogsMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  quantity: Float
+}
+
+type StoreBacklogsMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  quantity: Float
+}
+
+type StoreBacklogsAggregateResponse {
+  count: StoreBacklogsCountAggregate
+  sum: StoreBacklogsSumAggregate
+  avg: StoreBacklogsAvgAggregate
+  min: StoreBacklogsMinAggregate
+  max: StoreBacklogsMaxAggregate
+}
+
+type StoreCartsCountAggregate {
+  id: Int
+}
+
+type StoreCartsMinAggregate {
+  id: ID
+}
+
+type StoreCartsMaxAggregate {
+  id: ID
+}
+
+type StoreCartsAggregateResponse {
+  count: StoreCartsCountAggregate
+  min: StoreCartsMinAggregate
+  max: StoreCartsMaxAggregate
 }
 
 type StorePricesCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
-  amount: Int
-  taxamount: Int
-  finalamount: Int
-  transactionID: Int
-  remarks: Int
-  type: Int
+  deletedAt: Int
+  price: Int
+  taxIncluded: Int
 }
 
 type StorePricesSumAggregate {
-  amount: Float
-  taxamount: Float
-  finalamount: Float
+  price: Float
 }
 
 type StorePricesAvgAggregate {
-  amount: Float
-  taxamount: Float
-  finalamount: Float
+  price: Float
 }
 
 type StorePricesMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
-  amount: Float
-  taxamount: Float
-  finalamount: Float
-  transactionID: String
-  remarks: String
-  type: SettlementType
+  deletedAt: DateTime
+  price: Float
 }
 
 type StorePricesMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
-  amount: Float
-  taxamount: Float
-  finalamount: Float
-  transactionID: String
-  remarks: String
-  type: SettlementType
+  deletedAt: DateTime
+  price: Float
 }
 
 type StorePricesAggregateResponse {
@@ -3052,6 +3768,7 @@ type StoreSettlementsCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
   amount: Int
   taxamount: Int
   finalamount: Int
@@ -3076,6 +3793,7 @@ type StoreSettlementsMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   amount: Float
   taxamount: Float
   finalamount: Float
@@ -3088,6 +3806,7 @@ type StoreSettlementsMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   amount: Float
   taxamount: Float
   finalamount: Float
@@ -3289,6 +4008,7 @@ type TaxRateVariantsCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
   price: Int
   taxIncluded: Int
 }
@@ -3305,6 +4025,7 @@ type TaxRateVariantsMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   price: Float
 }
 
@@ -3312,6 +4033,7 @@ type TaxRateVariantsMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   price: Float
 }
 
@@ -3342,8 +4064,10 @@ type UserDeleteResponse {
   delivery: Delivery
   cart: Cart
   view: [View!]
+  reviews: [Review!]
   address: [Address!]
   order: [Order!]
+  reset: [ResetCode!]
 }
 
 type UserCountAggregate {
@@ -3402,6 +4126,7 @@ type UserOrdersCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
   totalPrice: Int
   address: Int
 }
@@ -3418,6 +4143,7 @@ type UserOrdersMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   totalPrice: Float
   address: String
 }
@@ -3426,6 +4152,7 @@ type UserOrdersMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   totalPrice: Float
   address: String
 }
@@ -3442,6 +4169,7 @@ type UserAddressesCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
   fullName: Int
   addressLine: Int
   city: Int
@@ -3459,6 +4187,7 @@ type UserAddressesMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   fullName: String
   addressLine: String
   city: String
@@ -3474,6 +4203,7 @@ type UserAddressesMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   fullName: String
   addressLine: String
   city: String
@@ -3620,6 +4350,7 @@ type ZoneMembersCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
   code: Int
   name: Int
   enabled: Int
@@ -3629,6 +4360,7 @@ type ZoneMembersMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   code: String
   name: String
 }
@@ -3637,6 +4369,7 @@ type ZoneMembersMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   code: String
   name: String
 }
@@ -3740,6 +4473,7 @@ type CountryDeleteResponse {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   code: String
   name: String
   enabled: Boolean
@@ -3749,6 +4483,7 @@ type CountryCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
   code: Int
   name: Int
   enabled: Int
@@ -3758,6 +4493,7 @@ type CountryMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   code: String
   name: String
 }
@@ -3766,6 +4502,7 @@ type CountryMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   code: String
   name: String
 }
@@ -3899,6 +4636,7 @@ type FacetDeleteResponse {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   name: String
   isPrivate: Boolean
   code: String
@@ -3908,6 +4646,7 @@ type FacetCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
   name: Int
   isPrivate: Int
   code: Int
@@ -3917,6 +4656,7 @@ type FacetMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   name: String
   code: String
 }
@@ -3925,6 +4665,7 @@ type FacetMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   name: String
   code: String
 }
@@ -3939,6 +4680,7 @@ type FacetProductsCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
   productName: Int
   slug: Int
   description: Int
@@ -3948,6 +4690,7 @@ type FacetProductsMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   productName: String
   slug: String
   description: String
@@ -3957,6 +4700,7 @@ type FacetProductsMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   productName: String
   slug: String
   description: String
@@ -3972,6 +4716,7 @@ type FacetValuesCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
   code: Int
 }
 
@@ -3979,6 +4724,7 @@ type FacetValuesMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   code: String
 }
 
@@ -3986,6 +4732,7 @@ type FacetValuesMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   code: String
 }
 
@@ -3999,6 +4746,7 @@ type FacetValueDeleteResponse {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   code: String
 }
 
@@ -4006,6 +4754,7 @@ type FacetValueCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
   code: Int
 }
 
@@ -4013,6 +4762,7 @@ type FacetValueMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   code: String
 }
 
@@ -4020,6 +4770,7 @@ type FacetValueMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   code: String
 }
 
@@ -4033,6 +4784,7 @@ type FacetValueProductsCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
   productName: Int
   slug: Int
   description: Int
@@ -4042,6 +4794,7 @@ type FacetValueProductsMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   productName: String
   slug: String
   description: String
@@ -4051,6 +4804,7 @@ type FacetValueProductsMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   productName: String
   slug: String
   description: String
@@ -4066,15 +4820,18 @@ type ProductDeleteResponse {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   productName: String
   slug: String
   description: String
+  viewcode: [String!]
 }
 
 type ProductCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
   productName: Int
   slug: Int
   description: Int
@@ -4084,6 +4841,7 @@ type ProductMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   productName: String
   slug: String
   description: String
@@ -4093,6 +4851,7 @@ type ProductMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   productName: String
   slug: String
   description: String
@@ -4108,6 +4867,7 @@ type ProductOptionsCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
   name: Int
   code: Int
 }
@@ -4116,6 +4876,7 @@ type ProductOptionsMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   name: String
   code: String
 }
@@ -4124,6 +4885,7 @@ type ProductOptionsMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   name: String
   code: String
 }
@@ -4138,6 +4900,7 @@ type ProductFacetsCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
   code: Int
 }
 
@@ -4145,6 +4908,7 @@ type ProductFacetsMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   code: String
 }
 
@@ -4152,6 +4916,7 @@ type ProductFacetsMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   code: String
 }
 
@@ -4170,15 +4935,18 @@ type ProductVariantsCountAggregate {
   enabled: Int
   sku: Int
   name: Int
+  rating: Int
   trackInventory: Int
 }
 
 type ProductVariantsSumAggregate {
   dum_price: Float
+  rating: Float
 }
 
 type ProductVariantsAvgAggregate {
   dum_price: Float
+  rating: Float
 }
 
 type ProductVariantsMinAggregate {
@@ -4189,6 +4957,7 @@ type ProductVariantsMinAggregate {
   dum_price: Float
   sku: String
   name: String
+  rating: Float
 }
 
 type ProductVariantsMaxAggregate {
@@ -4199,6 +4968,7 @@ type ProductVariantsMaxAggregate {
   dum_price: Float
   sku: String
   name: String
+  rating: Float
 }
 
 type ProductVariantsAggregateResponse {
@@ -4213,18 +4983,21 @@ type ProductAssetsCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
 }
 
 type ProductAssetsMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
 }
 
 type ProductAssetsMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
 }
 
 type ProductAssetsAggregateResponse {
@@ -4242,7 +5015,9 @@ type ProductVariantDeleteResponse {
   enabled: Boolean
   sku: String
   name: String
+  rating: Float
   trackInventory: Boolean
+  viewcode: [String!]
 }
 
 type ProductVariantCountAggregate {
@@ -4254,15 +5029,18 @@ type ProductVariantCountAggregate {
   enabled: Int
   sku: Int
   name: Int
+  rating: Int
   trackInventory: Int
 }
 
 type ProductVariantSumAggregate {
   dum_price: Float
+  rating: Float
 }
 
 type ProductVariantAvgAggregate {
   dum_price: Float
+  rating: Float
 }
 
 type ProductVariantMinAggregate {
@@ -4273,6 +5051,7 @@ type ProductVariantMinAggregate {
   dum_price: Float
   sku: String
   name: String
+  rating: Float
 }
 
 type ProductVariantMaxAggregate {
@@ -4283,6 +5062,7 @@ type ProductVariantMaxAggregate {
   dum_price: Float
   sku: String
   name: String
+  rating: Float
 }
 
 type ProductVariantAggregateResponse {
@@ -4297,6 +5077,7 @@ type ProductVariantLinesCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
   quantity: Int
 }
 
@@ -4312,6 +5093,7 @@ type ProductVariantLinesMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   quantity: Float
 }
 
@@ -4319,6 +5101,7 @@ type ProductVariantLinesMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   quantity: Float
 }
 
@@ -4390,6 +5173,7 @@ type ProductVariantAgreementsCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
   value: Int
 }
 
@@ -4405,6 +5189,7 @@ type ProductVariantAgreementsMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   value: Float
 }
 
@@ -4412,6 +5197,7 @@ type ProductVariantAgreementsMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   value: Float
 }
 
@@ -4427,6 +5213,7 @@ type ProductVariantPricesCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
   price: Int
   taxIncluded: Int
 }
@@ -4443,6 +5230,7 @@ type ProductVariantPricesMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   price: Float
 }
 
@@ -4450,6 +5238,7 @@ type ProductVariantPricesMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   price: Float
 }
 
@@ -4465,6 +5254,7 @@ type ProductOptionDeleteResponse {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   name: String
   code: String
 }
@@ -4473,6 +5263,7 @@ type ProductOptionCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
   name: Int
   code: Int
 }
@@ -4481,6 +5272,7 @@ type ProductOptionMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   name: String
   code: String
 }
@@ -4489,6 +5281,7 @@ type ProductOptionMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   name: String
   code: String
 }
@@ -4508,15 +5301,18 @@ type ProductOptionVariantsCountAggregate {
   enabled: Int
   sku: Int
   name: Int
+  rating: Int
   trackInventory: Int
 }
 
 type ProductOptionVariantsSumAggregate {
   dum_price: Float
+  rating: Float
 }
 
 type ProductOptionVariantsAvgAggregate {
   dum_price: Float
+  rating: Float
 }
 
 type ProductOptionVariantsMinAggregate {
@@ -4527,6 +5323,7 @@ type ProductOptionVariantsMinAggregate {
   dum_price: Float
   sku: String
   name: String
+  rating: Float
 }
 
 type ProductOptionVariantsMaxAggregate {
@@ -4537,6 +5334,7 @@ type ProductOptionVariantsMaxAggregate {
   dum_price: Float
   sku: String
   name: String
+  rating: Float
 }
 
 type ProductOptionVariantsAggregateResponse {
@@ -4551,6 +5349,7 @@ type ProductOptionGroupDeleteResponse {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   name: String
   code: String
 }
@@ -4559,6 +5358,7 @@ type ProductOptionGroupCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
   name: Int
   code: Int
 }
@@ -4567,6 +5367,7 @@ type ProductOptionGroupMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   name: String
   code: String
 }
@@ -4575,6 +5376,7 @@ type ProductOptionGroupMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   name: String
   code: String
 }
@@ -4589,6 +5391,7 @@ type ProductOptionGroupOptionsCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
   name: Int
   code: Int
 }
@@ -4597,6 +5400,7 @@ type ProductOptionGroupOptionsMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   name: String
   code: String
 }
@@ -4605,6 +5409,7 @@ type ProductOptionGroupOptionsMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   name: String
   code: String
 }
@@ -4619,6 +5424,7 @@ type ProductVariantPriceDeleteResponse {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   price: Float
   taxIncluded: Boolean
 }
@@ -4627,6 +5433,7 @@ type ProductVariantPriceCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
   price: Int
   taxIncluded: Int
 }
@@ -4643,6 +5450,7 @@ type ProductVariantPriceMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   price: Float
 }
 
@@ -4650,6 +5458,7 @@ type ProductVariantPriceMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   price: Float
 }
 
@@ -4661,28 +5470,69 @@ type ProductVariantPriceAggregateResponse {
   max: ProductVariantPriceMaxAggregate
 }
 
+type ProductVariantPriceBacklogsCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  quantity: Int
+}
+
+type ProductVariantPriceBacklogsSumAggregate {
+  quantity: Float
+}
+
+type ProductVariantPriceBacklogsAvgAggregate {
+  quantity: Float
+}
+
+type ProductVariantPriceBacklogsMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  quantity: Float
+}
+
+type ProductVariantPriceBacklogsMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  quantity: Float
+}
+
+type ProductVariantPriceBacklogsAggregateResponse {
+  count: ProductVariantPriceBacklogsCountAggregate
+  sum: ProductVariantPriceBacklogsSumAggregate
+  avg: ProductVariantPriceBacklogsAvgAggregate
+  min: ProductVariantPriceBacklogsMinAggregate
+  max: ProductVariantPriceBacklogsMaxAggregate
+}
+
 type ProductVariantAssetDeleteResponse {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
 }
 
 type ProductVariantAssetCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
 }
 
 type ProductVariantAssetMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
 }
 
 type ProductVariantAssetMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
 }
 
 type ProductVariantAssetAggregateResponse {
@@ -4695,24 +5545,28 @@ type ProductAssetDeleteResponse {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
 }
 
 type ProductAssetCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
 }
 
 type ProductAssetMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
 }
 
 type ProductAssetMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
 }
 
 type ProductAssetAggregateResponse {
@@ -4725,6 +5579,7 @@ type VendorPlansDeleteResponse {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   isActive: Boolean
   name: String
   planValue: Float
@@ -4736,6 +5591,7 @@ type VendorPlansCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
   isActive: Int
   name: Int
   planValue: Int
@@ -4753,6 +5609,7 @@ type VendorPlansMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   name: String
   planValue: Float
 }
@@ -4761,6 +5618,7 @@ type VendorPlansMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   name: String
   planValue: Float
 }
@@ -4775,18 +5633,21 @@ type VendorPlansAggregateResponse {
 
 type VendorPlansLicencesCountAggregate {
   id: Int
+  deletedAt: Int
   tenureStart: Int
   tenureEnd: Int
 }
 
 type VendorPlansLicencesMinAggregate {
   id: ID
+  deletedAt: DateTime
   tenureStart: DateTime
   tenureEnd: DateTime
 }
 
 type VendorPlansLicencesMaxAggregate {
   id: ID
+  deletedAt: DateTime
   tenureStart: DateTime
   tenureEnd: DateTime
 }
@@ -4799,24 +5660,28 @@ type VendorPlansLicencesAggregateResponse {
 
 type VendorLicenseDeleteResponse {
   id: ID
+  deletedAt: DateTime
   tenureStart: DateTime
   tenureEnd: DateTime
 }
 
 type VendorLicenseCountAggregate {
   id: Int
+  deletedAt: Int
   tenureStart: Int
   tenureEnd: Int
 }
 
 type VendorLicenseMinAggregate {
   id: ID
+  deletedAt: DateTime
   tenureStart: DateTime
   tenureEnd: DateTime
 }
 
 type VendorLicenseMaxAggregate {
   id: ID
+  deletedAt: DateTime
   tenureStart: DateTime
   tenureEnd: DateTime
 }
@@ -5148,14 +6013,17 @@ type OrderDeleteResponse {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   totalPrice: Float
   address: String
+  mode: String
 }
 
 type OrderCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
   totalPrice: Int
   address: Int
 }
@@ -5172,6 +6040,7 @@ type OrderMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   totalPrice: Float
   address: String
 }
@@ -5180,6 +6049,7 @@ type OrderMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   totalPrice: Float
   address: String
 }
@@ -5196,6 +6066,7 @@ type OrderLinesCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
   stage: Int
 }
 
@@ -5203,6 +6074,7 @@ type OrderLinesMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   stage: String
 }
 
@@ -5210,6 +6082,7 @@ type OrderLinesMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   stage: String
 }
 
@@ -5269,6 +6142,54 @@ type ZipAggregateResponse {
   avg: ZipAvgAggregate
   min: ZipMinAggregate
   max: ZipMaxAggregate
+}
+
+type ZipStoresCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  storeName: Int
+  phoneNumber: Int
+  officialemail: Int
+  zipcode: Int
+  streetAddress1: Int
+  streetAddress2: Int
+  GSTIN: Int
+  singleStore: Int
+  rentalStore: Int
+  channelMarkets: Int
+}
+
+type ZipStoresMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  storeName: String
+  phoneNumber: String
+  officialemail: String
+  zipcode: String
+  streetAddress1: String
+  streetAddress2: String
+  GSTIN: String
+}
+
+type ZipStoresMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  storeName: String
+  phoneNumber: String
+  officialemail: String
+  zipcode: String
+  streetAddress1: String
+  streetAddress2: String
+  GSTIN: String
+}
+
+type ZipStoresAggregateResponse {
+  count: ZipStoresCountAggregate
+  min: ZipStoresMinAggregate
+  max: ZipStoresMaxAggregate
 }
 
 type ZipVendorsCountAggregate {
@@ -5383,6 +6304,7 @@ type PageDeleteResponse {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   title: String
   targetId: String
   single: JSON
@@ -5395,6 +6317,7 @@ type PageCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
   title: Int
   targetId: Int
   pageType: Int
@@ -5405,6 +6328,7 @@ type PageMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   title: String
   targetId: String
   pageType: PageType
@@ -5415,6 +6339,7 @@ type PageMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   title: String
   targetId: String
   pageType: PageType
@@ -5431,6 +6356,7 @@ type AddressDeleteResponse {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   fullName: String
   addressLine: String
   city: String
@@ -5448,6 +6374,7 @@ type AddressCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
   fullName: Int
   addressLine: Int
   city: Int
@@ -5465,6 +6392,7 @@ type AddressMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   fullName: String
   addressLine: String
   city: String
@@ -5480,6 +6408,7 @@ type AddressMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   fullName: String
   addressLine: String
   city: String
@@ -5501,6 +6430,7 @@ type SettlementsDeleteResponse {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   amount: Float
   taxamount: Float
   finalamount: Float
@@ -5513,6 +6443,7 @@ type SettlementsCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
   amount: Int
   taxamount: Int
   finalamount: Int
@@ -5537,6 +6468,7 @@ type SettlementsMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   amount: Float
   taxamount: Float
   finalamount: Float
@@ -5549,6 +6481,7 @@ type SettlementsMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   amount: Float
   taxamount: Float
   finalamount: Float
@@ -5569,6 +6502,7 @@ type OrderLineDeleteResponse {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   priceField: JSON
   stage: String
 }
@@ -5577,6 +6511,7 @@ type OrderLineCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
   stage: Int
 }
 
@@ -5584,6 +6519,7 @@ type OrderLineMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   stage: String
 }
 
@@ -5591,6 +6527,7 @@ type OrderLineMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   stage: String
 }
 
@@ -5600,17 +6537,79 @@ type OrderLineAggregateResponse {
   max: OrderLineMaxAggregate
 }
 
+type OrderLineInvoicesCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  deletedAt: Int
+  type: Int
+  total: Int
+  amount: Int
+  fees: Int
+  tax: Int
+  nulled: Int
+}
+
+type OrderLineInvoicesSumAggregate {
+  total: Float
+  amount: Float
+  fees: Float
+  tax: Float
+}
+
+type OrderLineInvoicesAvgAggregate {
+  total: Float
+  amount: Float
+  fees: Float
+  tax: Float
+}
+
+type OrderLineInvoicesMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+  type: String
+  total: Float
+  amount: Float
+  fees: Float
+  tax: Float
+}
+
+type OrderLineInvoicesMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+  type: String
+  total: Float
+  amount: Float
+  fees: Float
+  tax: Float
+}
+
+type OrderLineInvoicesAggregateResponse {
+  count: OrderLineInvoicesCountAggregate
+  sum: OrderLineInvoicesSumAggregate
+  avg: OrderLineInvoicesAvgAggregate
+  min: OrderLineInvoicesMinAggregate
+  max: OrderLineInvoicesMaxAggregate
+}
+
 type OrderItemDeleteResponse {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   quantity: Float
+  productVariant: ProductVariant
 }
 
 type OrderItemCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
   quantity: Int
 }
 
@@ -5626,6 +6625,7 @@ type OrderItemMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   quantity: Float
 }
 
@@ -5633,6 +6633,7 @@ type OrderItemMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   quantity: Float
 }
 
@@ -5648,6 +6649,7 @@ type PromotionVariantPriceDeleteResponse {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   priceType: String
   value: Float
   forever: Boolean
@@ -5660,6 +6662,7 @@ type PromotionVariantPriceCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
   priceType: Int
   value: Int
   forever: Int
@@ -5680,6 +6683,7 @@ type PromotionVariantPriceMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   priceType: String
   value: Float
   startsAt: DateTime
@@ -5690,6 +6694,7 @@ type PromotionVariantPriceMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   priceType: String
   value: Float
   startsAt: DateTime
@@ -5708,6 +6713,7 @@ type CartPriceRulesDeleteResponse {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   priceType: String
   value: Float
 }
@@ -5716,6 +6722,7 @@ type CartPriceRulesCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
   priceType: Int
   value: Int
 }
@@ -5732,6 +6739,7 @@ type CartPriceRulesMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   priceType: String
   value: Float
 }
@@ -5740,6 +6748,7 @@ type CartPriceRulesMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   priceType: String
   value: Float
 }
@@ -5756,6 +6765,7 @@ type AccountDeleteResponse {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   currentBalance: Float
   totalVolumeBalance: Float
 }
@@ -5764,18 +6774,21 @@ type AccountCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
 }
 
 type AccountMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
 }
 
 type AccountMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
 }
 
 type AccountAggregateResponse {
@@ -5792,6 +6805,7 @@ type DeliveryDeleteResponse {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   user: User
   signIn: [DeliverySignIn!]
 }
@@ -5800,18 +6814,21 @@ type DeliveryCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
 }
 
 type DeliveryMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
 }
 
 type DeliveryMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
 }
 
 type DeliveryAggregateResponse {
@@ -5824,18 +6841,21 @@ type DeliverySignInsCountAggregate {
   id: Int
   createdAt: Int
   updatedAt: Int
+  deletedAt: Int
 }
 
 type DeliverySignInsMinAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
 }
 
 type DeliverySignInsMaxAggregate {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
 }
 
 type DeliverySignInsAggregateResponse {
@@ -5844,10 +6864,429 @@ type DeliverySignInsAggregateResponse {
   max: DeliverySignInsMaxAggregate
 }
 
+type DataSource {
+  sum: Float!
+  amount: Float!
+}
+
+type ProdDataSource {
+  sum: Float!
+}
+
+type StatisticeDto {
+  labels: [String!]!
+  datasource: [DataSource!]!
+}
+
+type StatisticeProdDto {
+  labels: [String!]!
+  datasource: [ProdDataSource!]!
+}
+
+type StockBackLogDeleteResponse {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  quantity: Float
+}
+
+type StockBackLogCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  quantity: Int
+}
+
+type StockBackLogSumAggregate {
+  quantity: Float
+}
+
+type StockBackLogAvgAggregate {
+  quantity: Float
+}
+
+type StockBackLogMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  quantity: Float
+}
+
+type StockBackLogMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  quantity: Float
+}
+
+type StockBackLogAggregateResponse {
+  count: StockBackLogCountAggregate
+  sum: StockBackLogSumAggregate
+  avg: StockBackLogAvgAggregate
+  min: StockBackLogMinAggregate
+  max: StockBackLogMaxAggregate
+}
+
+type InvoiceDeleteResponse {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+  type: String
+  total: Float
+  amount: Float
+  fees: Float
+  tax: Float
+  nulled: Boolean
+}
+
+type InvoiceCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  deletedAt: Int
+  type: Int
+  total: Int
+  amount: Int
+  fees: Int
+  tax: Int
+  nulled: Int
+}
+
+type InvoiceSumAggregate {
+  total: Float
+  amount: Float
+  fees: Float
+  tax: Float
+}
+
+type InvoiceAvgAggregate {
+  total: Float
+  amount: Float
+  fees: Float
+  tax: Float
+}
+
+type InvoiceMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+  type: String
+  total: Float
+  amount: Float
+  fees: Float
+  tax: Float
+}
+
+type InvoiceMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+  type: String
+  total: Float
+  amount: Float
+  fees: Float
+  tax: Float
+}
+
+type InvoiceAggregateResponse {
+  count: InvoiceCountAggregate
+  sum: InvoiceSumAggregate
+  avg: InvoiceAvgAggregate
+  min: InvoiceMinAggregate
+  max: InvoiceMaxAggregate
+}
+
+type RefundDeleteResponse {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+  reason: String
+  destination: String
+  transactionId: String
+  stage: String
+}
+
+type RefundCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  deletedAt: Int
+  reason: Int
+  destination: Int
+  transactionId: Int
+  stage: Int
+}
+
+type RefundMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+  reason: String
+  destination: String
+  transactionId: String
+  stage: String
+}
+
+type RefundMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+  reason: String
+  destination: String
+  transactionId: String
+  stage: String
+}
+
+type RefundAggregateResponse {
+  count: RefundCountAggregate
+  min: RefundMinAggregate
+  max: RefundMaxAggregate
+}
+
+type PaymentDeleteResponse {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+  amount: Float
+  errorMessage: String
+  transactionId: String
+}
+
+type PaymentCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  deletedAt: Int
+  amount: Int
+  errorMessage: Int
+  transactionId: Int
+}
+
+type PaymentSumAggregate {
+  amount: Float
+}
+
+type PaymentAvgAggregate {
+  amount: Float
+}
+
+type PaymentMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+  amount: Float
+  errorMessage: String
+  transactionId: String
+}
+
+type PaymentMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+  amount: Float
+  errorMessage: String
+  transactionId: String
+}
+
+type PaymentAggregateResponse {
+  count: PaymentCountAggregate
+  sum: PaymentSumAggregate
+  avg: PaymentAvgAggregate
+  min: PaymentMinAggregate
+  max: PaymentMaxAggregate
+}
+
+type ViewCodeDeleteResponse {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+  name: String
+  value: String
+  description: String
+}
+
+type ViewCodeCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  deletedAt: Int
+  name: Int
+  value: Int
+  description: Int
+}
+
+type ViewCodeMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+  name: String
+  value: String
+  description: String
+}
+
+type ViewCodeMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+  name: String
+  value: String
+  description: String
+}
+
+type ViewCodeAggregateResponse {
+  count: ViewCodeCountAggregate
+  min: ViewCodeMinAggregate
+  max: ViewCodeMaxAggregate
+}
+
+type HsnDeleteResponse {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+  code: String
+  value: Float
+}
+
+type HsnCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  deletedAt: Int
+  code: Int
+  value: Int
+}
+
+type HsnSumAggregate {
+  value: Float
+}
+
+type HsnAvgAggregate {
+  value: Float
+}
+
+type HsnMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+  code: String
+  value: Float
+}
+
+type HsnMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+  code: String
+  value: Float
+}
+
+type HsnAggregateResponse {
+  count: HsnCountAggregate
+  sum: HsnSumAggregate
+  avg: HsnAvgAggregate
+  min: HsnMinAggregate
+  max: HsnMaxAggregate
+}
+
+type HsnPricesCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  deletedAt: Int
+  price: Int
+  taxIncluded: Int
+}
+
+type HsnPricesSumAggregate {
+  price: Float
+}
+
+type HsnPricesAvgAggregate {
+  price: Float
+}
+
+type HsnPricesMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+  price: Float
+}
+
+type HsnPricesMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+  price: Float
+}
+
+type HsnPricesAggregateResponse {
+  count: HsnPricesCountAggregate
+  sum: HsnPricesSumAggregate
+  avg: HsnPricesAvgAggregate
+  min: HsnPricesMinAggregate
+  max: HsnPricesMaxAggregate
+}
+
+type HsnProdsCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  deletedAt: Int
+  productName: Int
+  slug: Int
+  description: Int
+}
+
+type HsnProdsMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+  productName: String
+  slug: String
+  description: String
+}
+
+type HsnProdsMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+  productName: String
+  slug: String
+  description: String
+}
+
+type HsnProdsAggregateResponse {
+  count: HsnProdsCountAggregate
+  min: HsnProdsMinAggregate
+  max: HsnProdsMaxAggregate
+}
+
 type Query {
   GetAdministratorData: Administrator!
   GetAllAdministrator(search: String): [Administrator!]!
-  asset(id: ID!): Asset
+  asset(
+    """The id of the record to find."""
+    id: ID!
+  ): Asset
   assets(
     """Limit or page results."""
     paging: OffsetPaging = {limit: 10}
@@ -5862,7 +7301,10 @@ type Query {
     """Filter to find records to aggregate on"""
     filter: AssetAggregateFilter
   ): AssetAggregateResponse!
-  role(id: ID!): Role
+  role(
+    """The id of the record to find."""
+    id: ID!
+  ): Role
   roles(
     """Limit or page results."""
     paging: OffsetPaging = {limit: 10}
@@ -5877,7 +7319,10 @@ type Query {
     """Filter to find records to aggregate on"""
     filter: RoleAggregateFilter
   ): RoleAggregateResponse!
-  collection(id: ID!): Collection
+  collection(
+    """The id of the record to find."""
+    id: ID!
+  ): Collection
   collections(
     """Limit or page results."""
     paging: OffsetPaging = {limit: 10}
@@ -5893,7 +7338,10 @@ type Query {
     filter: CollectionAggregateFilter
   ): CollectionAggregateResponse!
   GetCollectionTree: [Collection!]!
-  channel(id: ID!): Channel
+  channel(
+    """The id of the record to find."""
+    id: ID!
+  ): Channel
   channels(
     """Limit or page results."""
     paging: OffsetPaging = {limit: 10}
@@ -5908,7 +7356,10 @@ type Query {
     """Filter to find records to aggregate on"""
     filter: ChannelAggregateFilter
   ): ChannelAggregateResponse!
-  store(id: ID!): Store
+  store(
+    """The id of the record to find."""
+    id: ID!
+  ): Store
   stores(
     """Limit or page results."""
     paging: OffsetPaging = {limit: 10}
@@ -5924,7 +7375,10 @@ type Query {
     filter: StoreAggregateFilter
   ): StoreAggregateResponse!
   GetDefaultStore: Store!
-  taxCategory(id: ID!): TaxCategory
+  taxCategory(
+    """The id of the record to find."""
+    id: ID!
+  ): TaxCategory
   taxCategories(
     """Limit or page results."""
     paging: OffsetPaging = {limit: 10}
@@ -5939,7 +7393,10 @@ type Query {
     """Filter to find records to aggregate on"""
     filter: TaxCategoryAggregateFilter
   ): TaxCategoryAggregateResponse!
-  taxRate(id: ID!): TaxRate
+  taxRate(
+    """The id of the record to find."""
+    id: ID!
+  ): TaxRate
   taxRates(
     """Limit or page results."""
     paging: OffsetPaging = {limit: 10}
@@ -5956,7 +7413,10 @@ type Query {
   ): TaxRateAggregateResponse!
   GetAllTaxRates: [TaxRate!]!
   GetAllTaxCategory: [TaxCategory!]!
-  user(id: ID!): User
+  user(
+    """The id of the record to find."""
+    id: ID!
+  ): User
   users(
     """Limit or page results."""
     paging: OffsetPaging = {limit: 10}
@@ -5972,7 +7432,10 @@ type Query {
     filter: UserAggregateFilter
   ): UserAggregateResponse!
   GetCurrentUser: User!
-  vendor(id: ID!): Vendor
+  vendor(
+    """The id of the record to find."""
+    id: ID!
+  ): Vendor
   vendors(
     """Limit or page results."""
     paging: OffsetPaging = {limit: 10}
@@ -5988,7 +7451,10 @@ type Query {
     filter: VendorAggregateFilter
   ): VendorAggregateResponse!
   GetVendorInfo: Vendor
-  zone(id: ID!): Zone
+  zone(
+    """The id of the record to find."""
+    id: ID!
+  ): Zone
   zones(
     """Limit or page results."""
     paging: OffsetPaging = {limit: 10}
@@ -6005,7 +7471,10 @@ type Query {
   ): ZoneAggregateResponse!
   ZoneFindMany: [Zone!]!
   ZoneFindOne(id: ID!): Zone!
-  country(id: ID!): Country
+  country(
+    """The id of the record to find."""
+    id: ID!
+  ): Country
   countries(
     """Limit or page results."""
     paging: OffsetPaging = {limit: 10}
@@ -6021,7 +7490,10 @@ type Query {
     filter: CountryAggregateFilter
   ): CountryAggregateResponse!
   GetAllCountries: [Country!]!
-  seo(id: ID!): Seo
+  seo(
+    """The id of the record to find."""
+    id: ID!
+  ): Seo
   seos(
     """Limit or page results."""
     paging: OffsetPaging = {limit: 10}
@@ -6036,7 +7508,10 @@ type Query {
     """Filter to find records to aggregate on"""
     filter: SeoAggregateFilter
   ): SeoAggregateResponse!
-  facet(id: ID!): Facet
+  facet(
+    """The id of the record to find."""
+    id: ID!
+  ): Facet
   facets(
     """Limit or page results."""
     paging: OffsetPaging = {limit: 10}
@@ -6051,7 +7526,10 @@ type Query {
     """Filter to find records to aggregate on"""
     filter: FacetAggregateFilter
   ): FacetAggregateResponse!
-  facetValue(id: ID!): FacetValue
+  facetValue(
+    """The id of the record to find."""
+    id: ID!
+  ): FacetValue
   facetValues(
     """Limit or page results."""
     paging: OffsetPaging = {limit: 10}
@@ -6066,7 +7544,10 @@ type Query {
     """Filter to find records to aggregate on"""
     filter: FacetValueAggregateFilter
   ): FacetValueAggregateResponse!
-  product(id: ID!): Product
+  product(
+    """The id of the record to find."""
+    id: ID!
+  ): Product
   products(
     """Limit or page results."""
     paging: OffsetPaging = {limit: 10}
@@ -6081,7 +7562,10 @@ type Query {
     """Filter to find records to aggregate on"""
     filter: ProductAggregateFilter
   ): ProductAggregateResponse!
-  productVariant(id: ID!): ProductVariant
+  productVariant(
+    """The id of the record to find."""
+    id: ID!
+  ): ProductVariant
   productVariants(
     """Limit or page results."""
     paging: OffsetPaging = {limit: 10}
@@ -6096,7 +7580,10 @@ type Query {
     """Filter to find records to aggregate on"""
     filter: ProductVariantAggregateFilter
   ): ProductVariantAggregateResponse!
-  productOption(id: ID!): ProductOption
+  productOption(
+    """The id of the record to find."""
+    id: ID!
+  ): ProductOption
   productOptions(
     """Limit or page results."""
     paging: OffsetPaging = {limit: 10}
@@ -6111,7 +7598,10 @@ type Query {
     """Filter to find records to aggregate on"""
     filter: ProductOptionAggregateFilter
   ): ProductOptionAggregateResponse!
-  productOptionGroup(id: ID!): ProductOptionGroup
+  productOptionGroup(
+    """The id of the record to find."""
+    id: ID!
+  ): ProductOptionGroup
   productOptionGroups(
     """Limit or page results."""
     paging: OffsetPaging = {limit: 10}
@@ -6126,7 +7616,10 @@ type Query {
     """Filter to find records to aggregate on"""
     filter: ProductOptionGroupAggregateFilter
   ): ProductOptionGroupAggregateResponse!
-  productVariantPrice(id: ID!): ProductVariantPrice
+  productVariantPrice(
+    """The id of the record to find."""
+    id: ID!
+  ): ProductVariantPrice
   productVariantPrices(
     """Limit or page results."""
     paging: OffsetPaging = {limit: 10}
@@ -6142,7 +7635,10 @@ type Query {
     filter: ProductVariantPriceAggregateFilter
   ): ProductVariantPriceAggregateResponse!
   GetPriceForVariant(prodId: ID, storeId: ID): ProductVariantPrice
-  productVariantAsset(id: ID!): ProductVariantAsset
+  productVariantAsset(
+    """The id of the record to find."""
+    id: ID!
+  ): ProductVariantAsset
   productVariantAssets(
     """Limit or page results."""
     paging: OffsetPaging = {limit: 10}
@@ -6157,7 +7653,10 @@ type Query {
     """Filter to find records to aggregate on"""
     filter: ProductVariantAssetAggregateFilter
   ): ProductVariantAssetAggregateResponse!
-  productAsset(id: ID!): ProductAsset
+  productAsset(
+    """The id of the record to find."""
+    id: ID!
+  ): ProductAsset
   productAssets(
     """Limit or page results."""
     paging: OffsetPaging = {limit: 10}
@@ -6188,7 +7687,10 @@ type Query {
   ): VendorPlansAggregateResponse!
   FindAllVendorPlans: [VendorPlans!]!
   GetVendorPlansForRegistration: [VendorPlans!]!
-  vendorLicense(id: ID!): VendorLicense
+  vendorLicense(
+    """The id of the record to find."""
+    id: ID!
+  ): VendorLicense
   vendorLicenses(
     """Limit or page results."""
     paging: OffsetPaging = {limit: 10}
@@ -6207,7 +7709,10 @@ type Query {
   GetBillingAgreement(id: ID!): BillingAgreement!
   GetBillingRequestForAgreement(id: String!): [BillingAgreementRequest!]!
   GetBillingAgreementForStore(variantId: String!, storeId: String!): BillingAgreement!
-  stockKeeping(id: ID!): StockKeeping
+  stockKeeping(
+    """The id of the record to find."""
+    id: ID!
+  ): StockKeeping
   stockKeepings(
     """Limit or page results."""
     paging: OffsetPaging = {limit: 10}
@@ -6224,7 +7729,10 @@ type Query {
   ): StockKeepingAggregateResponse!
   getStockKeepingVendor(vendorId: ID, variantId: ID!): StockKeeping
   getStockKeepingByStore: [StockKeeping!]!
-  sale(id: ID!): Sale
+  sale(
+    """The id of the record to find."""
+    id: ID!
+  ): Sale
   sales(
     """Limit or page results."""
     paging: OffsetPaging = {limit: 10}
@@ -6239,7 +7747,10 @@ type Query {
     """Filter to find records to aggregate on"""
     filter: SaleAggregateFilter
   ): SaleAggregateResponse!
-  stockMovement(id: ID!): StockMovement
+  stockMovement(
+    """The id of the record to find."""
+    id: ID!
+  ): StockMovement
   stockMovements(
     """Limit or page results."""
     paging: OffsetPaging = {limit: 10}
@@ -6254,7 +7765,10 @@ type Query {
     """Filter to find records to aggregate on"""
     filter: StockMovementAggregateFilter
   ): StockMovementAggregateResponse!
-  cancellation(id: ID!): Cancellation
+  cancellation(
+    """The id of the record to find."""
+    id: ID!
+  ): Cancellation
   cancellations(
     """Limit or page results."""
     paging: OffsetPaging = {limit: 10}
@@ -6269,7 +7783,10 @@ type Query {
     """Filter to find records to aggregate on"""
     filter: CancellationAggregateFilter
   ): CancellationAggregateResponse!
-  order(id: ID!): Order
+  order(
+    """The id of the record to find."""
+    id: ID!
+  ): Order
   orders(
     """Limit or page results."""
     paging: OffsetPaging = {limit: 10}
@@ -6284,7 +7801,10 @@ type Query {
     """Filter to find records to aggregate on"""
     filter: OrderAggregateFilter
   ): OrderAggregateResponse!
-  zip(id: ID!): Zip
+  zip(
+    """The id of the record to find."""
+    id: ID!
+  ): Zip
   zips(
     """Limit or page results."""
     paging: OffsetPaging = {limit: 10}
@@ -6300,7 +7820,10 @@ type Query {
     filter: ZipAggregateFilter
   ): ZipAggregateResponse!
   findAllZip: [Zip!]!
-  menu(id: ID!): Menu
+  menu(
+    """The id of the record to find."""
+    id: ID!
+  ): Menu
   menus(
     """Limit or page results."""
     paging: OffsetPaging = {limit: 10}
@@ -6316,7 +7839,10 @@ type Query {
     filter: MenuAggregateFilter
   ): MenuAggregateResponse!
   GetMenuTree: MenuResponseTypes!
-  page(id: ID!): Page
+  page(
+    """The id of the record to find."""
+    id: ID!
+  ): Page
   pages(
     """Limit or page results."""
     paging: OffsetPaging = {limit: 10}
@@ -6332,7 +7858,10 @@ type Query {
     filter: PageAggregateFilter
   ): PageAggregateResponse!
   getHomePage: Page!
-  address(id: ID!): Address
+  address(
+    """The id of the record to find."""
+    id: ID!
+  ): Address
   addresses(
     """Limit or page results."""
     paging: OffsetPaging = {limit: 10}
@@ -6361,7 +7890,10 @@ type Query {
     """Filter to find records to aggregate on"""
     filter: SettlementsAggregateFilter
   ): SettlementsAggregateResponse!
-  orderLine(id: ID!): OrderLine
+  orderLine(
+    """The id of the record to find."""
+    id: ID!
+  ): OrderLine
   orderLines(
     """Limit or page results."""
     paging: OffsetPaging = {limit: 10}
@@ -6376,7 +7908,10 @@ type Query {
     """Filter to find records to aggregate on"""
     filter: OrderLineAggregateFilter
   ): OrderLineAggregateResponse!
-  orderItem(id: ID!): OrderItem
+  orderItem(
+    """The id of the record to find."""
+    id: ID!
+  ): OrderItem
   orderItems(
     """Limit or page results."""
     paging: OffsetPaging = {limit: 10}
@@ -6391,7 +7926,10 @@ type Query {
     """Filter to find records to aggregate on"""
     filter: OrderItemAggregateFilter
   ): OrderItemAggregateResponse!
-  promotionVariantPrice(id: ID!): PromotionVariantPrice
+  promotionVariantPrice(
+    """The id of the record to find."""
+    id: ID!
+  ): PromotionVariantPrice
   promotionVariantPrices(
     """Limit or page results."""
     paging: OffsetPaging = {limit: 10}
@@ -6421,7 +7959,10 @@ type Query {
     """Filter to find records to aggregate on"""
     filter: CartPriceRulesAggregateFilter
   ): CartPriceRulesAggregateResponse!
-  account(id: ID!): Account
+  account(
+    """The id of the record to find."""
+    id: ID!
+  ): Account
   accounts(
     """Limit or page results."""
     paging: OffsetPaging = {limit: 10}
@@ -6437,7 +7978,10 @@ type Query {
     filter: AccountAggregateFilter
   ): AccountAggregateResponse!
   GetVendorAccount: Account!
-  delivery(id: ID!): Delivery
+  delivery(
+    """The id of the record to find."""
+    id: ID!
+  ): Delivery
   deliveries(
     """Limit or page results."""
     paging: OffsetPaging = {limit: 10}
@@ -6456,6 +8000,119 @@ type Query {
   GetDeliveryStrandedCount: DeliveryStrandedCount!
   GetAllPaymentMethods: [PaymentMethod!]!
   GetDefaultPaymentMethods: PaymentMethod!
+  GetProductSaleData(storeId: String, type: String!, productId: ID!): StatisticeDto!
+  GetStoreOrderData(storeId: String!, type: String!): StatisticeDto!
+  GetAdminOrderData(type: String!): StatisticeDto!
+  GetProductViews(type: String, productId: ID!): StatisticeProdDto!
+  GetAdminViews(type: String): StatisticeProdDto!
+  stockBackLog(
+    """The id of the record to find."""
+    id: ID!
+  ): StockBackLog
+  stockBackLogs(
+    """Limit or page results."""
+    paging: OffsetPaging = {limit: 10}
+
+    """Specify to filter the records returned."""
+    filter: StockBackLogFilter = {}
+
+    """Specify to sort results."""
+    sorting: [StockBackLogSort!] = []
+  ): [StockBackLog!]!
+  stockBackLogAggregate(
+    """Filter to find records to aggregate on"""
+    filter: StockBackLogAggregateFilter
+  ): StockBackLogAggregateResponse!
+  invoice(
+    """The id of the record to find."""
+    id: ID!
+  ): Invoice
+  invoices(
+    """Limit or page results."""
+    paging: OffsetPaging = {limit: 10}
+
+    """Specify to filter the records returned."""
+    filter: InvoiceFilter = {}
+
+    """Specify to sort results."""
+    sorting: [InvoiceSort!] = []
+  ): [Invoice!]!
+  invoiceAggregate(
+    """Filter to find records to aggregate on"""
+    filter: InvoiceAggregateFilter
+  ): InvoiceAggregateResponse!
+  refund(
+    """The id of the record to find."""
+    id: ID!
+  ): Refund
+  refunds(
+    """Limit or page results."""
+    paging: OffsetPaging = {limit: 10}
+
+    """Specify to filter the records returned."""
+    filter: RefundFilter = {}
+
+    """Specify to sort results."""
+    sorting: [RefundSort!] = []
+  ): [Refund!]!
+  refundAggregate(
+    """Filter to find records to aggregate on"""
+    filter: RefundAggregateFilter
+  ): RefundAggregateResponse!
+  payment(
+    """The id of the record to find."""
+    id: ID!
+  ): Payment
+  payments(
+    """Limit or page results."""
+    paging: OffsetPaging = {limit: 10}
+
+    """Specify to filter the records returned."""
+    filter: PaymentFilter = {}
+
+    """Specify to sort results."""
+    sorting: [PaymentSort!] = []
+  ): [Payment!]!
+  paymentAggregate(
+    """Filter to find records to aggregate on"""
+    filter: PaymentAggregateFilter
+  ): PaymentAggregateResponse!
+  viewCode(
+    """The id of the record to find."""
+    id: ID!
+  ): ViewCode
+  viewCodes(
+    """Limit or page results."""
+    paging: OffsetPaging = {limit: 10}
+
+    """Specify to filter the records returned."""
+    filter: ViewCodeFilter = {}
+
+    """Specify to sort results."""
+    sorting: [ViewCodeSort!] = []
+  ): [ViewCode!]!
+  viewCodeAggregate(
+    """Filter to find records to aggregate on"""
+    filter: ViewCodeAggregateFilter
+  ): ViewCodeAggregateResponse!
+  hsn(
+    """The id of the record to find."""
+    id: ID!
+  ): Hsn
+  hsns(
+    """Limit or page results."""
+    paging: OffsetPaging = {limit: 10}
+
+    """Specify to filter the records returned."""
+    filter: HsnFilter = {}
+
+    """Specify to sort results."""
+    sorting: [HsnSort!] = []
+  ): [Hsn!]!
+  hsnAggregate(
+    """Filter to find records to aggregate on"""
+    filter: HsnAggregateFilter
+  ): HsnAggregateResponse!
 }
 
 input AssetFilter {
@@ -6464,6 +8121,7 @@ input AssetFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   name: StringFieldComparison
   type: StringFieldComparison
   mimeType: StringFieldComparison
@@ -6484,6 +8142,7 @@ enum AssetSortFields {
   id
   createdAt
   updatedAt
+  deletedAt
   name
   type
   mimeType
@@ -6500,6 +8159,7 @@ input AssetAggregateFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   name: StringFieldComparison
   type: StringFieldComparison
   mimeType: StringFieldComparison
@@ -6516,6 +8176,7 @@ input RoleFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   code: StringFieldComparison
   description: StringFieldComparison
 }
@@ -6530,6 +8191,7 @@ enum RoleSortFields {
   id
   createdAt
   updatedAt
+  deletedAt
   code
   description
 }
@@ -6540,6 +8202,7 @@ input RoleAggregateFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   code: StringFieldComparison
   description: StringFieldComparison
 }
@@ -6719,6 +8382,7 @@ input FacetFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   name: StringFieldComparison
   isPrivate: BooleanFieldComparison
   code: StringFieldComparison
@@ -6734,6 +8398,7 @@ enum FacetSortFields {
   id
   createdAt
   updatedAt
+  deletedAt
   name
   isPrivate
   code
@@ -6745,6 +8410,7 @@ input FacetAggregateFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   name: StringFieldComparison
   isPrivate: BooleanFieldComparison
   code: StringFieldComparison
@@ -6756,6 +8422,7 @@ input ProductVariantAssetFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
 }
 
 input ProductVariantAssetSort {
@@ -6768,6 +8435,7 @@ enum ProductVariantAssetSortFields {
   id
   createdAt
   updatedAt
+  deletedAt
 }
 
 input ProductVariantAssetAggregateFilter {
@@ -6776,6 +8444,7 @@ input ProductVariantAssetAggregateFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
 }
 
 input VendorPlansFilter {
@@ -6784,6 +8453,7 @@ input VendorPlansFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   isActive: BooleanFieldComparison
   name: StringFieldComparison
   planValue: NumberFieldComparison
@@ -6799,6 +8469,7 @@ enum VendorPlansSortFields {
   id
   createdAt
   updatedAt
+  deletedAt
   isActive
   name
   planValue
@@ -6810,6 +8481,7 @@ input VendorPlansAggregateFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   isActive: BooleanFieldComparison
   name: StringFieldComparison
   planValue: NumberFieldComparison
@@ -6821,6 +8493,7 @@ input PageFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   title: StringFieldComparison
   targetId: StringFieldComparison
   pageType: PageTypeFilterComparison
@@ -6871,6 +8544,7 @@ enum PageSortFields {
   id
   createdAt
   updatedAt
+  deletedAt
   title
   targetId
   pageType
@@ -6883,6 +8557,7 @@ input PageAggregateFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   title: StringFieldComparison
   targetId: StringFieldComparison
   pageType: PageTypeFilterComparison
@@ -6895,6 +8570,7 @@ input PromotionVariantPriceFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   priceType: StringFieldComparison
   value: NumberFieldComparison
   forever: BooleanFieldComparison
@@ -6910,6 +8586,7 @@ input PromotionVariantPriceFilterProductVariantPriceFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   price: NumberFieldComparison
   taxIncluded: BooleanFieldComparison
 }
@@ -6924,6 +8601,7 @@ enum PromotionVariantPriceSortFields {
   id
   createdAt
   updatedAt
+  deletedAt
   priceType
   value
   forever
@@ -6938,6 +8616,7 @@ input PromotionVariantPriceAggregateFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   priceType: StringFieldComparison
   value: NumberFieldComparison
   forever: BooleanFieldComparison
@@ -6952,6 +8631,7 @@ input CartPriceRulesFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   priceType: StringFieldComparison
   value: NumberFieldComparison
 }
@@ -6966,6 +8646,7 @@ enum CartPriceRulesSortFields {
   id
   createdAt
   updatedAt
+  deletedAt
   priceType
   value
 }
@@ -6976,6 +8657,7 @@ input CartPriceRulesAggregateFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   priceType: StringFieldComparison
   value: NumberFieldComparison
 }
@@ -6986,6 +8668,7 @@ input AccountFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
 }
 
 input AccountSort {
@@ -6998,6 +8681,7 @@ enum AccountSortFields {
   id
   createdAt
   updatedAt
+  deletedAt
 }
 
 input AccountAggregateFilter {
@@ -7006,6 +8690,7 @@ input AccountAggregateFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
 }
 
 input DeliveryFilter {
@@ -7014,6 +8699,7 @@ input DeliveryFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   signIn: DeliveryFilterDeliverySignInFilter
 }
 
@@ -7023,6 +8709,7 @@ input DeliveryFilterDeliverySignInFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
 }
 
 input DeliverySort {
@@ -7035,6 +8722,7 @@ enum DeliverySortFields {
   id
   createdAt
   updatedAt
+  deletedAt
 }
 
 input DeliveryAggregateFilter {
@@ -7043,12 +8731,211 @@ input DeliveryAggregateFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
+}
+
+input RefundFilter {
+  and: [RefundFilter!]
+  or: [RefundFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
+  reason: StringFieldComparison
+  destination: StringFieldComparison
+  transactionId: StringFieldComparison
+  stage: StringFieldComparison
+  line: RefundFilterOrderLineFilter
+}
+
+input RefundFilterOrderLineFilter {
+  and: [RefundFilterOrderLineFilter!]
+  or: [RefundFilterOrderLineFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
+  stage: StringFieldComparison
+}
+
+input RefundSort {
+  field: RefundSortFields!
+  direction: SortDirection!
+  nulls: SortNulls
+}
+
+enum RefundSortFields {
+  id
+  createdAt
+  updatedAt
+  deletedAt
+  reason
+  destination
+  transactionId
+  stage
+}
+
+input RefundAggregateFilter {
+  and: [RefundAggregateFilter!]
+  or: [RefundAggregateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
+  reason: StringFieldComparison
+  destination: StringFieldComparison
+  transactionId: StringFieldComparison
+  stage: StringFieldComparison
+}
+
+input PaymentFilter {
+  and: [PaymentFilter!]
+  or: [PaymentFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
+  amount: NumberFieldComparison
+  errorMessage: StringFieldComparison
+  transactionId: StringFieldComparison
+}
+
+input PaymentSort {
+  field: PaymentSortFields!
+  direction: SortDirection!
+  nulls: SortNulls
+}
+
+enum PaymentSortFields {
+  id
+  createdAt
+  updatedAt
+  deletedAt
+  amount
+  errorMessage
+  transactionId
+}
+
+input PaymentAggregateFilter {
+  and: [PaymentAggregateFilter!]
+  or: [PaymentAggregateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
+  amount: NumberFieldComparison
+  errorMessage: StringFieldComparison
+  transactionId: StringFieldComparison
+}
+
+input ViewCodeFilter {
+  and: [ViewCodeFilter!]
+  or: [ViewCodeFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
+  name: StringFieldComparison
+  value: StringFieldComparison
+  description: StringFieldComparison
+}
+
+input ViewCodeSort {
+  field: ViewCodeSortFields!
+  direction: SortDirection!
+  nulls: SortNulls
+}
+
+enum ViewCodeSortFields {
+  id
+  createdAt
+  updatedAt
+  deletedAt
+  name
+  value
+  description
+}
+
+input ViewCodeAggregateFilter {
+  and: [ViewCodeAggregateFilter!]
+  or: [ViewCodeAggregateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
+  name: StringFieldComparison
+  value: StringFieldComparison
+  description: StringFieldComparison
+}
+
+input HsnFilter {
+  and: [HsnFilter!]
+  or: [HsnFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
+  code: StringFieldComparison
+  value: NumberFieldComparison
+  price: HsnFilterProductVariantPriceFilter
+  prod: HsnFilterProductFilter
+}
+
+input HsnFilterProductVariantPriceFilter {
+  and: [HsnFilterProductVariantPriceFilter!]
+  or: [HsnFilterProductVariantPriceFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
+  price: NumberFieldComparison
+  taxIncluded: BooleanFieldComparison
+}
+
+input HsnFilterProductFilter {
+  and: [HsnFilterProductFilter!]
+  or: [HsnFilterProductFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
+  productName: StringFieldComparison
+  slug: StringFieldComparison
+  description: StringFieldComparison
+}
+
+input HsnSort {
+  field: HsnSortFields!
+  direction: SortDirection!
+  nulls: SortNulls
+}
+
+enum HsnSortFields {
+  id
+  createdAt
+  updatedAt
+  deletedAt
+  code
+  value
+}
+
+input HsnAggregateFilter {
+  and: [HsnAggregateFilter!]
+  or: [HsnAggregateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
+  code: StringFieldComparison
+  value: NumberFieldComparison
 }
 
 type Mutation {
   administratorLogin(password: String!, email: String!): AdministratorDto!
   createAdministrator(type: AdministratorEnum!, password: String!, phone: String!, email: String!, lname: String!, fname: String!): Administrator!
   updateAdministratorPassword(newpassword: String!, password: String!, email: String!): User!
+  deleteOneAsset(input: DeleteOneInput!): AssetDeleteResponse!
+  deleteManyAssets(input: DeleteManyAssetsInput!): DeleteManyResponse!
   removeFeaturedsFromAsset(input: RelationsInput!): Asset!
   removeProductAssetsFromAsset(input: RelationsInput!): Asset!
   addFeaturedsToAsset(input: RelationsInput!): Asset!
@@ -7087,13 +8974,19 @@ type Mutation {
   updateManyStores(input: UpdateManyStoresInput!): UpdateManyResponse!
   createOneStore(input: CreateOneStoreInput!): Store!
   createManyStores(input: CreateManyStoresInput!): [Store!]!
-  removeLinesFromStore(input: RelationsInput!): Store!
+  removeInvoicesFromStore(input: RelationsInput!): Store!
+  removeZipsFromStore(input: RelationsInput!): Store!
+  removeBacklogsFromStore(input: RelationsInput!): Store!
+  removeCartsFromStore(input: RelationsInput!): Store!
   removePricesFromStore(input: RelationsInput!): Store!
   removeSettlementsFromStore(input: RelationsInput!): Store!
   removeSkusFromStore(input: RelationsInput!): Store!
   removeBalanceFromStore(input: RelationInput!): Store!
   removeCountryFromStore(input: RelationInput!): Store!
-  addLinesToStore(input: RelationsInput!): Store!
+  addInvoicesToStore(input: RelationsInput!): Store!
+  addZipsToStore(input: RelationsInput!): Store!
+  addBacklogsToStore(input: RelationsInput!): Store!
+  addCartsToStore(input: RelationsInput!): Store!
   addPricesToStore(input: RelationsInput!): Store!
   addSettlementsToStore(input: RelationsInput!): Store!
   addSkusToStore(input: RelationsInput!): Store!
@@ -7132,6 +9025,7 @@ type Mutation {
   setDeliveryOnUser(input: RelationInput!): User!
   setVendorOnUser(input: RelationInput!): User!
   setAdministratorOnUser(input: RelationInput!): User!
+  RequestResetCode(email: String!): ResetCode!
   removeZipsFromVendor(input: RelationsInput!): Vendor!
   removeAccountFromVendor(input: RelationInput!): Vendor!
   removeStoreFromVendor(input: RelationInput!): Vendor!
@@ -7209,17 +9103,19 @@ type Mutation {
   removeFacetsFromProduct(input: RelationsInput!): Product!
   removeVariantsFromProduct(input: RelationsInput!): Product!
   removeAssetsFromProduct(input: RelationsInput!): Product!
+  removeHsnFromProduct(input: RelationInput!): Product!
   removeCollectionFromProduct(input: RelationInput!): Product!
   removeFeaturedAssetFromProduct(input: RelationInput!): Product!
   addOptionsToProduct(input: RelationsInput!): Product!
   addFacetsToProduct(input: RelationsInput!): Product!
   addVariantsToProduct(input: RelationsInput!): Product!
   addAssetsToProduct(input: RelationsInput!): Product!
+  setHsnOnProduct(input: RelationInput!): Product!
   setCollectionOnProduct(input: RelationInput!): Product!
   setFeaturedAssetOnProduct(input: RelationInput!): Product!
   CreateProduct(facet: [String!]!, asset: [String!]!, featured: String!, slug: String!, desc: String!, name: String!): Product!
   UpdateProductCollection(collectionId: ID!, id: ID!): Product!
-  updateProduct(facet: [String!]!, asset: [String!]!, featured: String!, id: ID!, desc: String!, name: String!): Product!
+  updateProduct(viewcode: [String!]!, facet: [String!]!, asset: [String!]!, featured: String!, id: ID!, desc: String!, name: String!): Product!
   deleteOneProductVariant(input: DeleteOneInput!): ProductVariantDeleteResponse!
   deleteManyProductVariants(input: DeleteManyProductVariantsInput!): DeleteManyResponse!
   removeLinesFromProductVariant(input: RelationsInput!): ProductVariant!
@@ -7241,6 +9137,7 @@ type Mutation {
   CreateProductVariants(options: String!, prodId: ID!): [ProductVariant!]!
   CreateProductVariantSpecification(specs: JSON!, variantId: ID!): ProductVariantSpecs!
   UpdateProductVariantSpecification(specs: JSON!, id: ID!): ProductVariantSpecs!
+  UpdateVariantViewCode(viewcode: [String!]!, variantId: ID!): ProductVariant!
   deleteOneProductOption(input: DeleteOneInput!): ProductOptionDeleteResponse!
   deleteManyProductOptions(input: DeleteManyProductOptionsInput!): DeleteManyResponse!
   updateOneProductOption(input: UpdateOneProductOptionInput!): ProductOption!
@@ -7267,10 +9164,12 @@ type Mutation {
   updateManyProductVariantPrices(input: UpdateManyProductVariantPricesInput!): UpdateManyResponse!
   createOneProductVariantPrice(input: CreateOneProductVariantPriceInput!): ProductVariantPrice!
   createManyProductVariantPrices(input: CreateManyProductVariantPricesInput!): [ProductVariantPrice!]!
+  removeBacklogsFromProductVariantPrice(input: RelationsInput!): ProductVariantPrice!
   removePromopriceFromProductVariantPrice(input: RelationInput!): ProductVariantPrice!
   removeStoreFromProductVariantPrice(input: RelationInput!): ProductVariantPrice!
   removeTaxFromProductVariantPrice(input: RelationInput!): ProductVariantPrice!
   removeVariantFromProductVariantPrice(input: RelationInput!): ProductVariantPrice!
+  addBacklogsToProductVariantPrice(input: RelationsInput!): ProductVariantPrice!
   setPromopriceOnProductVariantPrice(input: RelationInput!): ProductVariantPrice!
   setStoreOnProductVariantPrice(input: RelationInput!): ProductVariantPrice!
   setTaxOnProductVariantPrice(input: RelationInput!): ProductVariantPrice!
@@ -7296,7 +9195,9 @@ type Mutation {
   addLicencesToVendorPlans(input: RelationsInput!): VendorPlans!
   CreatePlan(tenureStrategy: VendorPlanTenure!, priceStrategy: VendorPlanPrice!, value: Float!, name: String!): VendorPlans!
   UpdatePlan(status: Boolean!, id: ID!): VendorPlans!
+  removePlansFromVendorLicense(input: RelationInput!): VendorLicense!
   removeVendorFromVendorLicense(input: RelationInput!): VendorLicense!
+  setPlansOnVendorLicense(input: RelationInput!): VendorLicense!
   setVendorOnVendorLicense(input: RelationInput!): VendorLicense!
   CreateVendorProdVariant(value: Float!, storeId: ID!, variantId: ID!): BillingAgreement!
   UpdateVendorProdVariant(value: Float!, id: ID!): BillingAgreement!
@@ -7354,7 +9255,9 @@ type Mutation {
   updateManyZips(input: UpdateManyZipsInput!): UpdateManyResponse!
   createOneZip(input: CreateOneZipInput!): Zip!
   createManyZips(input: CreateManyZipsInput!): [Zip!]!
+  removeStoresFromZip(input: RelationsInput!): Zip!
   removeVendorsFromZip(input: RelationsInput!): Zip!
+  addStoresToZip(input: RelationsInput!): Zip!
   addVendorsToZip(input: RelationsInput!): Zip!
   CreateZipToVendor(zips: [ID!]!, vendorId: ID!): Vendor!
   deleteOneMenu(input: DeleteOneInput!): MenuDeleteResponse!
@@ -7384,12 +9287,18 @@ type Mutation {
   setUserOnAddress(input: RelationInput!): Address!
   removeStoreFromSettlements(input: RelationInput!): Settlements!
   setStoreOnSettlements(input: RelationInput!): Settlements!
+  CreateSettlement(storeId: ID!): Settlements!
+  UpdateSettlement(transactionId: String, settlementId: ID!): Settlements!
   updateOneOrderLine(input: UpdateOneOrderLineInput!): OrderLine!
   updateManyOrderLines(input: UpdateManyOrderLinesInput!): UpdateManyResponse!
+  removeInvoicesFromOrderLine(input: RelationsInput!): OrderLine!
+  removeRefundFromOrderLine(input: RelationInput!): OrderLine!
   removePoolFromOrderLine(input: RelationInput!): OrderLine!
   removeStoreFromOrderLine(input: RelationInput!): OrderLine!
   removeItemFromOrderLine(input: RelationInput!): OrderLine!
   removeOrderFromOrderLine(input: RelationInput!): OrderLine!
+  addInvoicesToOrderLine(input: RelationsInput!): OrderLine!
+  setRefundOnOrderLine(input: RelationInput!): OrderLine!
   setPoolOnOrderLine(input: RelationInput!): OrderLine!
   setStoreOnOrderLine(input: RelationInput!): OrderLine!
   setItemOnOrderLine(input: RelationInput!): OrderLine!
@@ -7426,6 +9335,63 @@ type Mutation {
   SetDeliverySignIn(type: Boolean!): DeliverySignIn!
   CreatePaymentMethod(secret: String!, api: String!): PaymentMethod!
   UpdatePaymentMethod(enabled: Boolean!, modeId: String!): PaymentMethod!
+  deleteOneStockBackLog(input: DeleteOneInput!): StockBackLogDeleteResponse!
+  deleteManyStockBackLogs(input: DeleteManyStockBackLogsInput!): DeleteManyResponse!
+  updateOneStockBackLog(input: UpdateOneStockBackLogInput!): StockBackLog!
+  updateManyStockBackLogs(input: UpdateManyStockBackLogsInput!): UpdateManyResponse!
+  removeStoreFromStockBackLog(input: RelationInput!): StockBackLog!
+  removeVariantFromStockBackLog(input: RelationInput!): StockBackLog!
+  setStoreOnStockBackLog(input: RelationInput!): StockBackLog!
+  setVariantOnStockBackLog(input: RelationInput!): StockBackLog!
+  removeStoreFromInvoice(input: RelationInput!): Invoice!
+  removeLineFromInvoice(input: RelationInput!): Invoice!
+  setStoreOnInvoice(input: RelationInput!): Invoice!
+  setLineOnInvoice(input: RelationInput!): Invoice!
+  updateOneRefund(input: UpdateOneRefundInput!): Refund!
+  updateManyRefunds(input: UpdateManyRefundsInput!): UpdateManyResponse!
+  removeLineFromRefund(input: RelationInput!): Refund!
+  setLineOnRefund(input: RelationInput!): Refund!
+  removeOrderFromPayment(input: RelationInput!): Payment!
+  setOrderOnPayment(input: RelationInput!): Payment!
+  createOneViewCode(input: CreateOneViewCodeInput!): ViewCode!
+  createManyViewCodes(input: CreateManyViewCodesInput!): [ViewCode!]!
+  deleteOneHsn(input: DeleteOneInput!): HsnDeleteResponse!
+  deleteManyHsns(input: DeleteManyHsnsInput!): DeleteManyResponse!
+  updateOneHsn(input: UpdateOneHsnInput!): Hsn!
+  updateManyHsns(input: UpdateManyHsnsInput!): UpdateManyResponse!
+  createOneHsn(input: CreateOneHsnInput!): Hsn!
+  createManyHsns(input: CreateManyHsnsInput!): [Hsn!]!
+  removePricesFromHsn(input: RelationsInput!): Hsn!
+  removeProdsFromHsn(input: RelationsInput!): Hsn!
+  addPricesToHsn(input: RelationsInput!): Hsn!
+  addProdsToHsn(input: RelationsInput!): Hsn!
+}
+
+input DeleteOneInput {
+  """The id of the record to delete."""
+  id: ID!
+}
+
+input DeleteManyAssetsInput {
+  """Filter to find records to delete"""
+  filter: AssetDeleteFilter!
+}
+
+input AssetDeleteFilter {
+  and: [AssetDeleteFilter!]
+  or: [AssetDeleteFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
+  name: StringFieldComparison
+  type: StringFieldComparison
+  mimeType: StringFieldComparison
+  width: NumberFieldComparison
+  height: NumberFieldComparison
+  fileSize: NumberFieldComparison
+  source: StringFieldComparison
+  preview: StringFieldComparison
 }
 
 input RelationsInput {
@@ -7439,11 +9405,6 @@ input RelationsInput {
 """The `Upload` scalar type represents a file upload."""
 scalar Upload
 
-input DeleteOneInput {
-  """The id of the record to delete."""
-  id: ID!
-}
-
 input DeleteManyCollectionsInput {
   """Filter to find records to delete"""
   filter: CollectionDeleteFilter!
@@ -7455,6 +9416,7 @@ input CollectionDeleteFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   isRoot: BooleanFieldComparison
   inMenu: BooleanFieldComparison
   position: NumberFieldComparison
@@ -7475,6 +9437,7 @@ input UpdateCollection {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   isRoot: Boolean
   inMenu: Boolean
   position: Float
@@ -7497,6 +9460,7 @@ input CollectionUpdateFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   isRoot: BooleanFieldComparison
   inMenu: BooleanFieldComparison
   position: NumberFieldComparison
@@ -7514,6 +9478,7 @@ input CreateCollection {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   isRoot: Boolean
   inMenu: Boolean
   position: Float
@@ -7946,6 +9911,7 @@ input CountryDeleteFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   code: StringFieldComparison
   name: StringFieldComparison
   enabled: BooleanFieldComparison
@@ -7963,6 +9929,7 @@ input UpdateCountry {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   code: String
   name: String
   enabled: Boolean
@@ -7982,6 +9949,7 @@ input CountryUpdateFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   code: StringFieldComparison
   name: StringFieldComparison
   enabled: BooleanFieldComparison
@@ -7996,6 +9964,7 @@ input CreateCountry {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   code: String
   name: String
   enabled: Boolean
@@ -8092,6 +10061,7 @@ input FacetDeleteFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   name: StringFieldComparison
   isPrivate: BooleanFieldComparison
   code: StringFieldComparison
@@ -8109,6 +10079,7 @@ input UpdateFacet {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   name: String
   isPrivate: Boolean
   code: String
@@ -8128,6 +10099,7 @@ input FacetUpdateFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   name: StringFieldComparison
   isPrivate: BooleanFieldComparison
   code: StringFieldComparison
@@ -8142,6 +10114,7 @@ input CreateFacet {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   name: String
   isPrivate: Boolean
   code: String
@@ -8163,6 +10136,7 @@ input FacetValueDeleteFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   code: StringFieldComparison
 }
 
@@ -8178,6 +10152,7 @@ input UpdateFacetValue {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   code: String
 }
 
@@ -8195,6 +10170,7 @@ input FacetValueUpdateFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   code: StringFieldComparison
 }
 
@@ -8207,6 +10183,7 @@ input CreateFacetValue {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   code: String
 }
 
@@ -8226,6 +10203,7 @@ input ProductDeleteFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   productName: StringFieldComparison
   slug: StringFieldComparison
   description: StringFieldComparison
@@ -8243,9 +10221,11 @@ input UpdateProduct {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   productName: String
   slug: String
   description: String
+  viewcode: [String!]
 }
 
 input UpdateManyProductsInput {
@@ -8262,6 +10242,7 @@ input ProductUpdateFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   productName: StringFieldComparison
   slug: StringFieldComparison
   description: StringFieldComparison
@@ -8276,9 +10257,11 @@ input CreateProduct {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   productName: String
   slug: String
   description: String
+  viewcode: [String!]
 }
 
 input CreateManyProductsInput {
@@ -8302,6 +10285,7 @@ input ProductVariantDeleteFilter {
   enabled: BooleanFieldComparison
   sku: StringFieldComparison
   name: StringFieldComparison
+  rating: NumberFieldComparison
   trackInventory: BooleanFieldComparison
 }
 
@@ -8316,6 +10300,7 @@ input ProductOptionDeleteFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   name: StringFieldComparison
   code: StringFieldComparison
 }
@@ -8332,6 +10317,7 @@ input UpdateProductOption {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   name: String
   code: String
 }
@@ -8350,6 +10336,7 @@ input ProductOptionUpdateFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   name: StringFieldComparison
   code: StringFieldComparison
 }
@@ -8363,6 +10350,7 @@ input CreateProductOption {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   name: String
   code: String
 }
@@ -8383,6 +10371,7 @@ input ProductOptionGroupDeleteFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   name: StringFieldComparison
   code: StringFieldComparison
 }
@@ -8399,6 +10388,7 @@ input UpdateProductOptionGroup {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   name: String
   code: String
 }
@@ -8417,6 +10407,7 @@ input ProductOptionGroupUpdateFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   name: StringFieldComparison
   code: StringFieldComparison
 }
@@ -8430,6 +10421,7 @@ input CreateProductOptionGroup {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   name: String
   code: String
 }
@@ -8450,6 +10442,7 @@ input ProductVariantPriceDeleteFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   price: NumberFieldComparison
   taxIncluded: BooleanFieldComparison
 }
@@ -8466,6 +10459,7 @@ input UpdateProductVariantPrice {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   price: Float
   taxIncluded: Boolean
 }
@@ -8484,6 +10478,7 @@ input ProductVariantPriceUpdateFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   price: NumberFieldComparison
   taxIncluded: BooleanFieldComparison
 }
@@ -8497,6 +10492,7 @@ input CreateProductVariantPrice {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   price: Float
   taxIncluded: Boolean
 }
@@ -8517,6 +10513,7 @@ input ProductAssetDeleteFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
 }
 
 input UpdateOneProductAssetInput {
@@ -8531,6 +10528,7 @@ input UpdateProductAsset {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
 }
 
 input UpdateManyProductAssetsInput {
@@ -8547,6 +10545,7 @@ input ProductAssetUpdateFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
 }
 
 input CreateOneProductAssetInput {
@@ -8558,6 +10557,7 @@ input CreateProductAsset {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
 }
 
 input CreateManyProductAssetsInput {
@@ -8990,6 +10990,7 @@ input PageDeleteFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   title: StringFieldComparison
   targetId: StringFieldComparison
   pageType: PageTypeFilterComparison
@@ -9008,6 +11009,7 @@ input UpdatePage {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   title: String
   targetId: String
   single: JSON
@@ -9030,6 +11032,7 @@ input PageUpdateFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   title: StringFieldComparison
   targetId: StringFieldComparison
   pageType: PageTypeFilterComparison
@@ -9045,6 +11048,7 @@ input CreatePage {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   title: String
   targetId: String
   single: JSON
@@ -9069,6 +11073,7 @@ input AddressDeleteFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   fullName: StringFieldComparison
   addressLine: StringFieldComparison
   city: StringFieldComparison
@@ -9094,6 +11099,7 @@ input UpdateAddress {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   fullName: String
   addressLine: String
   city: String
@@ -9121,6 +11127,7 @@ input AddressUpdateFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   fullName: StringFieldComparison
   addressLine: StringFieldComparison
   city: StringFieldComparison
@@ -9143,6 +11150,7 @@ input CreateAddress {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   fullName: String
   addressLine: String
   city: String
@@ -9173,6 +11181,7 @@ input UpdateOrderLine {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   priceField: JSON
   stage: String
 }
@@ -9191,6 +11200,7 @@ input OrderLineUpdateFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   stage: StringFieldComparison
 }
 
@@ -9205,6 +11215,7 @@ input PromotionVariantPriceDeleteFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   priceType: StringFieldComparison
   value: NumberFieldComparison
   forever: BooleanFieldComparison
@@ -9225,6 +11236,7 @@ input UpdatePromotionVariantPrice {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   priceType: String
   value: Float
   forever: Boolean
@@ -9247,6 +11259,7 @@ input PromotionVariantPriceUpdateFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   priceType: StringFieldComparison
   value: NumberFieldComparison
   forever: BooleanFieldComparison
@@ -9264,6 +11277,7 @@ input CreatePromotionVariantPrice {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   priceType: String
   value: Float
   forever: Boolean
@@ -9288,6 +11302,7 @@ input CartPriceRulesDeleteFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   priceType: StringFieldComparison
   value: NumberFieldComparison
 }
@@ -9304,6 +11319,7 @@ input UpdateCartPriceRules {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   priceType: String
   value: Float
 }
@@ -9322,6 +11338,7 @@ input CartPriceRulesUpdateFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   priceType: StringFieldComparison
   value: NumberFieldComparison
 }
@@ -9335,6 +11352,7 @@ input CreateCartPriceRules {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
+  deletedAt: DateTime
   priceType: String
   value: Float
 }
@@ -9342,6 +11360,183 @@ input CreateCartPriceRules {
 input CreateManyCartPriceRulesInput {
   """Array of records to create"""
   cartPriceRules: [CreateCartPriceRules!]!
+}
+
+input DeleteManyStockBackLogsInput {
+  """Filter to find records to delete"""
+  filter: StockBackLogDeleteFilter!
+}
+
+input StockBackLogDeleteFilter {
+  and: [StockBackLogDeleteFilter!]
+  or: [StockBackLogDeleteFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  quantity: NumberFieldComparison
+}
+
+input UpdateOneStockBackLogInput {
+  """The id of the record to update"""
+  id: ID!
+
+  """The update to apply."""
+  update: UpdateStockBackLog!
+}
+
+input UpdateStockBackLog {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  quantity: Float
+}
+
+input UpdateManyStockBackLogsInput {
+  """Filter used to find fields to update"""
+  filter: StockBackLogUpdateFilter!
+
+  """The update to apply to all records found using the filter"""
+  update: UpdateStockBackLog!
+}
+
+input StockBackLogUpdateFilter {
+  and: [StockBackLogUpdateFilter!]
+  or: [StockBackLogUpdateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  quantity: NumberFieldComparison
+}
+
+input UpdateOneRefundInput {
+  """The id of the record to update"""
+  id: ID!
+
+  """The update to apply."""
+  update: UpdateRefund!
+}
+
+input UpdateRefund {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+  reason: String
+  destination: String
+  transactionId: String
+  stage: String
+}
+
+input UpdateManyRefundsInput {
+  """Filter used to find fields to update"""
+  filter: RefundUpdateFilter!
+
+  """The update to apply to all records found using the filter"""
+  update: UpdateRefund!
+}
+
+input RefundUpdateFilter {
+  and: [RefundUpdateFilter!]
+  or: [RefundUpdateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
+  reason: StringFieldComparison
+  destination: StringFieldComparison
+  transactionId: StringFieldComparison
+  stage: StringFieldComparison
+}
+
+input CreateOneViewCodeInput {
+  """The record to create"""
+  viewCode: CreateViewCode!
+}
+
+input CreateViewCode {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+  name: String
+  value: String
+  description: String
+}
+
+input CreateManyViewCodesInput {
+  """Array of records to create"""
+  viewCodes: [CreateViewCode!]!
+}
+
+input DeleteManyHsnsInput {
+  """Filter to find records to delete"""
+  filter: HsnDeleteFilter!
+}
+
+input HsnDeleteFilter {
+  and: [HsnDeleteFilter!]
+  or: [HsnDeleteFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
+  code: StringFieldComparison
+  value: NumberFieldComparison
+}
+
+input UpdateOneHsnInput {
+  """The id of the record to update"""
+  id: ID!
+
+  """The update to apply."""
+  update: UpdateHsn!
+}
+
+input UpdateHsn {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+  code: String
+  value: Float
+}
+
+input UpdateManyHsnsInput {
+  """Filter used to find fields to update"""
+  filter: HsnUpdateFilter!
+
+  """The update to apply to all records found using the filter"""
+  update: UpdateHsn!
+}
+
+input HsnUpdateFilter {
+  and: [HsnUpdateFilter!]
+  or: [HsnUpdateFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
+  code: StringFieldComparison
+  value: NumberFieldComparison
+}
+
+input CreateOneHsnInput {
+  """The record to create"""
+  hsn: CreateHsn!
+}
+
+input CreateHsn {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+  code: String
+  value: Float
+}
+
+input CreateManyHsnsInput {
+  """Array of records to create"""
+  hsns: [CreateHsn!]!
 }
 
 type Subscription {
@@ -9540,6 +11735,36 @@ type Subscription {
   updatedOneDelivery(input: UpdateOneDeliverySubscriptionFilterInput): Delivery!
   updatedManyDeliveries: UpdateManyResponse!
   createdDelivery(input: CreateDeliverySubscriptionFilterInput): Delivery!
+  deletedOneStockBackLog(input: DeleteOneStockBackLogSubscriptionFilterInput): StockBackLogDeleteResponse!
+  deletedManyStockBackLogs: DeleteManyResponse!
+  updatedOneStockBackLog(input: UpdateOneStockBackLogSubscriptionFilterInput): StockBackLog!
+  updatedManyStockBackLogs: UpdateManyResponse!
+  createdStockBackLog(input: CreateStockBackLogSubscriptionFilterInput): StockBackLog!
+  deletedOneInvoice(input: DeleteOneInvoiceSubscriptionFilterInput): InvoiceDeleteResponse!
+  deletedManyInvoices: DeleteManyResponse!
+  updatedOneInvoice(input: UpdateOneInvoiceSubscriptionFilterInput): Invoice!
+  updatedManyInvoices: UpdateManyResponse!
+  createdInvoice(input: CreateInvoiceSubscriptionFilterInput): Invoice!
+  deletedOneRefund(input: DeleteOneRefundSubscriptionFilterInput): RefundDeleteResponse!
+  deletedManyRefunds: DeleteManyResponse!
+  updatedOneRefund(input: UpdateOneRefundSubscriptionFilterInput): Refund!
+  updatedManyRefunds: UpdateManyResponse!
+  createdRefund(input: CreateRefundSubscriptionFilterInput): Refund!
+  deletedOnePayment(input: DeleteOnePaymentSubscriptionFilterInput): PaymentDeleteResponse!
+  deletedManyPayments: DeleteManyResponse!
+  updatedOnePayment(input: UpdateOnePaymentSubscriptionFilterInput): Payment!
+  updatedManyPayments: UpdateManyResponse!
+  createdPayment(input: CreatePaymentSubscriptionFilterInput): Payment!
+  deletedOneViewCode(input: DeleteOneViewCodeSubscriptionFilterInput): ViewCodeDeleteResponse!
+  deletedManyViewCodes: DeleteManyResponse!
+  updatedOneViewCode(input: UpdateOneViewCodeSubscriptionFilterInput): ViewCode!
+  updatedManyViewCodes: UpdateManyResponse!
+  createdViewCode(input: CreateViewCodeSubscriptionFilterInput): ViewCode!
+  deletedOneHsn(input: DeleteOneHsnSubscriptionFilterInput): HsnDeleteResponse!
+  deletedManyHsns: DeleteManyResponse!
+  updatedOneHsn(input: UpdateOneHsnSubscriptionFilterInput): Hsn!
+  updatedManyHsns: UpdateManyResponse!
+  createdHsn(input: CreateHsnSubscriptionFilterInput): Hsn!
 }
 
 input DeleteOneAssetSubscriptionFilterInput {
@@ -9553,6 +11778,7 @@ input AssetSubscriptionFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   name: StringFieldComparison
   type: StringFieldComparison
   mimeType: StringFieldComparison
@@ -9584,6 +11810,7 @@ input RoleSubscriptionFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   code: StringFieldComparison
   description: StringFieldComparison
 }
@@ -9609,6 +11836,7 @@ input CollectionSubscriptionFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   isRoot: BooleanFieldComparison
   inMenu: BooleanFieldComparison
   position: NumberFieldComparison
@@ -9832,6 +12060,7 @@ input CountrySubscriptionFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   code: StringFieldComparison
   name: StringFieldComparison
   enabled: BooleanFieldComparison
@@ -9884,6 +12113,7 @@ input FacetSubscriptionFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   name: StringFieldComparison
   isPrivate: BooleanFieldComparison
   code: StringFieldComparison
@@ -9910,6 +12140,7 @@ input FacetValueSubscriptionFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   code: StringFieldComparison
 }
 
@@ -9934,6 +12165,7 @@ input ProductSubscriptionFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   productName: StringFieldComparison
   slug: StringFieldComparison
   description: StringFieldComparison
@@ -9965,6 +12197,7 @@ input ProductVariantSubscriptionFilter {
   enabled: BooleanFieldComparison
   sku: StringFieldComparison
   name: StringFieldComparison
+  rating: NumberFieldComparison
   trackInventory: BooleanFieldComparison
 }
 
@@ -9989,6 +12222,7 @@ input ProductOptionSubscriptionFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   name: StringFieldComparison
   code: StringFieldComparison
 }
@@ -10014,6 +12248,7 @@ input ProductOptionGroupSubscriptionFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   name: StringFieldComparison
   code: StringFieldComparison
 }
@@ -10039,6 +12274,7 @@ input ProductVariantPriceSubscriptionFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   price: NumberFieldComparison
   taxIncluded: BooleanFieldComparison
 }
@@ -10064,6 +12300,7 @@ input ProductVariantAssetSubscriptionFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
 }
 
 input UpdateOneProductVariantAssetSubscriptionFilterInput {
@@ -10087,6 +12324,7 @@ input ProductAssetSubscriptionFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
 }
 
 input UpdateOneProductAssetSubscriptionFilterInput {
@@ -10110,6 +12348,7 @@ input VendorPlansSubscriptionFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   isActive: BooleanFieldComparison
   name: StringFieldComparison
   planValue: NumberFieldComparison
@@ -10134,6 +12373,7 @@ input VendorLicenseSubscriptionFilter {
   and: [VendorLicenseSubscriptionFilter!]
   or: [VendorLicenseSubscriptionFilter!]
   id: IDFilterComparison
+  deletedAt: DateFieldComparison
   tenureStart: DateFieldComparison
   tenureEnd: DateFieldComparison
 }
@@ -10262,6 +12502,7 @@ input OrderSubscriptionFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   totalPrice: NumberFieldComparison
   address: StringFieldComparison
 }
@@ -10339,6 +12580,7 @@ input PageSubscriptionFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   title: StringFieldComparison
   targetId: StringFieldComparison
   pageType: PageTypeFilterComparison
@@ -10366,6 +12608,7 @@ input AddressSubscriptionFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   fullName: StringFieldComparison
   addressLine: StringFieldComparison
   city: StringFieldComparison
@@ -10400,6 +12643,7 @@ input SettlementsSubscriptionFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   amount: NumberFieldComparison
   taxamount: NumberFieldComparison
   finalamount: NumberFieldComparison
@@ -10429,6 +12673,7 @@ input OrderLineSubscriptionFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   stage: StringFieldComparison
 }
 
@@ -10453,6 +12698,7 @@ input OrderItemSubscriptionFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   quantity: NumberFieldComparison
 }
 
@@ -10477,6 +12723,7 @@ input PromotionVariantPriceSubscriptionFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   priceType: StringFieldComparison
   value: NumberFieldComparison
   forever: BooleanFieldComparison
@@ -10506,6 +12753,7 @@ input CartPriceRulesSubscriptionFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
   priceType: StringFieldComparison
   value: NumberFieldComparison
 }
@@ -10531,6 +12779,7 @@ input AccountSubscriptionFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
 }
 
 input UpdateOneAccountSubscriptionFilterInput {
@@ -10554,6 +12803,7 @@ input DeliverySubscriptionFilter {
   id: IDFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
 }
 
 input UpdateOneDeliverySubscriptionFilterInput {
@@ -10564,4 +12814,166 @@ input UpdateOneDeliverySubscriptionFilterInput {
 input CreateDeliverySubscriptionFilterInput {
   """Specify to filter the records returned."""
   filter: DeliverySubscriptionFilter!
+}
+
+input DeleteOneStockBackLogSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: StockBackLogSubscriptionFilter!
+}
+
+input StockBackLogSubscriptionFilter {
+  and: [StockBackLogSubscriptionFilter!]
+  or: [StockBackLogSubscriptionFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  quantity: NumberFieldComparison
+}
+
+input UpdateOneStockBackLogSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: StockBackLogSubscriptionFilter!
+}
+
+input CreateStockBackLogSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: StockBackLogSubscriptionFilter!
+}
+
+input DeleteOneInvoiceSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: InvoiceSubscriptionFilter!
+}
+
+input InvoiceSubscriptionFilter {
+  and: [InvoiceSubscriptionFilter!]
+  or: [InvoiceSubscriptionFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
+  type: StringFieldComparison
+  total: NumberFieldComparison
+  amount: NumberFieldComparison
+  fees: NumberFieldComparison
+  tax: NumberFieldComparison
+  nulled: BooleanFieldComparison
+}
+
+input UpdateOneInvoiceSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: InvoiceSubscriptionFilter!
+}
+
+input CreateInvoiceSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: InvoiceSubscriptionFilter!
+}
+
+input DeleteOneRefundSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: RefundSubscriptionFilter!
+}
+
+input RefundSubscriptionFilter {
+  and: [RefundSubscriptionFilter!]
+  or: [RefundSubscriptionFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
+  reason: StringFieldComparison
+  destination: StringFieldComparison
+  transactionId: StringFieldComparison
+  stage: StringFieldComparison
+}
+
+input UpdateOneRefundSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: RefundSubscriptionFilter!
+}
+
+input CreateRefundSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: RefundSubscriptionFilter!
+}
+
+input DeleteOnePaymentSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: PaymentSubscriptionFilter!
+}
+
+input PaymentSubscriptionFilter {
+  and: [PaymentSubscriptionFilter!]
+  or: [PaymentSubscriptionFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
+  amount: NumberFieldComparison
+  errorMessage: StringFieldComparison
+  transactionId: StringFieldComparison
+}
+
+input UpdateOnePaymentSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: PaymentSubscriptionFilter!
+}
+
+input CreatePaymentSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: PaymentSubscriptionFilter!
+}
+
+input DeleteOneViewCodeSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: ViewCodeSubscriptionFilter!
+}
+
+input ViewCodeSubscriptionFilter {
+  and: [ViewCodeSubscriptionFilter!]
+  or: [ViewCodeSubscriptionFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
+  name: StringFieldComparison
+  value: StringFieldComparison
+  description: StringFieldComparison
+}
+
+input UpdateOneViewCodeSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: ViewCodeSubscriptionFilter!
+}
+
+input CreateViewCodeSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: ViewCodeSubscriptionFilter!
+}
+
+input DeleteOneHsnSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: HsnSubscriptionFilter!
+}
+
+input HsnSubscriptionFilter {
+  and: [HsnSubscriptionFilter!]
+  or: [HsnSubscriptionFilter!]
+  id: IDFilterComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  deletedAt: DateFieldComparison
+  code: StringFieldComparison
+  value: NumberFieldComparison
+}
+
+input UpdateOneHsnSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: HsnSubscriptionFilter!
+}
+
+input CreateHsnSubscriptionFilterInput {
+  """Specify to filter the records returned."""
+  filter: HsnSubscriptionFilter!
 }

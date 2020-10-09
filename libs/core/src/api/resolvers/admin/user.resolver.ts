@@ -1,6 +1,6 @@
-import {Context, Query, Resolver} from '@nestjs/graphql';
+import {Args, Context, Mutation, Query, Resolver} from '@nestjs/graphql';
 import {UserService} from '../../../service';
-import {TaxRate, User} from '../../../entity';
+import {ResetCode, TaxRate, User} from '../../../entity';
 import {CRUDResolver, PagingStrategies} from "@nestjs-query/query-graphql";
 import {InjectQueryService, QueryService} from "@nestjs-query/core";
 
@@ -32,5 +32,12 @@ export class UserResolver extends CRUDResolver(User, {
             const user = await this.userService.GetCurrentUser(token)
             resolve(user)
         })
+    }
+
+    @Mutation(() => ResetCode)
+    async RequestResetCode(
+        @Args('email') email: string,
+    ): Promise<ResetCode> {
+        return this.userService.resetPassword(email)
     }
 }

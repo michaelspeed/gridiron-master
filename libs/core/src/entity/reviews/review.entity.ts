@@ -2,7 +2,7 @@ import {Field, ID, Int, ObjectType} from "@nestjs/graphql";
 import {
     BaseEntity,
     Column,
-    CreateDateColumn,
+    CreateDateColumn, DeleteDateColumn,
     Entity,
     ManyToOne,
     PrimaryGeneratedColumn,
@@ -26,6 +26,10 @@ export class Review extends BaseEntity {
     @FilterableField()
     @UpdateDateColumn()
     updatedAt: Date;
+
+    @FilterableField()
+    @DeleteDateColumn()
+    deletedAt?: Date;
 
     @Field(() => Int)
     @Column({type: "int"})

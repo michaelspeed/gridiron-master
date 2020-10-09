@@ -157,7 +157,6 @@ export class VendorService {
 
             const vendorLicense = new VendorLicense()
             const plan = await this.connection.getRepository(VendorPlans).findOne({where:{id: planID}})
-            console.log(plan)
             vendorLicense.plans = plan
             vendorLicense.tenureStart = new Date()
             if (plan.tenureStrategy === VendorPlanTenure.MONTHLY) {

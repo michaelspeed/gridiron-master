@@ -61,6 +61,13 @@ import {DeliveryResolver} from "./resolvers/admin/delivery.resolver";
 import {PaymentMethodResolver} from "./resolvers/admin/paymentMethod.resolver";
 import {SearchCartResolver} from "./resolvers/shop/cart.resolver";
 import {ShopOrderResolver} from "./resolvers/shop/order.resolver";
+import {StatisticResolver} from "./resolvers/admin/statistic.resolver";
+import {StockBackLogResolver} from "./resolvers/admin/stock-back-log.resolver";
+import {InvoiceResolver} from "./resolvers/admin/invoice.resolver";
+import {RefundResolver} from "./resolvers/admin/refund.resolver";
+import {PaymentResolver} from "./resolvers/admin/payment.resolver";
+import {ViewCodesResolver} from "./resolvers/admin/view-codes.resolver";
+import {HsnResolver} from "./resolvers/admin/hsn.resolver";
 
 const adminResolvers = [
     AdministratorResolver,
@@ -104,7 +111,14 @@ const adminResolvers = [
     CartPriceResolver,
     AccountsResolver,
     DeliveryResolver,
-    PaymentMethodResolver
+    PaymentMethodResolver,
+    StatisticResolver,
+    StockBackLogResolver,
+    InvoiceResolver,
+    RefundResolver,
+    PaymentResolver,
+    ViewCodesResolver,
+    HsnResolver
 ]
 
 const shopResolvers = [

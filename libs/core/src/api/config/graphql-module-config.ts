@@ -49,12 +49,13 @@ async function configureAdminGraphQLOptions(
 
     return {
         path: '/' + options.apiPath,
-        autoSchemaFile: 'admin.gql',
+        // autoSchemaFile: 'admin.gql',
         include: [...options.resolverModule, ...getDynamicGraphQLModulesForPlugins(options.apiType)],
         uploads: {
             maxFileSize: configService.assetOptions.uploadMaxFileSize,
         },
         typePaths: options.typePaths,
+        // typePaths: [],
         playground: options.playground || false,
         debug: options.debug || false,
         context: (req: any) => req,
@@ -127,7 +128,7 @@ async function configureShopGraphQLOptions(
         buildSchemaOptions: {
             skipCheck: true,
         },
-        typePaths: [path.join(__dirname,'..', 'schema','shop', 'shop.graphql')],
+        /*typePaths: [path.join(__dirname,'..', 'schema','shop', 'shop.graphql')],*/
         resolverValidationOptions: {
             allowResolversNotInSchema: true,
         },

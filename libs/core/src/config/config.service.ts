@@ -45,4 +45,12 @@ export class ConfigService implements GridIronConfig {
         return this.activeConfig.jobQueueOptions;
     }
 
+    get defaultTax(): number {
+        return this.activeConfig.defaultTax
+    }
+
+    get flatFeeAmount(): number {
+        return this.activeConfig.flatFeeAmount
+    }
+
 }

@@ -1,7 +1,7 @@
 import {
     BaseEntity,
     Column,
-    CreateDateColumn,
+    CreateDateColumn, DeleteDateColumn,
     Entity,
     OneToMany,
     PrimaryGeneratedColumn,
@@ -25,6 +25,10 @@ export class PaymentMethod extends BaseEntity {
     @FilterableField()
     @UpdateDateColumn()
     updatedAt: Date;
+
+    @FilterableField()
+    @DeleteDateColumn()
+    deletedAt?: Date;
 
     @FilterableField()
     @Column()

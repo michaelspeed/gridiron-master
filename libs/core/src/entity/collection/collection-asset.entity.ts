@@ -1,4 +1,11 @@
-import {BaseEntity, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn} from 'typeorm';
+import {
+    BaseEntity,
+    CreateDateColumn,
+    DeleteDateColumn,
+    Entity,
+    PrimaryGeneratedColumn,
+    UpdateDateColumn
+} from 'typeorm';
 import {ID, ObjectType} from '@nestjs/graphql';
 import {FilterableField} from '@nestjs-query/query-graphql';
 
@@ -16,6 +23,10 @@ export class CollectionAsset extends  BaseEntity {
     @FilterableField()
     @UpdateDateColumn()
     updatedAt: Date;
+
+    @FilterableField()
+    @DeleteDateColumn()
+    deletedAt?: Date;
 
     @FilterableField(() => ID)
     @PrimaryGeneratedColumn('uuid')

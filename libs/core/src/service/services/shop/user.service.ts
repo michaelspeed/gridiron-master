@@ -1,9 +1,10 @@
 import {Injectable} from "@nestjs/common";
 import {InjectConnection} from "@nestjs/typeorm";
 import {Connection} from "typeorm";
-import {User} from "../../../entity";
+import {ResetCode, User} from "../../../entity";
 import * as bcrypt from 'bcrypt';
 import {JwtService} from "@nestjs/jwt";
+import uniqid from 'uniqid'
 
 @Injectable()
 export class ShopUserService {
@@ -85,6 +86,17 @@ export class ShopUserService {
             user.phoneNumber = phone
             this.connection.getRepository(User).save(user)
                 .then(value => resolve(value)).catch(error => reject(error))
+        })
+    }
+
+    async resetPassword(email: string): Promise<ResetCode> {
+        return new Promise<ResetCode>(async (resolve, reject) => {
+            const user = await this.connection.getRepository(User).findOne({where:{email:email}})
+            const resetcode = new ResetCode()
+            resetcode.user = user
+            resetcode.code = uniqid('reset-')
+            this.connection.getRepository(ResetCode).save(resetcode)
+                .then(value => resolve(value)).catch(e => reject(e))
         })
     }
 }

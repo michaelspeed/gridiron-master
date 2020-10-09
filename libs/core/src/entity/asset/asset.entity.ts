@@ -1,6 +1,6 @@
 import {
     Column,
-    CreateDateColumn,
+    CreateDateColumn, DeleteDateColumn,
     Entity,
     ManyToOne,
     OneToMany,
@@ -19,8 +19,8 @@ import {Product, ProductAsset, ProductVariant} from '../';
 
 @ObjectType('Asset')
 @Entity({name: 'Asset'})
-@Connection('productAsset', () => ProductAsset, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
-@Connection('featured', () => Product, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
+@Connection('productAsset', () => ProductAsset, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true, relationName: 'productAsset'})
+@Connection('featured', () => Product, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true, relationName: 'featured'})
 export class Asset extends GridIronEntity {
 
     constructor(input?: DeepPartial<Asset>) {
@@ -38,6 +38,10 @@ export class Asset extends GridIronEntity {
     @FilterableField()
     @UpdateDateColumn()
     updatedAt: Date;
+
+    @FilterableField()
+    @DeleteDateColumn()
+    deletedAt?: Date;
 
     @FilterableField()
     @Column() 

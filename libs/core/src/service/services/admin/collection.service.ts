@@ -1,19 +1,17 @@
 import {Inject, Injectable, OnModuleInit} from '@nestjs/common';
-import {Collection, CollectionQuery, Product} from '../../../entity';
+import {Collection, CollectionQuery, Product, Vendor} from '../../../entity';
 import {Connection, getConnection, Repository} from 'typeorm';
 import {InjectConnection, InjectRepository} from '@nestjs/typeorm';
 import {EventBus, ProductEvents} from '../../../event-bus';
 import {merge} from 'rxjs';
 import {debounceTime} from 'rxjs/operators';
-import {QueryService} from "@nestjs-query/core";
-import {TypeOrmQueryService} from "@nestjs-query/query-typeorm";
 
 @Injectable()
 export class CollectionService implements OnModuleInit {
 
     constructor(
         @InjectConnection() private connection: Connection,
-        private eventBus: EventBus,
+        private eventBus: EventBus
     ) {
     }
 

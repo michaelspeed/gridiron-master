@@ -2,7 +2,7 @@ import {Field, ID, ObjectType} from "@nestjs/graphql";
 import {
     BaseEntity,
     Column,
-    CreateDateColumn,
+    CreateDateColumn, DeleteDateColumn,
     Entity, JoinColumn,
     ManyToOne, OneToOne,
     PrimaryGeneratedColumn,
@@ -25,6 +25,10 @@ export class DeliverySignIn extends BaseEntity {
     @FilterableField()
     @UpdateDateColumn()
     updatedAt: Date;
+
+    @FilterableField()
+    @DeleteDateColumn()
+    deletedAt?: Date;
 
     @Column({default: false})
     online: boolean

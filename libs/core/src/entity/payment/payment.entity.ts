@@ -1,7 +1,7 @@
 import {
     BaseEntity,
     Column,
-    CreateDateColumn,
+    CreateDateColumn, DeleteDateColumn,
     Entity, ManyToOne,
     OneToOne,
     PrimaryGeneratedColumn,
@@ -28,14 +28,18 @@ export class Payment extends BaseEntity {
     updatedAt: Date;
 
     @FilterableField()
+    @DeleteDateColumn()
+    deletedAt?: Date;
+
+    @FilterableField()
     @Column()
     amount: number;
 
-    @FilterableField()
+    @FilterableField({nullable: true})
     @Column({ nullable: true })
     errorMessage: string;
 
-    @FilterableField()
+    @FilterableField({nullable: true})
     @Column({ nullable: true })
     transactionId: string;
 

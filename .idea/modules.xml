@@ -3,7 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/../GridironConsumerMobile/.idea/GridironConsumerMobile.iml" filepath="$PROJECT_DIR$/../GridironConsumerMobile/.idea/GridironConsumerMobile.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../girdiron-consumer/.idea/girdiron-consumer.iml" filepath="$PROJECT_DIR$/../girdiron-consumer/.idea/girdiron-consumer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../GridironVendorMobile/.idea/GridironVendorMobile.iml" filepath="$PROJECT_DIR$/../GridironVendorMobile/.idea/GridironVendorMobile.iml" />
       <module fileurl="file://$PROJECT_DIR$/../gridiron-admin-view/.idea/gridiron-admin-view.iml" filepath="$PROJECT_DIR$/../gridiron-admin-view/.idea/gridiron-admin-view.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/master.iml" filepath="$PROJECT_DIR$/.idea/master.iml" />
     </modules>

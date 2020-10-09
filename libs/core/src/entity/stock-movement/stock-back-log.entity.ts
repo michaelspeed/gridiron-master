@@ -8,13 +8,13 @@ import {
     PrimaryGeneratedColumn,
     UpdateDateColumn
 } from "typeorm";
-import {FilterableField, PagingStrategies, Relation} from "@nestjs-query/query-graphql";
+import {FilterableField, FilterableRelation, PagingStrategies, Relation} from "@nestjs-query/query-graphql";
 import {ProductVariantPrice, Store} from "..";
 
 @ObjectType('StockBackLog')
 @Entity({name: 'stock-back-log'})
-@Relation('variant', () => ProductVariantPrice, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true, nullable: true})
-@Relation('store', () => Store, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true, nullable: true})
+@FilterableRelation('variant', () => ProductVariantPrice, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true, nullable: true})
+@FilterableRelation('store', () => Store, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true, nullable: true})
 export class StockBackLog extends BaseEntity {
 
     @FilterableField(() => ID)
@@ -33,11 +33,11 @@ export class StockBackLog extends BaseEntity {
     @Column({default: 0})
     quantity: number;
 
-    @Field(() => ProductVariantPrice)
+    // @Field(() => ProductVariantPrice)
     @ManyToOne(() => ProductVariantPrice, prodvar => prodvar.backlog)
     variant: ProductVariantPrice
 
-    @Field(() => Store)
+    // @Field(() => Store)
     @ManyToOne(() => Store, store => store.backlogs)
     store: Store
 }

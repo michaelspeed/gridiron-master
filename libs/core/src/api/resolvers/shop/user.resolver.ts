@@ -1,5 +1,5 @@
 import {Args, Context, ID, Mutation, Query, Resolver} from "@nestjs/graphql";
-import {User} from "../../../entity";
+import {ResetCode, User} from "../../../entity";
 import {UserResponse} from "../../dto/shop/UserResponse";
 import {ShopUserService} from "../../../service/services/shop/user.service";
 
@@ -49,5 +49,12 @@ export class ShopUserResolver {
         const auth = context.req.headers.authorization;
         const token = auth.split(' ')[1];
         return this.userService.updateAccountInfo(fname, lname, phone, token)
+    }
+
+    @Mutation(() => ResetCode)
+    async RequestResetCode(
+        @Args('email') email: string,
+    ): Promise<ResetCode> {
+        return this.userService.resetPassword(email)
     }
 }

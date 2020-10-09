@@ -18,11 +18,7 @@
     "esModuleInterop": true,
     "noImplicitAny": false,
     "types": [
-      "@types/node",
-      "@nuxt/types",
-      "@nuxtjs/axios",
-      "@nuxtjs/apollo",
-      "vue-apollo"
+      "@types/node"
     ],
     "paths": {
       "@gridiron/core": [
@@ -36,13 +32,17 @@
       ],
       "@gridiron/asset-server-plugin/*": [
         "libs/asset-server-plugin/src/*"
+      ],
+      "@gridiron/email-plugin": [
+        "libs/email-plugin/src"
+      ],
+      "@gridiron/email-plugin/*": [
+        "libs/email-plugin/src/*"
       ]
     }
   },
   "exclude": [
     "node_modules",
-    "dist",
-    "admin/assets",
-    "admin/static"
+    "dist"
   ]
 }

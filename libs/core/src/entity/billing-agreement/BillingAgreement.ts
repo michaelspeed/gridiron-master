@@ -4,7 +4,7 @@ import {Connection, FilterableField, FilterableRelation, PagingStrategies, Relat
 import {
     BaseEntity,
     Column,
-    CreateDateColumn,
+    CreateDateColumn, DeleteDateColumn,
     Entity,
     ManyToMany,
     ManyToOne,
@@ -43,6 +43,10 @@ export class BillingAgreement extends BaseEntity {
     @FilterableField()
     @UpdateDateColumn()
     updatedAt: Date;
+
+    @FilterableField()
+    @DeleteDateColumn()
+    deletedAt?: Date;
 
     @FilterableField()
     @Column({default: 0, type: 'float'})

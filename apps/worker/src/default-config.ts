@@ -2,6 +2,7 @@ import {Transport} from '@nestjs/microservices';
 import * as path from 'path';
 import {DefaultLogger, GridIronConfig, InMemoryJobQueueStrategy, RestPlugin} from '@gridiron/core';
 import {AssetsServerPlugin} from '@gridiron/asset-server-plugin';
+import {defaultEmailHandlers, EmailPlugin} from "@gridiron/email-plugin";
 
 export const DEF_CONFIG: GridIronConfig = {
     logger: new DefaultLogger(),
@@ -15,11 +16,7 @@ export const DEF_CONFIG: GridIronConfig = {
         apolloServerPlugin: []
     },
     plugins: [
-        AssetsServerPlugin.init({
-            route: 'assets',
-            assetUploadDir: path.join(__dirname, 'assets'),
-            port: 5002
-        })
+
     ],
     workerOptions: {
         runInMainProcess: false,
@@ -47,4 +44,6 @@ export const DEF_CONFIG: GridIronConfig = {
         jobQueueStrategy: new InMemoryJobQueueStrategy(),
         pollInterval: 200,
     },
+    defaultTax: 10,
+    flatFeeAmount: 2
 }

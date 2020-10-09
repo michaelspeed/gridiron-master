@@ -15,9 +15,6 @@ export class AssetsResolver extends CRUDResolver(Asset, {
     update: {
         disabled: true
     },
-    delete: {
-        disabled: true
-    },
     pagingStrategy: PagingStrategies.OFFSET,
     enableAggregate: true,
     aggregate: {

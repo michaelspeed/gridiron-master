@@ -1,4 +1,14 @@
-import {BaseEntity, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn} from 'typeorm';
+import {
+    BaseEntity,
+    CreateDateColumn,
+    DeleteDateColumn,
+    Entity,
+    JoinColumn,
+    ManyToOne,
+    OneToOne,
+    PrimaryGeneratedColumn,
+    UpdateDateColumn
+} from 'typeorm';
 import {Field, ID, ObjectType} from '@nestjs/graphql';
 import {FilterableField, PagingStrategies, Relation} from '@nestjs-query/query-graphql';
 import {Asset, ProductVariant} from '../';
@@ -20,11 +30,15 @@ export class ProductVariantAsset extends BaseEntity {
     @UpdateDateColumn()
     updatedAt: Date;
 
-    @Field(() => Asset)
+    @FilterableField()
+    @DeleteDateColumn()
+    deletedAt?: Date;
+
+    // @Field(() => Asset)
     @ManyToOne(type => Asset, asset => asset.variantAsset)
     asset: Asset
 
-    @Field(() => ProductVariant)
+    // @Field(() => ProductVariant)
     @OneToOne(type => ProductVariant, variant => variant.asset)
     @JoinColumn()
     variant: ProductVariant

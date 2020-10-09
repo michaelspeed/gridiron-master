@@ -1,7 +1,7 @@
 import {Field, ID, ObjectType} from "@nestjs/graphql";
 import {
     BaseEntity,
-    CreateDateColumn,
+    CreateDateColumn, DeleteDateColumn,
     Entity,
     JoinColumn, OneToMany,
     OneToOne,
@@ -27,6 +27,10 @@ export class Delivery extends BaseEntity {
     @FilterableField()
     @UpdateDateColumn()
     updatedAt: Date;
+
+    @FilterableField()
+    @DeleteDateColumn()
+    deletedAt?: Date;
 
     @Field(() => User)
     @OneToOne(type => User, user => user.delivery)

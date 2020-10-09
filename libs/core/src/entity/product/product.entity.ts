@@ -1,7 +1,7 @@
 import {
     BaseEntity,
     Column,
-    CreateDateColumn,
+    CreateDateColumn, DeleteDateColumn,
     Entity,
     JoinTable,
     ManyToMany,
@@ -12,7 +12,7 @@ import {
 } from 'typeorm';
 import {Field, ID, ObjectType} from '@nestjs/graphql';
 import {Connection, FilterableField, PagingStrategies, Relation} from '@nestjs-query/query-graphql';
-import {Asset, Collection, Facet, FacetValue, ProductAsset, ProductOptionGroup, ProductVariant, View} from '../';
+import {Asset, Collection, Facet, FacetValue, ProductAsset, ProductOptionGroup, ProductVariant, View, Hsn} from '../';
 
 @ObjectType('Product')
 @Entity({name: 'product'})
@@ -22,6 +22,7 @@ import {Asset, Collection, Facet, FacetValue, ProductAsset, ProductOptionGroup, 
 @Connection('options', () => ProductOptionGroup, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @Relation('featuredAsset', () => Asset, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @Relation('collection', () => Collection, {nullable: true, pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
+@Relation('hsn', () => Hsn, {nullable: true, pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 export class Product extends BaseEntity {
     @FilterableField(() => ID)
     @PrimaryGeneratedColumn('uuid')
@@ -34,6 +35,10 @@ export class Product extends BaseEntity {
     @FilterableField()
     @UpdateDateColumn()
     updatedAt: Date;
+
+    @FilterableField()
+    @DeleteDateColumn()
+    deletedAt?: Date;
 
     @Column({ default: true })
     enabled: boolean;
@@ -50,31 +55,39 @@ export class Product extends BaseEntity {
     @Column("longtext")
     description: string;
 
-    @Field(() => Collection, {nullable: true})
+    // @Field(() => Hsn, {nullable: true})
+    @ManyToOne(type => Hsn, hsn => hsn.prod)
+    hsn: Hsn
+
+    // @Field(() => Collection, {nullable: true})
     @ManyToOne(type => Collection, col => col.products)
     collection: Collection
 
-    @Field(() => [ProductOptionGroup])
+    // @Field(() => [ProductOptionGroup])
     @OneToMany(type => ProductOptionGroup, optGroup => optGroup.product)
     options: ProductOptionGroup[]
 
-    @Field(() => Asset)
+    // @Field(() => Asset)
     @ManyToOne(type => Asset, asset => asset.featured)
     featuredAsset: Asset
 
-    @Field(() => [FacetValue])
+    // @Field(() => [FacetValue])
     @ManyToMany(type => FacetValue, facet => facet.product)
     @JoinTable()
     facets: FacetValue[]
 
-    @Field(() => [ProductAsset], {nullable: true})
+    // @Field(() => [ProductAsset], {nullable: true})
     @OneToMany(type => ProductAsset, prasset => prasset.product)
     assets: ProductAsset[]
 
-    @Field(() => [ProductVariant])
+    // @Field(() => [ProductVariant])
     @OneToMany(type => ProductVariant, variant => variant.product)
     variants: ProductVariant[]
 
     @OneToMany(() => View, view => view.product)
     views: View[]
+
+    @Field(() => [String])
+    @Column("simple-array")
+    viewcode: string[]
 }

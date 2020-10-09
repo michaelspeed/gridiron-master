@@ -50,4 +50,6 @@ export const defaultConfig: RuntimeGridIronConfig = {
         jobQueueStrategy: new InMemoryJobQueueStrategy(),
         pollInterval: 200,
     },
+    defaultTax: 10,
+    flatFeeAmount: 2
 }

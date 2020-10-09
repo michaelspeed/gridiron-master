@@ -14,7 +14,7 @@ import {Vendor, Store} from "..";
 @ObjectType('Zip')
 @Entity({name: 'zip'})
 @FilterableConnection('vendors', () => Vendor, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
-@FilterableConnection('store', () => Vendor, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
+@FilterableConnection('store', () => Store, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 export class Zip extends BaseEntity {
     @FilterableField(() => ID)
     @PrimaryGeneratedColumn('uuid')

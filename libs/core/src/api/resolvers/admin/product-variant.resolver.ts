@@ -51,4 +51,12 @@ export class ProductVariantResolver extends CRUDResolver(ProductVariant, {
     ): Promise<ProductVariantSpecifications> {
         return this.productVariantsService.updateProductVariantSpecs(id, specs)
     }
+
+    @Mutation(returns => ProductVariant)
+    async UpdateVariantViewCode(
+        @Args({name: 'variantId', type: () => ID}) id: string,
+        @Args({name: 'viewcode', type: () => [String]}) viewcode: string[],
+    ): Promise<ProductVariant> {
+        return this.productVariantsService.updateVariantViewCodes(id, viewcode)
+    }
 }

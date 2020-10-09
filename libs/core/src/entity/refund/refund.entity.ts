@@ -1,9 +1,20 @@
-import {BaseEntity, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn} from 'typeorm';
+import {
+    BaseEntity,
+    Column,
+    CreateDateColumn, DeleteDateColumn,
+    Entity,
+    OneToOne,
+    PrimaryGeneratedColumn,
+    UpdateDateColumn
+} from 'typeorm';
 import {ID, ObjectType} from '@nestjs/graphql';
-import {FilterableField} from '@nestjs-query/query-graphql';
+import {FilterableField, FilterableRelation, PagingStrategies} from '@nestjs-query/query-graphql';
+import {OrderLine, Store} from "..";
+import {RefundEnum} from "../../enums";
 
 @ObjectType('Refund')
 @Entity({name: 'refund'})
+@FilterableRelation('line', () => OrderLine, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true, relationName: 'line'})
 export class Refund extends BaseEntity {
     @FilterableField(() => ID)
     @PrimaryGeneratedColumn('uuid')
@@ -18,39 +29,28 @@ export class Refund extends BaseEntity {
     updatedAt: Date;
 
     @FilterableField()
-    @Column() 
-    items: number;
-
-    @FilterableField()
-    @Column() 
-    shipping: number;
-
-    @FilterableField()
-    @Column() 
-    adjustment: number;
-
-    @FilterableField()
-    @Column() 
-    total: number;
-
-    @FilterableField()
-    @Column() 
-    method: string;
+    @DeleteDateColumn()
+    deletedAt?: Date;
 
     @FilterableField()
     @Column({ nullable: true }) 
     reason: string;
 
-    // @FilterableField()
-    // @Column('varchar') 
-    // state: RefundState;
+    @FilterableField()
+    @Column({ nullable: true })
+    destination: string;
 
     @FilterableField()
     @Column({ nullable: true }) 
     transactionId: string;
 
-    // @EntityId()
-    // paymentId: ID;
+    @FilterableField()
+    @Column({type: "enum", enum: RefundEnum, default: RefundEnum.INITIATED})
+    stage: RefundEnum
+
+    // @Field(() => OrderLine)
+    @OneToOne(() => OrderLine, line => line.refund)
+    line: OrderLine
 
     
 }
