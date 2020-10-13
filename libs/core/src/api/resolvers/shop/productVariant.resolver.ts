@@ -80,4 +80,11 @@ export class ShopProductVariantResolver {
         const token = auth.split(' ')[1];
         return this.shopProductsService.CreateReview(varId, text, stars, token)
     }
+
+    @Query(() => ProductVariantPrice)
+    async GetSingleProductPrice(
+        @Args('id', {type: () => ID}) id: string,
+    ): Promise<ProductVariantPrice> {
+        return this.shopProductsService.getSingleProductVariantPrices(id)
+    }
 }

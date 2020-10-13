@@ -1,6 +1,6 @@
+var nodeExternals = require('webpack-node-externals');
+
 module.exports = {
-    externals: {
-        fsevents: "require('fsevents')",
-        sharp: "require('sharp')"
-    }
+    target: 'node',
+    externals: [nodeExternals()]
 }

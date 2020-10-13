@@ -11,11 +11,11 @@ export class Cart extends BaseEntity {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    // @Field(() => [CartItem])
+    @Field(() => [CartItem])
     @OneToMany(type => CartItem, item => item.cart)
     items: CartItem[]
 
-    // @Field(() => User, {nullable: true})
+    @Field(() => User, {nullable: true})
     @OneToOne(type => User, user => user.cart)
     @JoinColumn()
     user: User

@@ -49,7 +49,7 @@
     }
   },
   "compilerOptions": {
-    "webpack": false,
+    "webpack": true,
     "tsConfigPath": "apps/gridiron-master/tsconfig.app.json"
   },
   "monorepo": true,

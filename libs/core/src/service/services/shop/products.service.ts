@@ -1,6 +1,6 @@
 import {Injectable} from "@nestjs/common";
 import {InjectConnection} from "@nestjs/typeorm";
-import {Connection} from "typeorm";
+import {Connection, In, MoreThan, Not} from "typeorm";
 import {
     Asset,
     Product,
@@ -115,7 +115,7 @@ export class ShopProductsService {
 
     async GetStocksAndZipAvailability(variantId: string, zipf: number): Promise<ProductVariantPrice[]> {
         return new Promise(async (resolve, reject) => {
-            const zips = await this.connection.getRepository(Zip).findOne({where:{code: zipf}, relations: ['store']})
+            /*const zips = await this.connection.getRepository(Zip).findOne({where:{code: zipf}, relations: ['store']})
             const stores = zips.store.map(item => item.id)
             const qb = await this.connection.getRepository(ProductVariantPrice)
                 .createQueryBuilder('ProductVariantPrice')
@@ -127,40 +127,32 @@ export class ShopProductsService {
                 .andWhere('variant.id := variant', {variant: variantId})
                 .getMany()
 
-            resolve(qb)
-            /*let stock = false
-            let zip = false
-            const vendor = await this.connection.getRepository(Vendor).findOne({where:{store: {id: storeId}}, relations: ['zip']})
-            if (vendor.zip.find(item => item.code = zipf)) {
-                zip = true
-            } else if (vendor.zip.length === 0) {
-                zip = false
-            }
-            await this.connection.getRepository(StockKeeping).findOne({
-                where:{
-                    store: {
-                        id: storeId
-                    },
-                    variant: {
-                        id: variantId
-                    }
+            resolve(qb)*/
+            const stocks = await this.connection.getRepository(StockKeeping).find({where:{variant:{id: variantId} }, relations: ['store']})
+            const filteredStocks = stocks.filter(item => {
+                if (item.backorder) {
+                    return item
+                } else if (item.quantity > 0) {
+                    return item
                 }
             })
-                .then(value => {
-                    if (value) {
-                        stock = (value.quantity > 0 || value.backorder);
-                    }
-                    resolve({
-                        stock,
-                        zip
-                    })
-                })
-                .catch(error => {
-                    resolve({
-                        stock,
-                        zip
-                    })
-                })*/
+            const storeIds: any[] = filteredStocks.map(stock => stock.store.id)
+            const storeZip = await this.connection.getRepository(Zip).findOne({where:{code: zipf}, relations: ['store']})
+            const zipStores: any[] = storeZip.store.map(st => st.id)
+            const finalZips = storeIds.filter(item => zipStores.includes(item))
+            console.log(finalZips)
+            if (finalZips.length === 0) {
+                resolve([])
+            }
+            // const prodPrices = await this.connection.getRepository(ProductVariantPrice).find({where:{variant:{id: variantId}, store: {id: In(finalZips)}}, relations: ['store']})
+            const qb = await this.connection.getRepository(ProductVariantPrice)
+                .createQueryBuilder('ProductVariantPrice')
+                .innerJoinAndSelect('ProductVariantPrice.variant', 'variant')
+                .innerJoinAndSelect('ProductVariantPrice.store', 'store')
+                .where('store.id IN (:...stores)', {stores: finalZips})
+                .andWhere('variant.id = :variant', {variant: variantId})
+                .getMany()
+            resolve(qb)
         })
     }
 
@@ -196,6 +188,35 @@ export class ShopProductsService {
         return new Promise(async (resolve, reject) => {
             const revs = await this.connection.getRepository(Review).find({where:{variant:{id}}, take: 10})
             resolve(revs)
+        })
+    }
+
+    async getSingleProductVariantPrices(id: string): Promise<ProductVariantPrice> {
+        return new Promise(async (resolve, reject) => {
+            const variants = await this.connection.getRepository(ProductVariant).find({where:{product: {id}}, relations: ['price']})
+            let allPrices: ProductVariantPrice[] = []
+            for (const varsf of variants) {
+                allPrices.push(...varsf.price)
+            }
+            if (allPrices.length === 0) {
+                const varprices = new ProductVariantPrice()
+                varprices.price = 0
+                varprices.id = id
+                varprices.taxIncluded = true
+                resolve(varprices)
+            } else {
+                let lowcost: ProductVariantPrice
+                for (const price of allPrices) {
+                    if (!lowcost) {
+                        lowcost = price
+                    } else {
+                        if (lowcost.price > price.price) {
+                            lowcost = price
+                        }
+                    }
+                }
+                resolve(lowcost)
+            }
         })
     }
 }

@@ -11,5 +11,6 @@
     <orderEntry type="module" module-name="gridiron-admin-view" />
     <orderEntry type="module" module-name="GridironConsumerMobile" />
     <orderEntry type="module" module-name="GridironVendorMobile" />
+    <orderEntry type="module" module-name="girdiron-consumer" />
   </component>
 </module>

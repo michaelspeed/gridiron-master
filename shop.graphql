@@ -56,6 +56,21 @@ type Collection {
   isPrivate: Boolean!
   name: String!
   description: String!
+  children: [Collection!]!
+  products: [Product!]!
+  seo: Seo!
+  agreements: [BillingAgreement!]!
+  cartPrice: CartPriceRules!
+}
+
+type Facet {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  name: String!
+  isPrivate: Boolean!
+  code: String!
 }
 
 type FacetValue {
@@ -64,6 +79,8 @@ type FacetValue {
   updatedAt: DateTime!
   deletedAt: DateTime!
   code: String!
+  product: [Product!]!
+  facet: Facet!
 }
 
 type Order {
@@ -74,6 +91,16 @@ type Order {
   totalPrice: Float!
   address: String!
   mode: String!
+  line: [OrderLine!]!
+}
+
+type OrderItem {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  quantity: Float!
+  productVariant: ProductVariant!
 }
 
 type OrderLine {
@@ -83,6 +110,10 @@ type OrderLine {
   deletedAt: DateTime!
   priceField: JSON!
   stage: String!
+  item: OrderItem!
+  store: Store!
+  invoice: [Invoice!]!
+  refund: Refund!
 }
 
 """
@@ -98,6 +129,13 @@ type Product {
   productName: String!
   slug: String!
   description: String!
+  hsn: Hsn
+  collection: Collection
+  options: [ProductOptionGroup!]!
+  featuredAsset: Asset!
+  facets: [FacetValue!]!
+  assets: [ProductAsset!]
+  variants: [ProductVariant!]!
   viewcode: [String!]!
 }
 
@@ -133,6 +171,16 @@ type Vendor {
   vendorName: String!
   phoneNumber: String!
   email: String!
+  zip: Zip
+}
+
+type TaxRate {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  name: String!
+  value: Float!
+  enabled: Boolean!
 }
 
 type Store {
@@ -150,11 +198,35 @@ type Store {
   rentalStore: Boolean!
   channelMarkets: Boolean!
   type: StoreTypeEnum!
+  vendor: Vendor
+  cart: [CartItem!]!
+  backlogs: StockBackLog!
+  zip: Zip
 }
 
 enum StoreTypeEnum {
   DEFAULT
   VENDOR
+}
+
+type Seo {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  urlKey: String!
+  metatitle: String!
+  metakeywords: [String!]
+  metadesc: String!
+}
+
+type ProductAsset {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  product: Product!
+  asset: Asset!
 }
 
 type ProductVariant {
@@ -167,8 +239,27 @@ type ProductVariant {
   sku: String!
   name: String!
   rating: Float!
+  product: Product!
   trackInventory: Boolean!
+  asset: ProductVariantAsset
+  price: [ProductVariantPrice!]
+  specs: ProductVariantSpecs
+  seo: Seo
+  agreements: [BillingAgreement!]!
+  stock: [StockKeeping!]!
+  line: [OrderItem!]!
+  carts: [CartItem!]!
+  reviews: [Review!]!
   viewcode: [String!]!
+}
+
+type ProductVariantAsset {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  asset: Asset!
+  variant: ProductVariant!
 }
 
 type ProductVariantPrice {
@@ -178,10 +269,75 @@ type ProductVariantPrice {
   deletedAt: DateTime!
   price: Float!
   taxIncluded: Boolean!
+  hsn: Hsn!
+  tax: TaxRate!
+  variant: ProductVariant!
+  store: Store
+  promoprice: PromotionVariantPrice
+  cartItem: CartItem
+  backlog: StockBackLog
+}
+
+type ProductOption {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  name: String!
+  code: String!
+}
+
+type ProductOptionGroup {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  name: String!
+  code: String!
+  product: Product!
+  options: [ProductOption!]!
+}
+
+type BillingAgreement {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  value: Float!
+  type: BillingAgreementEnum!
+  state: BillingAgreementState!
+  variant: ProductVariant!
+  collection: Collection
+  store: Store!
+  request: [BillingAgreementRequest!]!
+}
+
+enum BillingAgreementEnum {
+  PLANBASE
+  COLLECTIONBASE
+  COMISSIONBASE
+  PRODCOMMISSION
+}
+
+enum BillingAgreementState {
+  APPROVED
+  PENDING
+  REJECTED
+}
+
+type ProductVariantSpecs {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  specs: JSON!
+  variant: ProductVariant!
 }
 
 type Cart {
   id: ID!
+  items: [CartItem!]!
+  user: User
 }
 
 type View {
@@ -199,10 +355,28 @@ type BillingAgreementRequest {
   state: BillingAgreementState!
 }
 
-enum BillingAgreementState {
-  APPROVED
-  PENDING
-  REJECTED
+type StockKeeping {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  quantity: Float!
+  available_quantity: Float!
+  threshold: Float!
+  multiple: Boolean!
+  backorder: Boolean!
+  stockstatus: Boolean!
+  sku: String!
+  type: String!
+  variant: ProductVariant!
+}
+
+type Zip {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  name: String!
+  slug: String!
+  code: Float!
 }
 
 type Page {
@@ -256,6 +430,28 @@ type Search {
   userId: String!
 }
 
+type PromotionVariantPrice {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  priceType: String!
+  value: Float!
+  forever: Boolean!
+  startsAt: DateTime!
+  endsAt: DateTime!
+  enabled: Boolean!
+}
+
+type CartPriceRules {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  priceType: String!
+  value: Float!
+}
+
 type DeliverySignIn {
   id: ID!
   createdAt: DateTime!
@@ -284,6 +480,13 @@ type CartItem {
   price: ProductVariantPrice!
 }
 
+type StockBackLog {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  quantity: Float!
+}
+
 type Review {
   id: ID!
   createdAt: DateTime!
@@ -295,6 +498,30 @@ type Review {
   variant: ProductVariant!
 }
 
+type Invoice {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  type: String!
+  total: Float!
+  amount: Float!
+  fees: Float!
+  tax: Float!
+  nulled: Boolean!
+}
+
+type Refund {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  reason: String!
+  destination: String!
+  transactionId: String!
+  stage: String!
+}
+
 type ResetCode {
   id: ID!
   createdAt: DateTime!
@@ -302,6 +529,15 @@ type ResetCode {
   deletedAt: DateTime!
   code: String!
   user: User!
+}
+
+type Hsn {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  code: String!
+  value: Float!
 }
 
 type Address {
@@ -3416,6 +3652,7 @@ type Query {
   GetStocksAndZipAvailability(zipf: Int!, variantId: ID!): [ProductVariantPrice!]!
   getProductVariantByProduct(id: ID!): [ProductVariant!]!
   getProductAsset(prodId: ID, variantId: ID): Asset!
+  GetSingleProductPrice(id: ID!): ProductVariantPrice!
   GetDefaultStore: Store!
   GetCurrentUser: User!
   GetUserAddress: [Address!]!

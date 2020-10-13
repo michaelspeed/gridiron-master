@@ -117,7 +117,7 @@ export class Store extends BaseEntity {
     @OneToMany(type1 => TaxCategory, taxc => taxc.store)
     taxCategory: TaxCategory[]
 
-    // @Field(() => Vendor, {nullable: true})
+    @Field(() => Vendor, {nullable: true})
     @OneToOne(type1 => Vendor, vendor => vendor.store)
     vendor: Vendor
 
@@ -140,15 +140,15 @@ export class Store extends BaseEntity {
     @OneToMany(() => OrderLine, line => line.store)
     line: OrderLine[]
 
-    // @Field(() => [CartItem])
+    @Field(() => [CartItem])
     @OneToMany(() => CartItem, item => item.store)
     cart: CartItem[]
 
-    // @Field(() => StockBackLog)
+    @Field(() => StockBackLog)
     @OneToMany(() => StockBackLog, backlog => backlog.store)
     backlogs: StockBackLog[]
 
-    // @Field(() => Zip, {nullable: true})
+    @Field(() => Zip, {nullable: true})
     @ManyToMany(() => Zip, zip => zip.store)
     @JoinTable()
     zip: Zip[]

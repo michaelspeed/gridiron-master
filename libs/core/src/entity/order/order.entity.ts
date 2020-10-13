@@ -49,7 +49,7 @@ export class Order extends BaseEntity {
     @Column({enum: PaymentModes, type: "enum", default: PaymentModes.cod})
     mode: PaymentModes
 
-    // @Field(() => [OrderLine])
+    @Field(() => [OrderLine])
     @OneToMany(() => OrderLine, item => item.order)
     line: OrderLine[]
 
