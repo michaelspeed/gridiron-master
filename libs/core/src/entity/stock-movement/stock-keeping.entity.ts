@@ -56,7 +56,7 @@ export class StockKeeping extends BaseEntity {
     @Column()
     sku: string
 
-    @FilterableField()
+    @FilterableField(() => StockKeepingType)
     @Column({enum: StockKeepingType, type: 'enum', default: StockKeepingType.VENDOR})
     type: StockKeepingType
 

@@ -9,11 +9,15 @@ import {
     PrimaryGeneratedColumn,
     UpdateDateColumn
 } from 'typeorm';
-import {Field, ID, ObjectType} from '@nestjs/graphql';
+import {Field, ID, ObjectType, registerEnumType} from '@nestjs/graphql';
 import {FilterableConnection, FilterableField, PagingStrategies, Relation} from '@nestjs-query/query-graphql';
 import {OrderItem, OrderLine, User} from '..';
 import {Payment} from "..";
 import {PaymentModes} from "../../enums/PaymentModes";
+
+registerEnumType(PaymentModes, {
+    name: 'PaymentModes'
+})
 
 @ObjectType('Order')
 @Entity({name: 'order'})
@@ -45,7 +49,7 @@ export class Order extends BaseEntity {
     @Column({type: 'text'})
     address: string
 
-    @Field()
+    @Field(() => PaymentModes)
     @Column({enum: PaymentModes, type: "enum", default: PaymentModes.cod})
     mode: PaymentModes
 

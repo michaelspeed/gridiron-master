@@ -1,4 +1,4 @@
-import {ID, ObjectType} from "@nestjs/graphql";
+import {ID, ObjectType, registerEnumType} from "@nestjs/graphql";
 import {
     BaseEntity,
     Column,
@@ -11,6 +11,10 @@ import {
 import {FilterableField, PagingStrategies, Relation} from "@nestjs-query/query-graphql";
 import {PricePromoType} from "@gridiron/core/enums";
 import {Collection} from "../../entity";
+
+registerEnumType(PricePromoType, {
+    name: 'PricePromoType'
+})
 
 @ObjectType('CartPriceRules')
 @Entity('cart-price')
@@ -33,7 +37,7 @@ export class CartPrice extends BaseEntity {
     @DeleteDateColumn()
     deletedAt?: Date;
 
-    @FilterableField()
+    @FilterableField(() => PricePromoType)
     @Column({type: "enum", enum: PricePromoType, default: PricePromoType.PERCENTAGE})
     priceType: PricePromoType
 

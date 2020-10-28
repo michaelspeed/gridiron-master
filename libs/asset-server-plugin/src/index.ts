@@ -3,3 +3,4 @@ export * from './asset-server-plugin.service';
 export * from './plugin'
 export * from './SharpAssetPreviewStrategy'
 export * from './types'
+export * from './google-storage-strategy'

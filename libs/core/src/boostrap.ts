@@ -18,15 +18,15 @@ export async function BootstrapServer(userConfig: Partial<GridIronConfig>): Prom
 
     const appModule = await import('./core.module')
     const {hostname, port, cors} = config.apiOptions
-    DefaultLogger.hideNestBoostrapLogs()
+    // DefaultLogger.hideNestBoostrapLogs()
     const app = await NestFactory.create(appModule.CoreModule, {
         cors,
         logger: new Logger()
     })
-    DefaultLogger.restoreOriginalLogLevel()
+    // DefaultLogger.restoreOriginalLogLevel()
     // app.useLogger(new Logger())
     app.enableCors({origin: '*'})
-    app.useGlobalFilters(new NestEnlighten({ theme: 'theme-dark' }));
+    /*app.useGlobalFilters(new NestEnlighten({ theme: 'theme-dark' }));*/
     await app.listen(port, hostname || '')
     app.enableShutdownHooks()
     if (config.workerOptions.runInMainProcess) {
@@ -184,5 +184,5 @@ function workerWelcomeMessage(config: GridIronConfig) {
 
 function logWelcomeMessage(config: GridIronConfig) {
     let version: string = GridironVersion
-    
+
 }

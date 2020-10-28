@@ -30,7 +30,7 @@ type Asset {
   updatedAt: DateTime!
   deletedAt: DateTime!
   name: String!
-  type: String!
+  type: AssetType!
   mimeType: String!
   width: Float!
   height: Float!
@@ -38,6 +38,12 @@ type Asset {
   source: String!
   preview: String!
   focalPoint: JSONObject!
+}
+
+enum AssetType {
+  IMAGE
+  VIDEO
+  BINARY
 }
 
 """
@@ -90,8 +96,17 @@ type Order {
   deletedAt: DateTime!
   totalPrice: Float!
   address: String!
-  mode: String!
+  mode: PaymentModes!
   line: [OrderLine!]!
+}
+
+enum PaymentModes {
+  card
+  netbanking
+  wallet
+  emi
+  upi
+  cod
 }
 
 type OrderItem {
@@ -109,7 +124,7 @@ type OrderLine {
   updatedAt: DateTime!
   deletedAt: DateTime!
   priceField: JSON!
-  stage: String!
+  stage: OrderStageType!
   item: OrderItem!
   store: Store!
   invoice: [Invoice!]!
@@ -120,6 +135,17 @@ type OrderLine {
 The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
 """
 scalar JSON @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
+
+enum OrderStageType {
+  CREATED
+  PACKAGED
+  PROCESSED
+  SHIPPED
+  DELIVERED
+  RETURNINITIATED
+  RETURNED
+  RETURNEDREFUNDED
+}
 
 type Product {
   id: ID!
@@ -366,8 +392,13 @@ type StockKeeping {
   backorder: Boolean!
   stockstatus: Boolean!
   sku: String!
-  type: String!
+  type: StockKeepingType!
   variant: ProductVariant!
+}
+
+enum StockKeepingType {
+  GLOBAL
+  VENDOR
 }
 
 type Zip {
@@ -435,7 +466,7 @@ type PromotionVariantPrice {
   createdAt: DateTime!
   updatedAt: DateTime!
   deletedAt: DateTime!
-  priceType: String!
+  priceType: PricePromoType!
   value: Float!
   forever: Boolean!
   startsAt: DateTime!
@@ -443,12 +474,17 @@ type PromotionVariantPrice {
   enabled: Boolean!
 }
 
+enum PricePromoType {
+  FLAT
+  PERCENTAGE
+}
+
 type CartPriceRules {
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
   deletedAt: DateTime!
-  priceType: String!
+  priceType: PricePromoType!
   value: Float!
 }
 
@@ -503,12 +539,18 @@ type Invoice {
   createdAt: DateTime!
   updatedAt: DateTime!
   deletedAt: DateTime!
-  type: String!
+  type: InvoiceEnum!
   total: Float!
   amount: Float!
   fees: Float!
   tax: Float!
   nulled: Boolean!
+}
+
+enum InvoiceEnum {
+  STORE
+  CONSUMER
+  MASTER
 }
 
 type Refund {
@@ -519,7 +561,12 @@ type Refund {
   reason: String!
   destination: String!
   transactionId: String!
-  stage: String!
+  stage: RefundEnum!
+}
+
+enum RefundEnum {
+  INITIATED
+  REFUNDED
 }
 
 type ResetCode {
@@ -596,7 +643,7 @@ type AssetMinAggregate {
   updatedAt: DateTime
   deletedAt: DateTime
   name: String
-  type: String
+  type: AssetType
   mimeType: String
   width: Float
   height: Float
@@ -611,7 +658,7 @@ type AssetMaxAggregate {
   updatedAt: DateTime
   deletedAt: DateTime
   name: String
-  type: String
+  type: AssetType
   mimeType: String
   width: Float
   height: Float
@@ -859,8 +906,355 @@ type ChannelMinAggregate {
   updatedAt: DateTime
   code: String
   token: String
-  defaultLanguageCode: String
-  currencyCode: String
+  defaultLanguageCode: LanguageCode
+  currencyCode: CurrencyCode
+}
+
+enum LanguageCode {
+  aa
+  ab
+  af
+  ak
+  sq
+  am
+  ar
+  an
+  hy
+  as
+  av
+  ae
+  ay
+  az
+  ba
+  bm
+  eu
+  be
+  bn
+  bh
+  bi
+  bs
+  br
+  bg
+  my
+  ca
+  ch
+  ce
+  zh
+  cu
+  cv
+  kw
+  co
+  cr
+  cs
+  da
+  dv
+  nl
+  dz
+  en
+  eo
+  et
+  ee
+  fo
+  fj
+  fi
+  fr
+  fy
+  ff
+  ka
+  de
+  gd
+  ga
+  gl
+  gv
+  el
+  gn
+  gu
+  ht
+  ha
+  he
+  hz
+  hi
+  ho
+  hr
+  hu
+  ig
+  is
+  io
+  ii
+  iu
+  ie
+  ia
+  id
+  ik
+  it
+  jv
+  ja
+  kl
+  kn
+  ks
+  kr
+  kk
+  km
+  ki
+  rw
+  ky
+  kv
+  kg
+  ko
+  kj
+  ku
+  lo
+  la
+  lv
+  li
+  ln
+  lt
+  lb
+  lu
+  lg
+  mk
+  mh
+  ml
+  mi
+  mr
+  ms
+  mg
+  mt
+  mn
+  na
+  nv
+  nr
+  nd
+  ng
+  ne
+  nn
+  nb
+  no
+  ny
+  oc
+  oj
+  or
+  om
+  os
+  pa
+  fa
+  pi
+  pl
+  pt
+  ps
+  qu
+  rm
+  ro
+  rn
+  ru
+  sg
+  sa
+  si
+  sk
+  sl
+  se
+  sm
+  sn
+  sd
+  so
+  st
+  es
+  sc
+  sr
+  ss
+  su
+  sw
+  sv
+  ty
+  ta
+  tt
+  te
+  tg
+  tl
+  th
+  bo
+  ti
+  to
+  tn
+  ts
+  tk
+  tr
+  tw
+  ug
+  uk
+  ur
+  uz
+  ve
+  vi
+  vo
+  cy
+  wa
+  wo
+  xh
+  yi
+  yo
+  za
+  zu
+}
+
+enum CurrencyCode {
+  AED
+  AFN
+  ALL
+  AMD
+  ANG
+  AOA
+  ARS
+  AUD
+  AWG
+  AZN
+  BAM
+  BBD
+  BDT
+  BGN
+  BHD
+  BIF
+  BMD
+  BND
+  BOB
+  BRL
+  BSD
+  BTN
+  BWP
+  BYN
+  BZD
+  CAD
+  CDF
+  CHF
+  CLP
+  CNY
+  COP
+  CRC
+  CUC
+  CUP
+  CVE
+  CZK
+  DJF
+  DKK
+  DOP
+  DZD
+  EGP
+  ERN
+  ETB
+  EUR
+  FJD
+  FKP
+  GBP
+  GEL
+  GHS
+  GIP
+  GMD
+  GNF
+  GTQ
+  GYD
+  HKD
+  HNL
+  HRK
+  HTG
+  HUF
+  IDR
+  ILS
+  INR
+  IQD
+  IRR
+  ISK
+  JMD
+  JOD
+  JPY
+  KES
+  KGS
+  KHR
+  KMF
+  KPW
+  KRW
+  KWD
+  KYD
+  KZT
+  LAK
+  LBP
+  LKR
+  LRD
+  LSL
+  LYD
+  MAD
+  MDL
+  MGA
+  MKD
+  MMK
+  MNT
+  MOP
+  MRU
+  MUR
+  MVR
+  MWK
+  MXN
+  MYR
+  MZN
+  NAD
+  NGN
+  NIO
+  NOK
+  NPR
+  NZD
+  OMR
+  PAB
+  PEN
+  PGK
+  PHP
+  PKR
+  PLN
+  PYG
+  QAR
+  RON
+  RSD
+  RUB
+  RWF
+  SAR
+  SBD
+  SCR
+  SDG
+  SEK
+  SGD
+  SHP
+  SLL
+  SOS
+  SRD
+  SSP
+  STN
+  SVC
+  SYP
+  SZL
+  THB
+  TJS
+  TMT
+  TND
+  TOP
+  TRY
+  TTD
+  TWD
+  TZS
+  UAH
+  UGX
+  USD
+  UYU
+  UZS
+  VES
+  VND
+  VUV
+  WST
+  XAF
+  XCD
+  XOF
+  XPF
+  YER
+  ZAR
+  ZMW
+  ZWL
 }
 
 type ChannelMaxAggregate {
@@ -869,8 +1263,8 @@ type ChannelMaxAggregate {
   updatedAt: DateTime
   code: String
   token: String
-  defaultLanguageCode: String
-  currencyCode: String
+  defaultLanguageCode: LanguageCode
+  currencyCode: CurrencyCode
 }
 
 type StoreCountAggregate {
@@ -947,7 +1341,7 @@ type StoreInvoicesMinAggregate {
   createdAt: DateTime
   updatedAt: DateTime
   deletedAt: DateTime
-  type: String
+  type: InvoiceEnum
   total: Float
   amount: Float
   fees: Float
@@ -959,7 +1353,7 @@ type StoreInvoicesMaxAggregate {
   createdAt: DateTime
   updatedAt: DateTime
   deletedAt: DateTime
-  type: String
+  type: InvoiceEnum
   total: Float
   amount: Float
   fees: Float
@@ -1165,7 +1559,7 @@ type StoreSkusMinAggregate {
   available_quantity: Float
   threshold: Float
   sku: String
-  type: String
+  type: StockKeepingType
 }
 
 type StoreSkusMaxAggregate {
@@ -1176,7 +1570,7 @@ type StoreSkusMaxAggregate {
   available_quantity: Float
   threshold: Float
   sku: String
-  type: String
+  type: StockKeepingType
 }
 
 type TaxCategoryCountAggregate {
@@ -2128,7 +2522,7 @@ type ProductVariantStocksMinAggregate {
   available_quantity: Float
   threshold: Float
   sku: String
-  type: String
+  type: StockKeepingType
 }
 
 type ProductVariantStocksMaxAggregate {
@@ -2139,7 +2533,7 @@ type ProductVariantStocksMaxAggregate {
   available_quantity: Float
   threshold: Float
   sku: String
-  type: String
+  type: StockKeepingType
 }
 
 type ProductVariantAgreementsCountAggregate {
@@ -2553,7 +2947,7 @@ type StockKeepingMinAggregate {
   available_quantity: Float
   threshold: Float
   sku: String
-  type: String
+  type: StockKeepingType
 }
 
 type StockKeepingMaxAggregate {
@@ -2564,7 +2958,7 @@ type StockKeepingMaxAggregate {
   available_quantity: Float
   threshold: Float
   sku: String
-  type: String
+  type: StockKeepingType
 }
 
 type StockKeepingSalesCountAggregate {
@@ -2789,7 +3183,7 @@ type OrderLinesMinAggregate {
   createdAt: DateTime
   updatedAt: DateTime
   deletedAt: DateTime
-  stage: String
+  stage: OrderStageType
 }
 
 type OrderLinesMaxAggregate {
@@ -2797,7 +3191,7 @@ type OrderLinesMaxAggregate {
   createdAt: DateTime
   updatedAt: DateTime
   deletedAt: DateTime
-  stage: String
+  stage: OrderStageType
 }
 
 type ZipCountAggregate {
@@ -2919,7 +3313,15 @@ type MenuMinAggregate {
   updatedAt: DateTime
   title: String
   targetId: String
-  target: String
+  target: MenuBuilderTypes
+}
+
+enum MenuBuilderTypes {
+  COLLECTION
+  VARIANT
+  FACET
+  PROMO
+  HEADER
 }
 
 type MenuMaxAggregate {
@@ -2928,7 +3330,7 @@ type MenuMaxAggregate {
   updatedAt: DateTime
   title: String
   targetId: String
-  target: String
+  target: MenuBuilderTypes
 }
 
 type MenuChildrenCountAggregate {
@@ -2946,7 +3348,7 @@ type MenuChildrenMinAggregate {
   updatedAt: DateTime
   title: String
   targetId: String
-  target: String
+  target: MenuBuilderTypes
 }
 
 type MenuChildrenMaxAggregate {
@@ -2955,7 +3357,7 @@ type MenuChildrenMaxAggregate {
   updatedAt: DateTime
   title: String
   targetId: String
-  target: String
+  target: MenuBuilderTypes
 }
 
 type PageCountAggregate {
@@ -3115,7 +3517,7 @@ type OrderLineMinAggregate {
   createdAt: DateTime
   updatedAt: DateTime
   deletedAt: DateTime
-  stage: String
+  stage: OrderStageType
 }
 
 type OrderLineMaxAggregate {
@@ -3123,7 +3525,7 @@ type OrderLineMaxAggregate {
   createdAt: DateTime
   updatedAt: DateTime
   deletedAt: DateTime
-  stage: String
+  stage: OrderStageType
 }
 
 type OrderLineInvoicesCountAggregate {
@@ -3158,7 +3560,7 @@ type OrderLineInvoicesMinAggregate {
   createdAt: DateTime
   updatedAt: DateTime
   deletedAt: DateTime
-  type: String
+  type: InvoiceEnum
   total: Float
   amount: Float
   fees: Float
@@ -3170,7 +3572,7 @@ type OrderLineInvoicesMaxAggregate {
   createdAt: DateTime
   updatedAt: DateTime
   deletedAt: DateTime
-  type: String
+  type: InvoiceEnum
   total: Float
   amount: Float
   fees: Float
@@ -3235,7 +3637,7 @@ type PromotionVariantPriceMinAggregate {
   createdAt: DateTime
   updatedAt: DateTime
   deletedAt: DateTime
-  priceType: String
+  priceType: PricePromoType
   value: Float
   startsAt: DateTime
   endsAt: DateTime
@@ -3246,7 +3648,7 @@ type PromotionVariantPriceMaxAggregate {
   createdAt: DateTime
   updatedAt: DateTime
   deletedAt: DateTime
-  priceType: String
+  priceType: PricePromoType
   value: Float
   startsAt: DateTime
   endsAt: DateTime
@@ -3274,7 +3676,7 @@ type CartPriceRulesMinAggregate {
   createdAt: DateTime
   updatedAt: DateTime
   deletedAt: DateTime
-  priceType: String
+  priceType: PricePromoType
   value: Float
 }
 
@@ -3283,7 +3685,7 @@ type CartPriceRulesMaxAggregate {
   createdAt: DateTime
   updatedAt: DateTime
   deletedAt: DateTime
-  priceType: String
+  priceType: PricePromoType
   value: Float
 }
 
@@ -3420,7 +3822,7 @@ type InvoiceMinAggregate {
   createdAt: DateTime
   updatedAt: DateTime
   deletedAt: DateTime
-  type: String
+  type: InvoiceEnum
   total: Float
   amount: Float
   fees: Float
@@ -3432,7 +3834,7 @@ type InvoiceMaxAggregate {
   createdAt: DateTime
   updatedAt: DateTime
   deletedAt: DateTime
-  type: String
+  type: InvoiceEnum
   total: Float
   amount: Float
   fees: Float
@@ -3458,7 +3860,7 @@ type RefundMinAggregate {
   reason: String
   destination: String
   transactionId: String
-  stage: String
+  stage: RefundEnum
 }
 
 type RefundMaxAggregate {
@@ -3469,7 +3871,7 @@ type RefundMaxAggregate {
   reason: String
   destination: String
   transactionId: String
-  stage: String
+  stage: RefundEnum
 }
 
 type PaymentCountAggregate {
@@ -3668,7 +4070,7 @@ type Query {
 type Mutation {
   ShiftProductVariant(prodId: String!, name: String!): ProductVariant!
   creteReview(stars: Float!, varId: String!, text: String!): Review!
-  createView(variant: String!, id: String!): View!
+  createView(variant: ViewEnum!, id: String!): View!
   CreateUser(lname: String!, fname: String!, phone: String!, password: String!, email: String!): UserResponse!
   LoginUser(password: String!, email: String!): UserResponse!
   UpdateAccountInfo(lname: String!, fname: String!, phone: String!): User!
@@ -3679,6 +4081,12 @@ type Mutation {
   addToCart(quantity: Int!, price: ID!, store: ID!, variant: ID!, userId: ID!): CartItem!
   removeCartItem(cartId: ID!): CartItem!
   createShopOrder(transaction: String, orderLineDto: [CartItemDto!]!, address: String!): Order!
+}
+
+enum ViewEnum {
+  PRODUCT
+  VARIANT
+  COLLECTION
 }
 
 input CartItemDto {

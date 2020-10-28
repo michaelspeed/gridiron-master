@@ -22,7 +22,7 @@ export class ShopStoreResolver {
     @Mutation(() => View)
     async createView(
         @Args('id') id: string,
-        @Args('variant') variant: ViewEnum,
+        @Args('variant', {type: () => ViewEnum}) variant: ViewEnum,
         @Context() context
     ): Promise<View> {
         let user

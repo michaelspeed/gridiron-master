@@ -8,7 +8,7 @@ import {
     UpdateDateColumn
 } from 'typeorm';
 import {AssetType} from '../../enums/AssetType';
-import {Field, ID, ObjectType} from '@nestjs/graphql';
+import {Field, ID, ObjectType, registerEnumType} from '@nestjs/graphql';
 import {Connection, FilterableField, PagingStrategies} from '@nestjs-query/query-graphql';
 import {FocalPoint} from '../common/FocalPoint';
 import {GraphQLJSONObject} from 'graphql-type-json';
@@ -16,6 +16,10 @@ import {AssetsFolder} from './assets-folder.entity';
 import {DeepPartial} from '../../common';
 import {GridIronEntity} from '../base/base.entity';
 import {Product, ProductAsset, ProductVariant} from '../';
+
+registerEnumType(AssetType, {
+    name: 'AssetType'
+})
 
 @ObjectType('Asset')
 @Entity({name: 'Asset'})
@@ -47,7 +51,7 @@ export class Asset extends GridIronEntity {
     @Column() 
     name: string;
 
-    @FilterableField()
+    @FilterableField(() => AssetType)
     @Column('varchar') 
     type: AssetType;
 

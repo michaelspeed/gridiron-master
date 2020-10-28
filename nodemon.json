@@ -4,7 +4,7 @@
     "nuxt.config.ts",
     "libs"
   ],
-  "verbose": true,
+  "verbose": false,
   "ext": "ts js",
   "exec": "ts-node -r tsconfig-paths/register"
 }

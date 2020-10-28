@@ -46,7 +46,7 @@ export class Invoice extends BaseEntity {
     @ManyToOne(() => Store, store => store)
     store: Store
 
-    @FilterableField()
+    @FilterableField(() => InvoiceEnum)
     @Column({type: "enum", enum: InvoiceEnum})
     type: InvoiceEnum
 

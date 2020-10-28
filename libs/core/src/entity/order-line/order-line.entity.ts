@@ -55,7 +55,7 @@ export class OrderLine extends BaseEntity {
     @Column("simple-json")
     priceField: JSON
 
-    @FilterableField()
+    @FilterableField(() => OrderStageType)
     @Column({type: "enum", enum: OrderStageType, default: OrderStageType.CREATED})
     stage: OrderStageType
 

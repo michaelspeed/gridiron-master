@@ -2,9 +2,15 @@ import {BaseEntity, Column, CreateDateColumn, Entity, ManyToOne, PrimaryGenerate
 import {Zone} from '..';
 import {LanguageCode} from '../../enums/LanguageCode';
 import {CurrencyCode} from '../../enums/CurrencyCode';
-import {ID, ObjectType} from '@nestjs/graphql';
+import {ID, ObjectType, registerEnumType} from '@nestjs/graphql';
 import {FilterableField} from '@nestjs-query/query-graphql';
-import {DeepPartial} from '@gridiron/core/common';
+
+registerEnumType(LanguageCode, {
+    name: 'LanguageCode'
+})
+registerEnumType(CurrencyCode, {
+    name: 'CurrencyCode'
+})
 
 @ObjectType('Channel')
 @Entity({name: 'channel'})
@@ -30,7 +36,7 @@ export class Channel extends BaseEntity {
     @Column({ unique: true })
     token: string;
 
-    @FilterableField()
+    @FilterableField(() => LanguageCode)
     @Column('varchar') 
     defaultLanguageCode: LanguageCode;
 
@@ -40,7 +46,7 @@ export class Channel extends BaseEntity {
     @ManyToOne(type => Zone)
     defaultShippingZone: Zone;
 
-    @FilterableField()
+    @FilterableField(() => CurrencyCode)
     @Column('varchar')
     currencyCode: CurrencyCode;
 

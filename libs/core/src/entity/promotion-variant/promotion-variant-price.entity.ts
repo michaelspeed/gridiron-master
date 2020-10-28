@@ -37,7 +37,7 @@ export class PromotionVariantPrice extends BaseEntity {
     @DeleteDateColumn()
     deletedAt?: Date;
 
-    @FilterableField()
+    @FilterableField(() => PricePromoType)
     @Column({type: "enum", enum: PricePromoType, default: PricePromoType.PERCENTAGE})
     priceType: PricePromoType
 

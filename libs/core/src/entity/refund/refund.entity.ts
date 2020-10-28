@@ -7,10 +7,14 @@ import {
     PrimaryGeneratedColumn,
     UpdateDateColumn
 } from 'typeorm';
-import {ID, ObjectType} from '@nestjs/graphql';
+import {ID, ObjectType, registerEnumType} from '@nestjs/graphql';
 import {FilterableField, FilterableRelation, PagingStrategies} from '@nestjs-query/query-graphql';
 import {OrderLine, Store} from "..";
 import {RefundEnum} from "../../enums";
+
+registerEnumType(RefundEnum, {
+    name:'RefundEnum'
+})
 
 @ObjectType('Refund')
 @Entity({name: 'refund'})
@@ -44,7 +48,7 @@ export class Refund extends BaseEntity {
     @Column({ nullable: true }) 
     transactionId: string;
 
-    @FilterableField()
+    @FilterableField(() => RefundEnum)
     @Column({type: "enum", enum: RefundEnum, default: RefundEnum.INITIATED})
     stage: RefundEnum
 

@@ -33,7 +33,7 @@ export class Menu extends BaseEntity {
     @Column({nullable: true})
     targetId: string;
 
-    @FilterableField()
+    @FilterableField(() => MenuBuilderTypes)
     @Column({enum: MenuBuilderTypes, type: 'enum'})
     target: MenuBuilderTypes;
 
