@@ -4,6 +4,8 @@ import {DefaultLogger, GridIronConfig, InMemoryJobQueueStrategy, RestPlugin} fro
 import {AssetsServerPlugin, configureGoogleCloudStorage} from '@gridiron/asset-server-plugin';
 import {defaultEmailHandlers, EmailPlugin} from "@gridiron/email-plugin";
 
+
+// anibo config
 export const DEF_CONFIG: GridIronConfig = {
     logger: new DefaultLogger(),
     apiOptions: {
