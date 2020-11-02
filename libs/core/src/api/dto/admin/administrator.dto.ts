@@ -1,6 +1,13 @@
 import {Field, ObjectType} from '@nestjs/graphql';
 import {Store, User} from '../../../entity';
 
+export enum AdministratorResponseType {
+    BASIC,
+    ADMIN,
+    VENDOR,
+    BOTH
+}
+
 @ObjectType()
 export class AdministratorDto {
     @Field(() => User)
@@ -11,4 +18,7 @@ export class AdministratorDto {
 
     @Field({nullable: true})
     store: Store
+
+    @Field(() => AdministratorResponseType)
+    type: AdministratorResponseType
 }

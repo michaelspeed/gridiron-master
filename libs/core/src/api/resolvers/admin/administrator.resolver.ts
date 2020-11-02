@@ -1,12 +1,15 @@
-import {Args, Context, Mutation, Query, Resolver} from '@nestjs/graphql';
+import {Args, Context, Mutation, Query, registerEnumType, Resolver} from '@nestjs/graphql';
 import {Administrator, User} from '../../../entity';
-import * as errorcodes from '../../../common/errorcodes.json';
 import * as bcrypt from 'bcrypt';
 import {JwtService} from '@nestjs/jwt';
-import {AdministratorDto} from '@gridiron/core/api/dto/admin/administrator.dto';
+import {AdministratorDto, AdministratorResponseType} from '../../dto/admin/administrator.dto';
 import {AdministratorService} from '../../../service/services/admin/administrator.service'
 import {AdministratorEnum} from '../../../enums';
 import {StoreService} from '../../../service';
+
+registerEnumType(AdministratorResponseType, {
+    name: 'AdministratorResponseType'
+})
 
 @Resolver(of => Administrator)
 export class AdministratorResolver {
@@ -23,30 +26,52 @@ export class AdministratorResolver {
         @Args('password') password: string
     ): Promise<AdministratorDto> {
         return new Promise(async (resolve, reject) => {
-            const user = await User.findOne({where: {email}, relations: ["administrator"]})
+            const user = await User.findOne({where: {email}, relations: ['administrator', 'vendor']})
             if (user) {
-                if (user.administrator !== null) {
-                    const valid = await bcrypt.compare(password, user.password)
-                    if (valid) {
-                        const token = await this.administratorService.createToken(user.id, user.administrator.id)
-                        const defStore = await this.storeService.GetDefaultStore()
+                const valid = await bcrypt.compare(password, user.password)
+                if (valid) {
+                    const token = await this.administratorService.createToken(user.id, user.administrator.id)
+                    const defStore = await this.storeService.GetDefaultStore()
+                    if (user.administrator && user.vendor) {
                         resolve({
                             user: user,
                             token,
-                            store: defStore
+                            store: defStore,
+                            type: AdministratorResponseType.BOTH
+                        })
+                    } else if (user.vendor && !user.administrator) {
+                        resolve({
+                            user: user,
+                            token,
+                            store: defStore,
+                            type: AdministratorResponseType.VENDOR
+                        })
+                    } else if (!user.vendor && user.administrator) {
+                        resolve({
+                            user: user,
+                            token,
+                            store: defStore,
+                            type: AdministratorResponseType.ADMIN
+                        })
+                    } else if (!user.vendor && !user.administrator) {
+                        resolve({
+                            user: user,
+                            token,
+                            store: defStore,
+                            type: AdministratorResponseType.BASIC
                         })
                     }
+                    /*resolve({
+                        user: user,
+                        token,
+                        store: defStore,
+
+                    })*/
                 } else {
-                    reject({
-                        type: 1002,
-                        message: errorcodes["1002"]
-                    })
+                    reject('Email / Password does not match')
                 }
             } else {
-                reject({
-                    type: 1001,
-                    message: errorcodes["1001"]
-                })
+                reject('User not found')
             }
         })
     }
