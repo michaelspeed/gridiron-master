@@ -2,10 +2,10 @@ import {Field, ObjectType} from '@nestjs/graphql';
 import {Store, User} from '../../../entity';
 
 export enum AdministratorResponseType {
-    BASIC,
-    ADMIN,
-    VENDOR,
-    BOTH
+    BASIC = "BASIC",
+    ADMIN = "ADMIN",
+    VENDOR = "VENDOR",
+    BOTH = "BOTH"
 }
 
 @ObjectType()
