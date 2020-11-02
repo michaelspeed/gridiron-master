@@ -3062,9 +3062,17 @@ type Address {
   user: User
 }
 
+enum AdministratorResponseType {
+    BASIC
+    ADMIN
+    VENDOR
+    BOTH
+}
+
 type AdministratorDto {
   user: User!
   token: String!
+  type: AdministratorResponseType!
   store: Store
 }
 
