@@ -21,7 +21,7 @@ export const DEF_CONFIG: GridIronConfig = {
         AssetsServerPlugin.init({
             route: 'assets',
             assetUploadDir: path.join(__dirname, 'assets'),
-            port: 5002,
+            port: 5002
         }),
         EmailPlugin.init({
             devMode: true,
@@ -46,7 +46,7 @@ export const DEF_CONFIG: GridIronConfig = {
         authTokenHeaderKey: 'gridiron-key'
     },
     dbConnectionOptions: {
-        database: 'anibo-shop',
+        database: 'assammart',
         type: 'mysql',
         host: 'ls-cac559240bd8e22d83894da3b6ee0768e4d43bc1.cxkzwswlsfxz.ap-south-1.rds.amazonaws.com',
         port: 3306,

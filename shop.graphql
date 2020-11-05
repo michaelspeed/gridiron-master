@@ -4047,6 +4047,7 @@ type Query {
   GetSingleCollection(id: ID!): CollectionSingleResponse!
   GetFacetsByCollection(id: ID!): [FacetValue!]!
   GetProductVariantForCollection(search: String, limit: Int, id: ID!): [ProductVariant!]!
+  GetAllProdsWithPriceRangeAndFacet(search: String, last: Int, start: Int, facetIds: [String!]!, id: ID!): [ProductVariant!]!
   getHomePage: Page!
   getSingleProductVariant(id: ID!): ProductVariant!
   singProductInfo(id: ID!): Product!
