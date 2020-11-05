@@ -47,4 +47,15 @@ export class ShopCollectionResolver {
     ): Promise<ProductVariant[]> {
         return this.collectionService.GetAllProductForCollection(id, limit, search)
     }
+
+    @Query(() => [ProductVariant])
+    async GetAllProdsWithPriceRangeAndFacet(
+        @Args('id', {type: () => ID}) id: string,
+        @Args('facetIds', {type: () => [String]}) facetIds: string[],
+        @Args('start', {nullable: true, type: () => Int}) start: number,
+        @Args('last', {nullable: true, type: () => Int}) last: number,
+        @Args('search', {nullable: true, type: () => String}) search: string,
+    ): Promise<ProductVariant[]> {
+        return this.collectionService.GetAllProdsWithPriceRangeAndFacet(id, facetIds, start, last, search)
+    }
 }

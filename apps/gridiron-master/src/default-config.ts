@@ -10,6 +10,8 @@ import {
 import {AssetsServerPlugin, configureGoogleCloudStorage, configureS3AssetStorage} from '@gridiron/asset-server-plugin';
 import {defaultEmailHandlers, EmailPlugin} from "@gridiron/email-plugin";
 
+
+// anibo config
 export const DEF_CONFIG: GridIronConfig = {
     logger: new DefaultLogger(),
     apiOptions: {
@@ -26,14 +28,7 @@ export const DEF_CONFIG: GridIronConfig = {
             route: 'assets',
             assetUploadDir: path.join(__dirname, 'assets'),
             port: 5002,
-            namingStrategy: new DefaultAssetsNamingStrategy(),
-            /*storageStrategyFactory: configureS3AssetStorage({
-                bucket: 'assammart',
-                credentials: {
-                    accessKeyId: 'AKIASNOC7JBKURZVBQCQ',
-                    secretAccessKey: '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',
-                },
-            }),*/
+            namingStrategy: new DefaultAssetsNamingStrategy()
         }),
         EmailPlugin.init({
             devMode: true,
