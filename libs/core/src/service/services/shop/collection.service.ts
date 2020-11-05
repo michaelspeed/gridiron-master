@@ -1,7 +1,7 @@
 import {Injectable} from "@nestjs/common";
 import {InjectConnection} from "@nestjs/typeorm";
 import {Connection, getConnection, In, Not} from "typeorm";
-import {Collection, FacetValue, ProductVariant} from "../../../entity";
+import {Collection, FacetValue, ProductVariant, Search} from "../../../entity";
 
 @Injectable()
 export class ShopCollectionService {
@@ -110,6 +110,9 @@ export class ShopCollectionService {
 
             if (search) {
                 qb.andWhere(`(productVariant.name LIKE '%${search}%') OR (collection.name LIKE '%${search}%') OR (facets.code LIKE '%${search}%')`)
+                const newsearch = new Search()
+                newsearch.search = search;
+                await this.connection.getRepository(Search).save(newsearch)
             }
 
             const variant = await qb.getMany()
