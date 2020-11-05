@@ -1,7 +1,13 @@
 import {Transport} from '@nestjs/microservices';
 import * as path from 'path';
-import {DefaultLogger, GridIronConfig, InMemoryJobQueueStrategy, RestPlugin} from '@gridiron/core';
-import {AssetsServerPlugin, configureGoogleCloudStorage} from '@gridiron/asset-server-plugin';
+import {
+    DefaultAssetsNamingStrategy,
+    DefaultLogger,
+    GridIronConfig,
+    InMemoryJobQueueStrategy,
+    RestPlugin
+} from '@gridiron/core';
+import {AssetsServerPlugin, configureGoogleCloudStorage, configureS3AssetStorage} from '@gridiron/asset-server-plugin';
 import {defaultEmailHandlers, EmailPlugin} from "@gridiron/email-plugin";
 
 
@@ -21,7 +27,8 @@ export const DEF_CONFIG: GridIronConfig = {
         AssetsServerPlugin.init({
             route: 'assets',
             assetUploadDir: path.join(__dirname, 'assets'),
-            port: 5002
+            port: 5002,
+            namingStrategy: new DefaultAssetsNamingStrategy()
         }),
         EmailPlugin.init({
             devMode: true,
