@@ -1,7 +1,13 @@
 import {Transport} from '@nestjs/microservices';
 import * as path from 'path';
-import {DefaultLogger, GridIronConfig, InMemoryJobQueueStrategy, RestPlugin} from '@gridiron/core';
-import {AssetsServerPlugin, configureGoogleCloudStorage} from '@gridiron/asset-server-plugin';
+import {
+    DefaultAssetsNamingStrategy,
+    DefaultLogger,
+    GridIronConfig,
+    InMemoryJobQueueStrategy,
+    RestPlugin
+} from '@gridiron/core';
+import {AssetsServerPlugin, configureGoogleCloudStorage, configureS3AssetStorage} from '@gridiron/asset-server-plugin';
 import {defaultEmailHandlers, EmailPlugin} from "@gridiron/email-plugin";
 
 
@@ -22,6 +28,7 @@ export const DEF_CONFIG: GridIronConfig = {
             route: 'assets',
             assetUploadDir: path.join(__dirname, 'assets'),
             port: 5002,
+            namingStrategy: new DefaultAssetsNamingStrategy()
         }),
         EmailPlugin.init({
             devMode: true,
@@ -46,7 +53,7 @@ export const DEF_CONFIG: GridIronConfig = {
         authTokenHeaderKey: 'gridiron-key'
     },
     dbConnectionOptions: {
-        database: 'anibo-shop',
+        database: 'assammart',
         type: 'mysql',
         host: 'ls-cac559240bd8e22d83894da3b6ee0768e4d43bc1.cxkzwswlsfxz.ap-south-1.rds.amazonaws.com',
         port: 3306,
