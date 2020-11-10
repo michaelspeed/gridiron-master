@@ -4,7 +4,8 @@ import {
     DeleteDateColumn,
     Entity,
     PrimaryGeneratedColumn,
-    UpdateDateColumn
+    UpdateDateColumn,
+    Column
 } from 'typeorm';
 import {ID, ObjectType} from '@nestjs/graphql';
 import {FilterableField} from '@nestjs-query/query-graphql';
@@ -29,7 +30,7 @@ export class CollectionAsset extends  BaseEntity {
     deletedAt?: Date;
 
     @FilterableField(() => ID)
-    @PrimaryGeneratedColumn('uuid')
+    @Column()
     collectionId: string;
 
 }
