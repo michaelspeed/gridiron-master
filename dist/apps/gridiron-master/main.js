@@ -21511,7 +21511,7 @@ exports.DEF_CONFIG = {
     logger: new core_1.DefaultLogger(),
     apiOptions: {
         hostname: '',
-        port: 5588,
+        port: 6898,
         adminApiPath: 'admin-api',
         shopApiPath: 'shop-api',
         cors: true,
@@ -21522,7 +21522,7 @@ exports.DEF_CONFIG = {
         asset_server_plugin_1.AssetsServerPlugin.init({
             route: 'assets',
             assetUploadDir: path.join(__dirname, 'assets'),
-            port: 5002,
+            port: 6002,
             namingStrategy: new core_1.DefaultAssetsNamingStrategy()
         }),
         email_plugin_1.EmailPlugin.init({
@@ -21530,7 +21530,7 @@ exports.DEF_CONFIG = {
             handlers: email_plugin_1.defaultEmailHandlers,
             templatePath: path.join(__dirname, 'templates'),
             outputPath: path.join(__dirname, 'test-emails'),
-            mailboxPort: 5003,
+            mailboxPort: 6003,
             globalTemplateVars: {
                 verifyEmailAddressUrl: 'http://localhost:4201/verify',
                 passwordResetUrl: 'http://localhost:4201/reset-password',
@@ -21541,14 +21541,14 @@ exports.DEF_CONFIG = {
         runInMainProcess: false,
         transport: microservices_1.Transport.TCP,
         options: {
-            port: 3020
+            port: 3021
         }
     },
     authOptions: {
         authTokenHeaderKey: 'gridiron-key'
     },
     dbConnectionOptions: {
-        database: 'assammart',
+        database: 'oihelp',
         type: 'mysql',
         host: 'ls-cac559240bd8e22d83894da3b6ee0768e4d43bc1.cxkzwswlsfxz.ap-south-1.rds.amazonaws.com',
         port: 3306,

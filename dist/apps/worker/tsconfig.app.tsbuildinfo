@@ -10981,7 +10981,7 @@
         "affectsGlobalScope": false
       },
       "../../../apps/worker/src/default-config.ts": {
-        "version": "4523640023fa096203b13fa4f91c0f387f3cda35aeacda9c25ccf3b9d0c472ad",
+        "version": "c6b3b05c34bcbf0b2210c71b1abb4f3ebaa3d111b7b60738c29b1463f24edf2c",
         "signature": "189da4739960c04edc08af345d6212c8acfd41c0296f400f3dbb1556de33f31a",
         "affectsGlobalScope": false
       },

@@ -10981,7 +10981,7 @@
         "affectsGlobalScope": false
       },
       "../../../apps/gridiron-master/src/default-config.ts": {
-        "version": "277643352bb1b7c75c9651e19c18f3a51262d908d8a0348bf18df580bafd8303",
+        "version": "cc6cd5d9580d2b822a7ae35139fcc0cc44eb116b7bee29a61ab135b7799af836",
         "signature": "189da4739960c04edc08af345d6212c8acfd41c0296f400f3dbb1556de33f31a",
         "affectsGlobalScope": false
       },

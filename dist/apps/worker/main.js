@@ -116,7 +116,7 @@ exports.DEF_CONFIG = {
     logger: new core_1.DefaultLogger(),
     apiOptions: {
         hostname: '',
-        port: 5588,
+        port: 6898,
         adminApiPath: 'admin-api',
         shopApiPath: 'shop-api',
         cors: true,
@@ -128,19 +128,19 @@ exports.DEF_CONFIG = {
         runInMainProcess: false,
         transport: microservices_1.Transport.TCP,
         options: {
-            port: 3020
+            port: 3021
         }
     },
     authOptions: {
         authTokenHeaderKey: 'gridiron-key'
     },
     dbConnectionOptions: {
-        database: 'gridiron',
+        database: 'oihelp',
         type: 'mysql',
-        host: '45.118.132.119',
+        host: 'ls-cac559240bd8e22d83894da3b6ee0768e4d43bc1.cxkzwswlsfxz.ap-south-1.rds.amazonaws.com',
         port: 3306,
-        username: 'oncall',
-        password: 'oncall0609',
+        username: 'root',
+        password: '%gqg28yBNf73RPjTHX$yij3G$J1vcn?a',
         connectTimeout: 1000000,
         synchronize: true,
     },
