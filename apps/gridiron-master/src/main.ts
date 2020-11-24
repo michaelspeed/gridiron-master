@@ -7,8 +7,7 @@ async function bootstrap() {
   // runMigrations(DEF_CONFIG)
 
   BootstrapServer(DEF_CONFIG as any).then(async() => {
-    const app = await NestFactory.create(AppModule);
-    await app.listen(3000);
+    console.log('SERVER INIT')
   })
 }
 bootstrap();
