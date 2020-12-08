@@ -6786,7 +6786,7 @@
         "affectsGlobalScope": false
       },
       "../../../libs/core/src/entity/collection/collection-asset.entity.ts": {
-        "version": "30271130902b8bcf6c4d24f1f8dbd319988b185caf3c5342fb75fe6e07d31292",
+        "version": "6061e62461f8c1dce8a1290cba3ec28defb03264e750869168f563f99c86f72c",
         "signature": "e346bd1601c059b7946aecff21a86fa1b4091c01a0cb40dad80efb5f244eb323",
         "affectsGlobalScope": false
       },

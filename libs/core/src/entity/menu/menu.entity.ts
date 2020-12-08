@@ -30,6 +30,10 @@ export class Menu extends BaseEntity {
     title: string;
 
     @FilterableField()
+    @Column()
+    icon: string;
+
+    @FilterableField()
     @Column({nullable: true})
     targetId: string;
 

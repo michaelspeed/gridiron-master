@@ -3611,7 +3611,7 @@ __decorate([
 ], CollectionAsset.prototype, "deletedAt", void 0);
 __decorate([
     query_graphql_1.FilterableField(() => graphql_1.ID),
-    typeorm_1.PrimaryGeneratedColumn('uuid'),
+    typeorm_1.Column(),
     __metadata("design:type", String)
 ], CollectionAsset.prototype, "collectionId", void 0);
 CollectionAsset = __decorate([
