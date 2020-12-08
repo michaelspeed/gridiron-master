@@ -30,7 +30,7 @@ export const DEF_CONFIG: GridIronConfig = {
             port: 5002,
             namingStrategy: new DefaultAssetsNamingStrategy()
         }),
-        EmailPlugin.init({
+        /*EmailPlugin.init({
             devMode: true,
             handlers: defaultEmailHandlers,
             templatePath: path.join(__dirname, 'templates'),
@@ -40,7 +40,7 @@ export const DEF_CONFIG: GridIronConfig = {
                 verifyEmailAddressUrl: 'http://localhost:4201/verify',
                 passwordResetUrl: 'http://localhost:4201/reset-password',
             },
-        })
+        })*/
     ],
     workerOptions: {
         runInMainProcess: false,
@@ -53,7 +53,7 @@ export const DEF_CONFIG: GridIronConfig = {
         authTokenHeaderKey: 'gridiron-key'
     },
     dbConnectionOptions: {
-        database: 'anibo-shop',
+        database: 'assammart',
         type: 'mysql',
         host: 'ls-cac559240bd8e22d83894da3b6ee0768e4d43bc1.cxkzwswlsfxz.ap-south-1.rds.amazonaws.com',
         port: 3306,
