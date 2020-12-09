@@ -4,11 +4,9 @@ import {
     DefaultAssetsNamingStrategy,
     DefaultLogger,
     GridIronConfig,
-    InMemoryJobQueueStrategy,
-    RestPlugin
+    InMemoryJobQueueStrategy
 } from '@gridiron/core';
-import {AssetsServerPlugin, configureGoogleCloudStorage, configureS3AssetStorage} from '@gridiron/asset-server-plugin';
-import {defaultEmailHandlers, EmailPlugin} from "@gridiron/email-plugin";
+import {AssetsServerPlugin} from '@gridiron/asset-server-plugin';
 
 
 // anibo config
@@ -30,7 +28,7 @@ export const DEF_CONFIG: GridIronConfig = {
             port: 5002,
             namingStrategy: new DefaultAssetsNamingStrategy()
         }),
-        EmailPlugin.init({
+        /*EmailPlugin.init({
             devMode: true,
             handlers: defaultEmailHandlers,
             templatePath: path.join(__dirname, 'templates'),
@@ -40,7 +38,7 @@ export const DEF_CONFIG: GridIronConfig = {
                 verifyEmailAddressUrl: 'http://localhost:4201/verify',
                 passwordResetUrl: 'http://localhost:4201/reset-password',
             },
-        })
+        })*/
     ],
     workerOptions: {
         runInMainProcess: false,
