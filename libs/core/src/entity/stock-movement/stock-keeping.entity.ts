@@ -8,7 +8,7 @@ registerEnumType(StockKeepingType, {
     name: 'StockKeepingType'
 })
 
-@ObjectType('StockKeeping')
+@ObjectType('StockKeeping', {isAbstract: true})
 @Entity({name: 'StockKeeping'})
 @Relation('variant', () => ProductVariant, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @Relation('store', () => Store, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
@@ -60,7 +60,7 @@ export class StockKeeping extends BaseEntity {
     @Column({enum: StockKeepingType, type: 'enum', default: StockKeepingType.VENDOR})
     type: StockKeepingType
 
-    @Field(() => ProductVariant)
+    // @Field(() => ProductVariant)
     @ManyToOne(() => ProductVariant, variant => variant.stock)
     variant: ProductVariant
 

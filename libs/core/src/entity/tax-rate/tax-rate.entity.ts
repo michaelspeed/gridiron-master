@@ -4,7 +4,7 @@ import {Connection, FilterableField, PagingStrategies, Relation} from '@nestjs-q
 import {ProductVariantPrice, TaxCategory, Zone} from '..';
 import {DecimalTransformer} from '../utils/ValueTransformers';
 
-@ObjectType('TaxRate')
+@ObjectType('TaxRate', {isAbstract: true})
 @Relation('category', () => TaxCategory, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @Relation('zone', () => Zone, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @Connection('variants', () => ProductVariantPrice, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
@@ -21,9 +21,9 @@ export class TaxRate extends BaseEntity {
     @FilterableField()
     @UpdateDateColumn()
     updatedAt: Date;
- 
+
     @FilterableField()
-    @Column() 
+    @Column()
     name: string;
 
     @FilterableField()
@@ -31,7 +31,7 @@ export class TaxRate extends BaseEntity {
     value: number;
 
     @FilterableField()
-    @Column() 
+    @Column()
     enabled: boolean;
 
     @ManyToOne(type => TaxCategory, cat => cat.rate)

@@ -31,12 +31,10 @@ export const DEF_CONFIG: GridIronConfig = {
     dbConnectionOptions: {
         database: 'gridiron',
         type: 'mysql',
-        host: '45.118.132.119',
+        host: 'localhost',
         port: 3306,
-        username: 'oncall',
-        password: 'oncall0609',
-        connectTimeout: 1000000,
-        synchronize: true,
+        username: 'root',
+        password: 'mike0001',
         /*logger: "advanced-console",
         logging: "all"*/
     },

@@ -3,7 +3,7 @@ import {Connection, FilterableField, PagingStrategies, Relation} from "@nestjs-q
 import {BillingAgreement, Product, ProductQuery, Seo} from "@gridiron/core";
 import {DeleteDateColumn} from "typeorm";
 
-@ObjectType('Collection')
+@ObjectType('CollectionQuery')
 @Connection('agreements', () => BillingAgreement, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @Connection('products', () => ProductQuery, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @Connection('children', () => CollectionQuery, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
@@ -41,8 +41,10 @@ export class CollectionQuery {
     @FilterableField()
     description: string
 
+    //@Field(() => [CollectionQuery])
     children: CollectionQuery[]
 
+    //@Field(() => CollectionQuery)
     parent: CollectionQuery
 
     products: Product[]

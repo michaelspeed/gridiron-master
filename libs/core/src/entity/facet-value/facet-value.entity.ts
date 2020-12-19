@@ -14,7 +14,7 @@ import {Connection, FilterableField, PagingStrategies, Relation} from '@nestjs-q
 import {Facet} from '../facet/facet.entity';
 import {Product} from '../';
 
-@ObjectType('FacetValue')
+@ObjectType('FacetValue', {isAbstract: true})
 @Entity({name: 'facetValue'})
 @Relation('facet', () => Facet, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @Connection('product', () => Product, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
@@ -36,15 +36,15 @@ export class FacetValue extends BaseEntity {
     deletedAt?: Date;
 
     @FilterableField()
-    @Column() 
+    @Column()
     code: string;
 
-    @Field(() => [Product])
+    // @Field(() => [Product])
     @ManyToMany(type => Product, prod => prod.facets)
     product: Product[]
 
-    @Field(() => Facet)
+    // @Field(() => Facet)
     @ManyToOne(type => Facet, fac => fac.values)
     facet: Facet
-    
+
 }

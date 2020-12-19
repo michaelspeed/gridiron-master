@@ -12,7 +12,7 @@ registerEnumType(CurrencyCode, {
     name: 'CurrencyCode'
 })
 
-@ObjectType('Channel')
+@ObjectType('Channel', {isAbstract: true})
 @Entity({name: 'channel'})
 export class Channel extends BaseEntity {
 
@@ -37,7 +37,7 @@ export class Channel extends BaseEntity {
     token: string;
 
     @FilterableField(() => LanguageCode)
-    @Column('varchar') 
+    @Column('varchar')
     defaultLanguageCode: LanguageCode;
 
     @ManyToOne(type => Zone)
@@ -51,6 +51,6 @@ export class Channel extends BaseEntity {
     currencyCode: CurrencyCode;
 
     @FilterableField()
-    @Column() 
+    @Column()
     pricesIncludeTax: boolean;
 }

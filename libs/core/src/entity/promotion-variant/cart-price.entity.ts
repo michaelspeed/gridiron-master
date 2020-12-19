@@ -16,7 +16,7 @@ registerEnumType(PricePromoType, {
     name: 'PricePromoType'
 })
 
-@ObjectType('CartPriceRules')
+@ObjectType('CartPriceRules', {isAbstract: true})
 @Entity('cart-price')
 @Relation('collection', () => Collection, {nullable: true, pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 export class CartPrice extends BaseEntity {

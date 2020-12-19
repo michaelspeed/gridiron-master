@@ -57,6 +57,7 @@ import {CollectionSubscriber} from "./services/subscribers/CollectionSubscriber"
 import {GlobalCollectionsService} from "./services/global/collection.service";
 import {CollectionController} from "./controllers/collection.controller";
 import {SettlementService} from "./services/admin/settlement.service";
+import { ServiceableService } from './services/admin/serviceable.service';
 
 export const adminServices = [
     AdministratorService,
@@ -87,7 +88,8 @@ export const adminServices = [
     PaymentMethodService,
     StatisticsService,
     RefundService,
-    SettlementService
+    SettlementService,
+    ServiceableService
 ]
 
 export const globalServices = [

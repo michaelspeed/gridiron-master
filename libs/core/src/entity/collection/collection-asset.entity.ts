@@ -10,7 +10,7 @@ import {
 import {ID, ObjectType} from '@nestjs/graphql';
 import {FilterableField} from '@nestjs-query/query-graphql';
 
-@ObjectType('CollectionAsset')
+@ObjectType('CollectionAsset', {isAbstract: true})
 @Entity({name: 'collectionAsset'})
 export class CollectionAsset extends  BaseEntity {
     @FilterableField(() => ID)

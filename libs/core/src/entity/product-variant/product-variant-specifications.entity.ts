@@ -13,7 +13,7 @@ import {FilterableField, PagingStrategies, Relation} from '@nestjs-query/query-g
 import {ProductVariant} from '../';
 import GraphQLJSON from 'graphql-type-json';
 
-@ObjectType('ProductVariantSpecs')
+@ObjectType('ProductVariantSpecs', {isAbstract: true})
 @Entity({name: 'product-variant-specs'})
 @Relation('variant', () => ProductVariant, {nullable: true, pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 export class ProductVariantSpecifications extends BaseEntity {
@@ -37,7 +37,7 @@ export class ProductVariantSpecifications extends BaseEntity {
     @Column('simple-json')
     specs: JSON
 
-    @Field(() => ProductVariant)
+    // @Field(() => ProductVariant)
     @OneToOne(() => ProductVariant, variant => variant.specs)
     variant: ProductVariant
 }

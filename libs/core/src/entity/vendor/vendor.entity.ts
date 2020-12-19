@@ -18,14 +18,15 @@ import {
     Relation
 } from '@nestjs-query/query-graphql';
 import {User} from '../user/user.entity';
-import {Accounts, OrderLine, Store, VendorLicense, Zip} from '../';
+import {Accounts, OrderLine, Serviceable, Store, VendorLicense, Zip} from '../';
 
-@ObjectType('Vendor')
+@ObjectType('Vendor', {isAbstract: true})
 @Entity({name: 'vendor'})
 @Relation('user', () => User, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @Relation('license', () => VendorLicense, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @Relation('store', () => Store, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @Relation('account', () => Store, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
+@Relation('serviceable', () => Serviceable, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @FilterableConnection('zip', () => Zip, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 export class Vendor extends BaseEntity {
     @FilterableField(() => ID)
@@ -71,4 +72,7 @@ export class Vendor extends BaseEntity {
 
     @OneToOne(() => Accounts, account => account.vendor)
     account: Accounts
+
+    @ManyToOne(() => Serviceable, service => service.vendors)
+    serviceable: Serviceable
 }

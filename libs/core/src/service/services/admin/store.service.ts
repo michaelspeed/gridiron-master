@@ -30,6 +30,7 @@ export class StoreService {
             store.streetAddress2 = streetAddress2
             store.zipcode = zipcode
             store.country = country!
+            store.services = true
             store.save().then(value => {
                 resolve(value)
             }).catch(error => reject(error))

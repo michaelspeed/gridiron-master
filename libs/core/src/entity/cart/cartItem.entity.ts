@@ -3,7 +3,7 @@ import {BaseEntity, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn
 import {FilterableField} from "@nestjs-query/query-graphql";
 import {Cart, ProductVariant, ProductVariantPrice, Store} from "..";
 
-@ObjectType('CartItem')
+@ObjectType('CartItem', {isAbstract: true})
 @Entity('catritem')
 export class CartItem extends BaseEntity {
 

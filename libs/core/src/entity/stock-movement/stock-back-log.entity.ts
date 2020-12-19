@@ -11,7 +11,7 @@ import {
 import {FilterableField, FilterableRelation, PagingStrategies, Relation} from "@nestjs-query/query-graphql";
 import {ProductVariantPrice, Store} from "..";
 
-@ObjectType('StockBackLog')
+@ObjectType('StockBackLog', {isAbstract: true})
 @Entity({name: 'stock-back-log'})
 @FilterableRelation('variant', () => ProductVariantPrice, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true, nullable: true})
 @FilterableRelation('store', () => Store, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true, nullable: true})

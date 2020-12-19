@@ -13,7 +13,7 @@ import {Field, ID, ObjectType} from '@nestjs/graphql';
 import {Connection, FilterableField, PagingStrategies, Relation} from '@nestjs-query/query-graphql';
 import {Address, Administrator, Cart, Delivery, Order, ResetCode, Review, Vendor, View} from '..';
 
-@ObjectType('User')
+@ObjectType('User', {isAbstract: true})
 @Relation('administrator', () => Administrator, {nullable: true})
 @Relation('vendor', () => Vendor, {nullable: true})
 @Relation('delivery', () => Delivery, {nullable: true})

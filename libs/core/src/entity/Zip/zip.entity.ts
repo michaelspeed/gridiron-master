@@ -11,7 +11,7 @@ import {
 import {Connection, FilterableConnection, FilterableField, PagingStrategies} from '@nestjs-query/query-graphql';
 import {Vendor, Store} from "..";
 
-@ObjectType('Zip')
+@ObjectType('Zip', {isAbstract: true})
 @Entity({name: 'zip'})
 @FilterableConnection('vendors', () => Vendor, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @FilterableConnection('store', () => Store, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})

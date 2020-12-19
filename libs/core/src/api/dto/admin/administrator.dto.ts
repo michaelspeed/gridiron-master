@@ -8,7 +8,7 @@ export enum AdministratorResponseType {
     BOTH = "BOTH"
 }
 
-@ObjectType()
+@ObjectType({isAbstract: true})
 export class AdministratorDto {
     @Field(() => User)
     user: User

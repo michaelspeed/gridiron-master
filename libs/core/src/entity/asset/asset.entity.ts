@@ -3,28 +3,30 @@ import {
     CreateDateColumn, DeleteDateColumn,
     Entity,
     ManyToOne,
-    OneToMany,
+    OneToMany, OneToOne,
     PrimaryGeneratedColumn,
     UpdateDateColumn
 } from 'typeorm';
 import {AssetType} from '../../enums/AssetType';
 import {Field, ID, ObjectType, registerEnumType} from '@nestjs/graphql';
-import {Connection, FilterableField, PagingStrategies} from '@nestjs-query/query-graphql';
+import {Connection, FilterableField, PagingStrategies, Relation} from '@nestjs-query/query-graphql';
 import {FocalPoint} from '../common/FocalPoint';
 import {GraphQLJSONObject} from 'graphql-type-json';
 import {AssetsFolder} from './assets-folder.entity';
 import {DeepPartial} from '../../common';
 import {GridIronEntity} from '../base/base.entity';
-import {Product, ProductAsset, ProductVariant} from '../';
+import {Collection, Menu, Product, ProductAsset, ProductVariant} from '../';
 
 registerEnumType(AssetType, {
     name: 'AssetType'
 })
 
-@ObjectType('Asset')
+@ObjectType('Asset', {isAbstract: true})
 @Entity({name: 'Asset'})
 @Connection('productAsset', () => ProductAsset, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true, relationName: 'productAsset'})
 @Connection('featured', () => Product, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true, relationName: 'featured'})
+@Relation('collection', () => Collection, {nullable: true, pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true, relationName: 'collection'})
+@Relation('menu', () => Menu, {nullable: true, pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true, relationName: 'menu'})
 export class Asset extends GridIronEntity {
 
     constructor(input?: DeepPartial<Asset>) {
@@ -48,35 +50,35 @@ export class Asset extends GridIronEntity {
     deletedAt?: Date;
 
     @FilterableField()
-    @Column() 
+    @Column()
     name: string;
 
     @FilterableField(() => AssetType)
-    @Column('varchar') 
+    @Column('varchar')
     type: AssetType;
 
     @FilterableField()
-    @Column() 
+    @Column()
     mimeType: string;
 
     @FilterableField()
-    @Column({ default: 0 }) 
+    @Column({ default: 0 })
     width: number;
 
     @FilterableField()
-    @Column({ default: 0 }) 
+    @Column({ default: 0 })
     height: number;
 
     @FilterableField()
-    @Column() 
+    @Column()
     fileSize: number;
 
     @FilterableField()
-    @Column() 
+    @Column()
     source: string;
 
     @FilterableField()
-    @Column() 
+    @Column()
     preview: string;
 
     @OneToMany(type1 => ProductVariant, vr => vr.asset)
@@ -94,4 +96,10 @@ export class Asset extends GridIronEntity {
 
     @ManyToOne(type => AssetsFolder, folder => folder.assets)
     folder: AssetsFolder
+
+    @OneToOne(type => Collection, collection => collection.asset)
+    collection: Collection
+
+    @OneToOne(type => Menu, menu => menu.asset)
+    menu: Menu
 }

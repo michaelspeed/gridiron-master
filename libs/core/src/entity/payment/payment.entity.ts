@@ -11,7 +11,7 @@ import {ID, ObjectType} from '@nestjs/graphql';
 import {FilterableField, PagingStrategies, Relation} from '@nestjs-query/query-graphql';
 import {Order, PaymentMethod, User} from "..";
 
-@ObjectType('Payment')
+@ObjectType('Payment', {isAbstract: true})
 @Entity({name: 'payment'})
 @Relation('order', () => Order, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true, relationName: 'order'})
 export class Payment extends BaseEntity {

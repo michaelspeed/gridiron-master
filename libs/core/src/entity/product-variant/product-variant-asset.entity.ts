@@ -13,7 +13,7 @@ import {Field, ID, ObjectType} from '@nestjs/graphql';
 import {FilterableField, PagingStrategies, Relation} from '@nestjs-query/query-graphql';
 import {Asset, ProductVariant} from '../';
 
-@ObjectType('ProductVariantAsset')
+@ObjectType('ProductVariantAsset', {isAbstract: true})
 @Entity({name: 'productVariantAsset'})
 @Relation('variant', () => ProductVariant, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @Relation('asset', () => Asset, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
@@ -34,11 +34,11 @@ export class ProductVariantAsset extends BaseEntity {
     @DeleteDateColumn()
     deletedAt?: Date;
 
-    @Field(() => Asset)
+    // @Field(() => Asset)
     @ManyToOne(type => Asset, asset => asset.variantAsset)
     asset: Asset
 
-    @Field(() => ProductVariant)
+    // @Field(() => ProductVariant)
     @OneToOne(type => ProductVariant, variant => variant.asset)
     @JoinColumn()
     variant: ProductVariant

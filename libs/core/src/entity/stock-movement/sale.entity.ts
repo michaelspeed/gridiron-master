@@ -3,7 +3,7 @@ import {ID, ObjectType} from '@nestjs/graphql';
 import {FilterableField, PagingStrategies, Relation} from '@nestjs-query/query-graphql';
 import {StockKeeping} from '..';
 
-@ObjectType('Sale')
+@ObjectType('Sale', {isAbstract: true})
 @Entity({name: 'sale'})
 @Relation('keeping', () => StockKeeping, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 export class Sale extends BaseEntity {

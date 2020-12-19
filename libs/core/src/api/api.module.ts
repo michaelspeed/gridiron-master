@@ -3,7 +3,6 @@ import {ConfigModule} from '../config';
 import {GqlJson} from './config/scalars/GqlJson';
 import {AdminApiModule, ApiSharedModule, ShopApiModule} from './api-internal-modules';
 import {configureAdminGraphQLModule, configureShopGraphQLModule} from './config/graphql-module-config';
-import {JwtModule} from '@nestjs/jwt';
 import {ServiceModule} from '../service/service.module';
 
 @Module({
@@ -13,9 +12,9 @@ import {ServiceModule} from '../service/service.module';
             apiType: 'admin',
             apiPath: configService.apiOptions.adminApiPath,
             playground: true,
-            debug: false,
-            // typePaths: [],
-            typePaths: ['./admin.gql'],
+            debug: true,
+            typePaths: [],
+            //typePaths: ['./admin.gql'],
             resolverModule: [
                 AdminApiModule,
             ],
@@ -32,7 +31,7 @@ export class AdminGQLModule {}
             apiType: 'shop',
             apiPath: configService.apiOptions.shopApiPath,
             playground: true,
-            debug: false,
+            debug: true,
             typePaths: [],
             resolverModule: [
                 ShopApiModule,
@@ -48,7 +47,7 @@ export class ShopGQLModule {}
         ServiceModule.forRoot(),
         ApiSharedModule,
         AdminGQLModule,
-        ShopGQLModule
+        // ShopGQLModule
     ],
 })
 export class ApiModule {}

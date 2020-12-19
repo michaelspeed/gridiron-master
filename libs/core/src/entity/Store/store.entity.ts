@@ -40,7 +40,7 @@ registerEnumType(StoreTypeEnum, {
     name: 'StoreTypeEnum',
 });
 
-@ObjectType('Store')
+@ObjectType('Store', {isAbstract: true})
 @Relation('country', () => Country, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @Relation('balance', () => StoreBalance, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true, nullable: true})
 @Connection('sku', () => StockKeeping, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
@@ -107,6 +107,10 @@ export class Store extends BaseEntity {
     @Column({default: false})
     channelMarkets: boolean;
 
+    @FilterableField()
+    @Column({default: false})
+    services: boolean;
+
     @Field(() => StoreTypeEnum)
     @Column({enum: StoreTypeEnum, type: "enum", default: StoreTypeEnum.DEFAULT})
     type: StoreTypeEnum
@@ -117,7 +121,7 @@ export class Store extends BaseEntity {
     @OneToMany(type1 => TaxCategory, taxc => taxc.store)
     taxCategory: TaxCategory[]
 
-    @Field(() => Vendor, {nullable: true})
+    //@Field(() => Vendor, {nullable: true})
     @OneToOne(type1 => Vendor, vendor => vendor.store)
     vendor: Vendor
 
@@ -140,15 +144,15 @@ export class Store extends BaseEntity {
     @OneToMany(() => OrderLine, line => line.store)
     line: OrderLine[]
 
-    @Field(() => [CartItem])
+    //@Field(() => [CartItem])
     @OneToMany(() => CartItem, item => item.store)
     cart: CartItem[]
 
-    @Field(() => StockBackLog)
+    //@Field(() => StockBackLog)
     @OneToMany(() => StockBackLog, backlog => backlog.store)
     backlogs: StockBackLog[]
 
-    @Field(() => Zip, {nullable: true})
+    //@Field(() => Zip, {nullable: true})
     @ManyToMany(() => Zip, zip => zip.store)
     @JoinTable()
     zip: Zip[]

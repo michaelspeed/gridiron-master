@@ -13,7 +13,7 @@ import {
 import {FilterableField, PagingStrategies, Relation} from '@nestjs-query/query-graphql';
 import {Vendor, VendorPlans} from '../';
 
-@ObjectType('VendorLicense')
+@ObjectType('VendorLicense', {isAbstract: true})
 @Entity({name: 'vendor-license'})
 @Relation('vendor', () => Vendor, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @Relation('plans', () => VendorPlans, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})

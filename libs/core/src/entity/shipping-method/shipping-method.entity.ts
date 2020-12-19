@@ -7,7 +7,7 @@ registerEnumType(ShippingMethodsEnum, {
     name: 'ShippingMethodsEnum'
 })
 
-@ObjectType('ShippingMethod')
+@ObjectType('ShippingMethod', {isAbstract: true})
 @Entity({name: 'shippingMethod'})
 export class ShippingMethod extends BaseEntity {
     @FilterableField(() => ID)
@@ -31,7 +31,7 @@ export class ShippingMethod extends BaseEntity {
     code: ShippingMethodsEnum;
 
     @FilterableField()
-    @Column() 
+    @Column()
     description: number;
-    
+
 }
