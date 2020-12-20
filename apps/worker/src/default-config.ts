@@ -29,12 +29,14 @@ export const DEF_CONFIG: GridIronConfig = {
         authTokenHeaderKey: 'gridiron-key'
     },
     dbConnectionOptions: {
-        database: 'gridiron',
+        database: 'assammart',
         type: 'mysql',
-        host: 'localhost',
+        host: 'ls-cac559240bd8e22d83894da3b6ee0768e4d43bc1.cxkzwswlsfxz.ap-south-1.rds.amazonaws.com',
         port: 3306,
         username: 'root',
-        password: 'mike0001',
+        password: '%gqg28yBNf73RPjTHX$yij3G$J1vcn?a',
+        connectTimeout: 1000000,
+        synchronize: false,
         /*logger: "advanced-console",
         logging: "all"*/
     },

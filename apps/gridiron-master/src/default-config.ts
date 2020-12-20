@@ -53,7 +53,7 @@ export const DEF_CONFIG: GridIronConfig = {
         authTokenHeaderKey: 'gridiron-key'
     },
     dbConnectionOptions: {
-        database: 'gridiron',
+        database: 'assammart',
         type: 'mysql',
         host: 'localhost',
         port: 3306,
