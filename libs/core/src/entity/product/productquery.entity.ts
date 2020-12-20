@@ -19,7 +19,7 @@ import {
     ProductVariant
 } from "@gridiron/core";
 
-@ObjectType('Product')
+@ObjectType('Product', {isAbstract: true})
 @Connection('assets', () => ProductAsset, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @Connection('variants', () => ProductVariant, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @Connection('facets', () => FacetValue, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})

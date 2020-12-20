@@ -12,7 +12,7 @@ import {FilterableField} from '@nestjs-query/query-graphql';
 import {ID, ObjectType} from '@nestjs/graphql';
 import {Collection, Product, ProductVariant, User} from '..';
 
-@ObjectType('View')
+@ObjectType('View', {isAbstract: true})
 @Entity({name: 'view'})
 export class View extends BaseEntity {
 

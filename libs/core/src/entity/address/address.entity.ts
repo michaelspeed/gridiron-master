@@ -18,7 +18,7 @@ registerEnumType(AddressType, {
     name: 'AddressType'
 })
 
-@ObjectType('Address')
+@ObjectType('Address', {isAbstract: true})
 @Entity({name: 'address'})
 @Relation('user', () => User, {nullable: true, relationName: 'user'})
 export class Address extends BaseEntity {

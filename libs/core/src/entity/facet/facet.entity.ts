@@ -14,7 +14,7 @@ import {ID, ObjectType} from '@nestjs/graphql';
 import {Connection, FilterableField, PagingStrategies, Relation} from '@nestjs-query/query-graphql';
 import {FacetValue, Product} from '../';
 
-@ObjectType('Facet')
+@ObjectType('Facet', {isAbstract: true})
 @Entity({name: 'facet'})
 @Connection('values', () => FacetValue, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @Connection('product', () => Product, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})

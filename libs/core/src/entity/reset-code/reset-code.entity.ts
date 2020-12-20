@@ -11,7 +11,7 @@ import {
 import {FilterableField} from "@nestjs-query/query-graphql";
 import {User} from "..";
 
-@ObjectType('ResetCode')
+@ObjectType('ResetCode', {isAbstract: true})
 @Entity({name: 'resetcode'})
 export class ResetCode extends BaseEntity {
 

@@ -19,7 +19,7 @@ registerEnumType(PaymentModes, {
     name: 'PaymentModes'
 })
 
-@ObjectType('Order')
+@ObjectType('Order', {isAbstract: true})
 @Entity({name: 'order'})
 @FilterableConnection('line', () => OrderLine, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true, relationName: 'line'})
 @Relation('user', () => User, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true, relationName: 'user'})

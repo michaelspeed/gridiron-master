@@ -1,6 +1,6 @@
 import {Field, ObjectType} from "@nestjs/graphql";
 
-@ObjectType()
+@ObjectType({isAbstract: true})
 export class DataSource {
     @Field()
     sum: number
@@ -9,13 +9,13 @@ export class DataSource {
     amount: number
 }
 
-@ObjectType()
+@ObjectType({isAbstract: true})
 export class ProdDataSource {
     @Field()
     sum: number
 }
 
-@ObjectType()
+@ObjectType({isAbstract: true})
 export class StatisticeDto {
     @Field(() => [String])
     labels: string[]
@@ -24,7 +24,7 @@ export class StatisticeDto {
 }
 
 
-@ObjectType()
+@ObjectType({isAbstract: true})
 export class StatisticeProdDto {
     @Field(() => [String])
     labels: string[]

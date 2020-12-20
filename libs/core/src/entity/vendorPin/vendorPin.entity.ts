@@ -2,7 +2,7 @@ import {BaseEntity, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, Up
 import {FilterableField} from '@nestjs-query/query-graphql';
 import {ID, ObjectType} from '@nestjs/graphql';
 
-@ObjectType('VendorPin')
+@ObjectType('VendorPin', {isAbstract: true})
 @Entity({name: 'vendor-pin'})
 export class VendorPin extends BaseEntity {
     @FilterableField(() => ID)

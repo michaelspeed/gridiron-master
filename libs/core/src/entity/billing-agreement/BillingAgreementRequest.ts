@@ -14,7 +14,7 @@ import {FilterableField, FilterableRelation, PagingStrategies, Relation} from '@
 import {BillingAgreement} from '..';
 import {BillingAgreementState} from '../../enums';
 
-@ObjectType('BillingAgreementRequest')
+@ObjectType('BillingAgreementRequest', {isAbstract: true})
 @Entity('billing-agreement-request')
 @FilterableRelation('agreement', () => BillingAgreement, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 export class BillingAgreementRequest extends BaseEntity {

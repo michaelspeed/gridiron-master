@@ -3,7 +3,7 @@ import {BaseEntity, Column, CreateDateColumn, Entity, OneToMany, PrimaryGenerate
 import {FilterableField} from '@nestjs-query/query-graphql';
 import {Asset} from './asset.entity';
 
-@ObjectType('AssetFolder')
+@ObjectType('AssetFolder', {isAbstract: true})
 @Entity({name: 'asset-folder'})
 export class AssetsFolder extends BaseEntity {
 

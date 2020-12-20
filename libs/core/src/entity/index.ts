@@ -70,6 +70,8 @@ export * from './refund/refund.entity'
 export * from './reset-code/reset-code.entity'
 export * from './view-codes/view-codes.entity'
 export * from './hsn/hsn.entity'
+export * from './serviceable/serviceable.entity'
+export * from './serviceable/serviceableOrders.entity'
 
 
 // nestjsQuery

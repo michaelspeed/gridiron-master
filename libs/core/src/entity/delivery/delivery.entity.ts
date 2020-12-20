@@ -11,7 +11,7 @@ import {
 import {FilterableConnection, FilterableField, PagingStrategies, Relation} from "@nestjs-query/query-graphql";
 import {Administrator, DeliverySignIn, User} from "..";
 
-@ObjectType('Delivery')
+@ObjectType('Delivery', {isAbstract: true})
 @Entity({name: 'delivery'})
 @Relation('user', () => User, {nullable: true})
 @FilterableConnection('signIn', () => DeliverySignIn, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true, nullable: true, relationName: 'signIn'})

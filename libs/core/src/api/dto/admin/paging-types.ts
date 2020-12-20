@@ -1,6 +1,6 @@
 import {Field, ObjectType} from '@nestjs/graphql';
 
-@ObjectType()
+@ObjectType({isAbstract: true})
 export class PagingTypes {
     @Field({nullable: true})
     take?: number | null

@@ -21,7 +21,7 @@ registerEnumType(VendorPlanTenure, {
     name: 'VendorPlanTenure'
 })
 
-@ObjectType('VendorPlans')
+@ObjectType('VendorPlans', {isAbstract: true})
 @Entity({name: 'vendor-plans'})
 @Connection('licences', () => VendorLicense, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 export class VendorPlans extends BaseEntity {

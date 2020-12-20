@@ -68,6 +68,8 @@ import {RefundResolver} from "./resolvers/admin/refund.resolver";
 import {PaymentResolver} from "./resolvers/admin/payment.resolver";
 import {ViewCodesResolver} from "./resolvers/admin/view-codes.resolver";
 import {HsnResolver} from "./resolvers/admin/hsn.resolver";
+import {ServiceableResolver} from "./resolvers/admin/serviceable.resolver";
+import {DefaultController} from "./controllers/default.controller";
 
 const adminResolvers = [
     AdministratorResolver,
@@ -118,7 +120,8 @@ const adminResolvers = [
     RefundResolver,
     PaymentResolver,
     ViewCodesResolver,
-    HsnResolver
+    HsnResolver,
+    ServiceableResolver
 ]
 
 const shopResolvers = [
@@ -157,7 +160,8 @@ export class ApiSharedModule {}
         ...createDynamicGraphQLModulesForPlugin('admin'),
     ],
     providers: [...adminResolvers, ...adminServiceMap],
-    exports: [...adminResolvers]
+    exports: [...adminResolvers],
+    controllers: [DefaultController]
 })
 export class AdminApiModule {}
 

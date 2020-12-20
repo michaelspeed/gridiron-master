@@ -16,7 +16,7 @@ registerEnumType(PricePromoType, {
     name: 'PricePromoType'
 })
 
-@ObjectType('PromotionVariantPrice')
+@ObjectType('PromotionVariantPrice', {isAbstract: true})
 @Entity('promotion-variant-price')
 @FilterableRelation('price', () => ProductVariantPrice, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 export class PromotionVariantPrice extends BaseEntity {

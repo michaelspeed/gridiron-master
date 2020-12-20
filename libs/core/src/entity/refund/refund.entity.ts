@@ -16,7 +16,7 @@ registerEnumType(RefundEnum, {
     name:'RefundEnum'
 })
 
-@ObjectType('Refund')
+@ObjectType('Refund', {isAbstract: true})
 @Entity({name: 'refund'})
 @FilterableRelation('line', () => OrderLine, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true, relationName: 'line'})
 export class Refund extends BaseEntity {
@@ -37,7 +37,7 @@ export class Refund extends BaseEntity {
     deletedAt?: Date;
 
     @FilterableField()
-    @Column({ nullable: true }) 
+    @Column({ nullable: true })
     reason: string;
 
     @FilterableField()
@@ -45,7 +45,7 @@ export class Refund extends BaseEntity {
     destination: string;
 
     @FilterableField()
-    @Column({ nullable: true }) 
+    @Column({ nullable: true })
     transactionId: string;
 
     @FilterableField(() => RefundEnum)
@@ -56,5 +56,5 @@ export class Refund extends BaseEntity {
     @OneToOne(() => OrderLine, line => line.refund)
     line: OrderLine
 
-    
+
 }

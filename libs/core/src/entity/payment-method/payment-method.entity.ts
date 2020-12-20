@@ -11,7 +11,7 @@ import {ID, ObjectType} from '@nestjs/graphql';
 import {FilterableField} from '@nestjs-query/query-graphql';
 import {Payment} from "..";
 
-@ObjectType('PaymentMethod')
+@ObjectType('PaymentMethod', {isAbstract: true})
 @Entity({name: 'paymentMethod'})
 export class PaymentMethod extends BaseEntity {
     @FilterableField(() => ID)
