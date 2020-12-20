@@ -2,6 +2,14 @@
 <project version="4">
   <component name="PublishConfigData" serverName="oncall-linode">
     <serverData>
+      <paths name="oihelp">
+        <serverdata>
+          <mappings>
+            <mapping local="$PROJECT_DIR$/../GridironConsumerMobile" web="/" />
+            <mapping local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
       <paths name="oncall-linode">
         <serverdata>
           <mappings>

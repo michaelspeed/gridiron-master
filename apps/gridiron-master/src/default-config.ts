@@ -16,7 +16,7 @@ export const DEF_CONFIG: GridIronConfig = {
     logger: new DefaultLogger(),
     apiOptions: {
         hostname: '',
-        port: 5588,
+        port: 6898,
         adminApiPath: 'admin-api',
         shopApiPath: 'shop-api',
         cors: true,
@@ -27,7 +27,7 @@ export const DEF_CONFIG: GridIronConfig = {
         AssetsServerPlugin.init({
             route: 'assets',
             assetUploadDir: path.join(__dirname, 'assets'),
-            port: 5002,
+            port: 6002,
             namingStrategy: new DefaultAssetsNamingStrategy()
         }),
         /*EmailPlugin.init({
@@ -35,7 +35,7 @@ export const DEF_CONFIG: GridIronConfig = {
             handlers: defaultEmailHandlers,
             templatePath: path.join(__dirname, 'templates'),
             outputPath: path.join(__dirname, 'test-emails'),
-            mailboxPort: 5003,
+            mailboxPort: 6003,
             globalTemplateVars: {
                 verifyEmailAddressUrl: 'http://localhost:4201/verify',
                 passwordResetUrl: 'http://localhost:4201/reset-password',
@@ -46,14 +46,14 @@ export const DEF_CONFIG: GridIronConfig = {
         runInMainProcess: false,
         transport: Transport.TCP,
         options: {
-            port: 3020
+            port: 3021
         }
     },
     authOptions: {
         authTokenHeaderKey: 'gridiron-key'
     },
     dbConnectionOptions: {
-        database: 'gridiron',
+        database: 'oihelp',
         type: 'mysql',
         host: 'localhost',
         port: 3306,
