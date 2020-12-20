@@ -19,7 +19,7 @@ registerEnumType(MenuBuilderTypes, {
     name: 'MenuBuilderTypes'
 })
 
-@ObjectType('Menu')
+@ObjectType('Menu', {isAbstract: true})
 @Entity({name: 'menu'})
 @Tree("nested-set")
 @Connection('children', () => Menu, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
@@ -50,7 +50,7 @@ export class Menu extends BaseEntity {
     @Column({enum: MenuBuilderTypes, type: 'enum'})
     target: MenuBuilderTypes;
 
-    // @Field(() => [Menu])
+    @Field(() => [Menu])
     @TreeChildren()
     children: Menu[]
 

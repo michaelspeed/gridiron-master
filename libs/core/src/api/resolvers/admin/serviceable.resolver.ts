@@ -1,5 +1,5 @@
 import {Args, ID, Mutation, Resolver} from "@nestjs/graphql";
-import {Serviceable} from "../../../entity";
+import {Product, Serviceable, Vendor} from "../../../entity";
 import {CRUDResolver, PagingStrategies} from "@nestjs-query/query-graphql";
 import {InjectQueryService, QueryService} from "@nestjs-query/core";
 import { ServiceableService } from "../../../service";
@@ -35,6 +35,20 @@ export class ServiceableResolver extends CRUDResolver(Serviceable, {
         @Args('product', {type: () => ID}) product: string,
     ) {
         return this.serviceableService.addServiceableToProduct(service, product)
+    }
+
+    @Mutation(() => Product)
+    async removeServiceableToProduct(
+        @Args('product', {type: () => ID}) product: string,
+    ) {
+        return this.serviceableService.removeServiceableToProduct(product)
+    }
+
+    @Mutation(() => Vendor)
+    async removeServiceableToVendor(
+        @Args('vendor', {type: () => ID}) vendor: string,
+    ) {
+        return this.serviceableService.removeServiceableToVendor(vendor)
     }
 
 }

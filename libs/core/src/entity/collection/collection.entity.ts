@@ -14,7 +14,7 @@ import {Field, ID, ObjectType} from '@nestjs/graphql';
 import {Connection, FilterableField, PagingStrategies, Relation} from '@nestjs-query/query-graphql';
 import {Seo, BillingAgreement, Product, Store, CartPrice, View, Asset} from '../';
 
-@ObjectType('Collection')
+@ObjectType('Collection', {isAbstract: true})
 @Entity({name: 'collection'})
 @Tree("nested-set")
 @Connection('agreements', () => BillingAgreement, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
@@ -65,32 +65,32 @@ export class Collection extends BaseEntity {
     @Column("text")
     description: string
 
-    // @Field(() => [Collection])
+    @Field(() => [Collection])
     @TreeChildren()
     children: Collection[]
 
     @TreeParent()
     parent: Collection
 
-    //@Field(() => [Product])
+    @Field(() => [Product])
     @OneToMany(type => Product, prod => prod.collection)
     products: Product[]
 
-    //@Field(() => Seo)
+    @Field(() => Seo)
     @OneToOne(type => Seo, seo => seo.collection)
     @JoinColumn()
     seo: Seo
 
-    //@Field(() => Asset)
+    @Field(() => Asset)
     @OneToOne(type => Asset, asset => asset.collection)
     @JoinColumn()
     asset: Asset
 
-    //@Field(() => [BillingAgreement])
+    @Field(() => [BillingAgreement])
     @OneToMany(type => BillingAgreement, agreement => agreement.collection)
     agreements: BillingAgreement[]
 
-    //@Field(() => CartPrice)
+    @Field(() => CartPrice)
     @OneToOne(() => CartPrice, cart => cart.collection)
     cartPrice: CartPrice
 

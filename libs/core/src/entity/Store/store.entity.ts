@@ -28,7 +28,7 @@ import {
     Vendor, Zip,
     Zone,
     Settlements,
-    StoreBalance
+    StoreBalance, Asset
 } from '..';
 
 export enum StoreTypeEnum {
@@ -43,6 +43,7 @@ registerEnumType(StoreTypeEnum, {
 @ObjectType('Store', {isAbstract: true})
 @Relation('country', () => Country, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @Relation('balance', () => StoreBalance, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true, nullable: true})
+@Relation('logo', () => Asset, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true, nullable: true})
 @Connection('sku', () => StockKeeping, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @FilterableConnection('settlement', () => Settlements, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true, relationName: 'settlement'})
 @Connection('prices', () => ProductVariantPrice, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
@@ -111,6 +112,14 @@ export class Store extends BaseEntity {
     @Column({default: false})
     services: boolean;
 
+    @FilterableField()
+    @Column()
+    assetAPI: string;
+
+    @FilterableField()
+    @Column()
+    mainAPI: string;
+
     @Field(() => StoreTypeEnum)
     @Column({enum: StoreTypeEnum, type: "enum", default: StoreTypeEnum.DEFAULT})
     type: StoreTypeEnum
@@ -121,13 +130,17 @@ export class Store extends BaseEntity {
     @OneToMany(type1 => TaxCategory, taxc => taxc.store)
     taxCategory: TaxCategory[]
 
-    //@Field(() => Vendor, {nullable: true})
+    @Field(() => Vendor, {nullable: true})
     @OneToOne(type1 => Vendor, vendor => vendor.store)
     vendor: Vendor
 
     @OneToOne(type1 => StoreBalance, balance => balance.store)
     @JoinColumn()
     balance: StoreBalance
+
+    @OneToOne(type => Asset, asset => asset.store)
+    @JoinColumn()
+    logo: Asset
 
     @OneToMany(type1 => BillingAgreement, agreement => agreement.store)
     agreement: BillingAgreement[]
@@ -144,15 +157,15 @@ export class Store extends BaseEntity {
     @OneToMany(() => OrderLine, line => line.store)
     line: OrderLine[]
 
-    //@Field(() => [CartItem])
+    @Field(() => [CartItem])
     @OneToMany(() => CartItem, item => item.store)
     cart: CartItem[]
 
-    //@Field(() => StockBackLog)
+    @Field(() => StockBackLog)
     @OneToMany(() => StockBackLog, backlog => backlog.store)
     backlogs: StockBackLog[]
 
-    //@Field(() => Zip, {nullable: true})
+    @Field(() => Zip, {nullable: true})
     @ManyToMany(() => Zip, zip => zip.store)
     @JoinTable()
     zip: Zip[]

@@ -31,7 +31,7 @@ import {
 @Connection('variants', () => ProductVariant, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @Connection('facets', () => FacetValue, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @Connection('options', () => ProductOptionGroup, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
-@Connection('serviceable', () => Serviceable, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
+@Relation('serviceable', () => Serviceable, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true, nullable: true})
 @Relation('featuredAsset', () => Asset, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @Relation('collection', () => Collection, {nullable: true, pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @Relation('hsn', () => Hsn, {nullable: true, pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
@@ -67,35 +67,36 @@ export class Product extends BaseEntity {
     @Column("longtext")
     description: string;
 
-    // @Field(() => Hsn, {nullable: true})
+    @Field(() => Hsn, {nullable: true})
     @ManyToOne(type => Hsn, hsn => hsn.prod)
     hsn: Hsn
 
-    //@Field(() => Collection, {nullable: true})
+    @Field(() => Collection, {nullable: true})
     @ManyToOne(type => Collection, col => col.products)
     collection: Collection
 
-    //@Field(() => [ProductOptionGroup])
+    @Field(() => [ProductOptionGroup])
     @OneToMany(type => ProductOptionGroup, optGroup => optGroup.product)
     options: ProductOptionGroup[]
 
-    //@Field(() => Asset)
+    @Field(() => Asset)
     @ManyToOne(type => Asset, asset => asset.featured)
     featuredAsset: Asset
 
-    //@Field(() => [FacetValue])
+    @Field(() => [FacetValue])
     @ManyToMany(type => FacetValue, facet => facet.product)
     @JoinTable()
     facets: FacetValue[]
 
-    //@Field(() => [ProductAsset], {nullable: true})
+    @Field(() => [ProductAsset], {nullable: true})
     @OneToMany(type => ProductAsset, prasset => prasset.product)
     assets: ProductAsset[]
 
-    //@Field(() => [ProductVariant])
+    @Field(() => [ProductVariant])
     @OneToMany(type => ProductVariant, variant => variant.product)
     variants: ProductVariant[]
 
+    @Field(() => Serviceable)
     @ManyToOne(() => Serviceable, serviceable => serviceable.product)
     serviceable: Serviceable
 

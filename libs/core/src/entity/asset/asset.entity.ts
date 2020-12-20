@@ -15,7 +15,7 @@ import {GraphQLJSONObject} from 'graphql-type-json';
 import {AssetsFolder} from './assets-folder.entity';
 import {DeepPartial} from '../../common';
 import {GridIronEntity} from '../base/base.entity';
-import {Collection, Menu, Product, ProductAsset, ProductVariant} from '../';
+import {Collection, Menu, Product, ProductAsset, ProductVariant, Store} from '../';
 
 registerEnumType(AssetType, {
     name: 'AssetType'
@@ -27,6 +27,7 @@ registerEnumType(AssetType, {
 @Connection('featured', () => Product, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true, relationName: 'featured'})
 @Relation('collection', () => Collection, {nullable: true, pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true, relationName: 'collection'})
 @Relation('menu', () => Menu, {nullable: true, pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true, relationName: 'menu'})
+@Relation('store', () => Store, {nullable: true, pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true, relationName: 'store'})
 export class Asset extends GridIronEntity {
 
     constructor(input?: DeepPartial<Asset>) {
@@ -102,4 +103,7 @@ export class Asset extends GridIronEntity {
 
     @OneToOne(type => Menu, menu => menu.asset)
     menu: Menu
+
+    @OneToOne(type => Store, store => store.logo)
+    store: Store
 }

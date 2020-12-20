@@ -13,7 +13,7 @@ export const GridironVersion = '0.0.1'
 
 export async function BootstrapServer(userConfig: Partial<GridIronConfig>): Promise<INestApplication> {
     const config = await preBootStrapServer(userConfig)
-    // Logger.useLogger(config.logger)
+    Logger.useLogger(config.logger)
     Logger.info(`Bootstrapping Gridiron Server (pid: ${process.pid})...`)
 
     const appModule = await import('./core.module')
@@ -21,7 +21,7 @@ export async function BootstrapServer(userConfig: Partial<GridIronConfig>): Prom
     // DefaultLogger.hideNestBoostrapLogs()
     const app = await NestFactory.create(appModule.CoreModule, {
         cors,
-        logger: false
+        logger: new Logger()
     })
     // DefaultLogger.restoreOriginalLogLevel()
     app.useLogger(new Logger())

@@ -10,7 +10,7 @@
 8. Product Variant Price 
 9. Product Variant Specification
 10. Store
-11. Face Value
+11. FaceT Value
 12. Stock Keeping
 13. Order Line
 14. Order

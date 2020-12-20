@@ -39,11 +39,11 @@ export class FacetValue extends BaseEntity {
     @Column()
     code: string;
 
-    // @Field(() => [Product])
+    @Field(() => [Product])
     @ManyToMany(type => Product, prod => prod.facets)
     product: Product[]
 
-    // @Field(() => Facet)
+    @Field(() => Facet)
     @ManyToOne(type => Facet, fac => fac.values)
     facet: Facet
 

@@ -8,7 +8,13 @@ import {
     PrimaryGeneratedColumn,
     UpdateDateColumn
 } from "typeorm";
-import {FilterableField, PagingStrategies, Relation, FilterableRelation} from "@nestjs-query/query-graphql";
+import {
+    FilterableField,
+    PagingStrategies,
+    Relation,
+    FilterableRelation,
+    FilterableConnection
+} from "@nestjs-query/query-graphql";
 import {ServiceableOrderTypes, ServiceableTypes} from "../../enums";
 import {Product, Vendor} from "../";
 
@@ -22,8 +28,8 @@ registerEnumType(ServiceableOrderTypes, {
 
 @ObjectType('Serviceable', {isAbstract: true})
 @Entity({name: 'serviceable'})
-@FilterableRelation('vendors', () => Vendor, {nullable: true, pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true, relationName: 'vendors'})
-@FilterableRelation('product', () => Product, {nullable: true, pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true, relationName: 'product'})
+@FilterableConnection('vendors', () => Vendor, {nullable: true, pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true, relationName: 'vendors'})
+@FilterableConnection('product', () => Product, {nullable: true, pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true, relationName: 'product'})
 export class Serviceable extends BaseEntity {
     @FilterableField(() => ID)
     @PrimaryGeneratedColumn('uuid')

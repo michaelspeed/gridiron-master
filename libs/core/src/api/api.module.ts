@@ -13,8 +13,8 @@ import {ServiceModule} from '../service/service.module';
             apiPath: configService.apiOptions.adminApiPath,
             playground: true,
             debug: true,
-            typePaths: [],
-            //typePaths: ['./admin.gql'],
+            // typePaths: [],
+            typePaths: ['./admin.gql'],
             resolverModule: [
                 AdminApiModule,
             ],
@@ -47,7 +47,7 @@ export class ShopGQLModule {}
         ServiceModule.forRoot(),
         ApiSharedModule,
         AdminGQLModule,
-        // ShopGQLModule
+        ShopGQLModule
     ],
 })
 export class ApiModule {}
