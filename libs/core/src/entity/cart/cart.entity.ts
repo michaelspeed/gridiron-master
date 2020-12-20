@@ -3,7 +3,7 @@ import {FilterableField} from '@nestjs-query/query-graphql';
 import {Field, ID, ObjectType} from '@nestjs/graphql';
 import {CartItem, User} from '../';
 
-@ObjectType('Cart')
+@ObjectType('Cart', {isAbstract: true})
 @Entity({name: 'cart'})
 export class Cart extends BaseEntity {
 

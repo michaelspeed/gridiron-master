@@ -2,7 +2,7 @@ import {BaseEntity, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, Up
 import {FilterableField} from '@nestjs-query/query-graphql';
 import {ID, ObjectType} from '@nestjs/graphql';
 
-@ObjectType('GlobalSettings')
+@ObjectType('GlobalSettings', {isAbstract: true})
 @Entity({name: 'global-settings'})
 export class GlobalSettings extends BaseEntity {
     @FilterableField(() => ID)

@@ -23,7 +23,7 @@ registerEnumType(SortOrder, {
     name: 'SortOrder'
 })
 
-@ObjectType()
+@ObjectType({isAbstract: true})
 export class CoordinateInput {
     @Field(() => Float)
     x: number;
@@ -32,7 +32,7 @@ export class CoordinateInput {
     y: number;
 }
 
-@ObjectType()
+@ObjectType({isAbstract: true})
 export class UpdateAssetInput {
     @Field()
     id: string
@@ -44,7 +44,7 @@ export class UpdateAssetInput {
     focalPoint?: CoordinateInput
 }
 
-@ObjectType()
+@ObjectType({isAbstract: true})
 export class MutationUpdateAssetArgs {
 
     @Field(() => UpdateAssetInput)
@@ -55,7 +55,7 @@ export declare type CreateAssetInput = {
     file: FileUpload;
 };
 
-@ObjectType()
+@ObjectType({isAbstract: true})
 export class AssetSortParameter {
     @Field(() => SortOrder)
     id?: SortOrder
@@ -88,7 +88,7 @@ export class AssetSortParameter {
     preview?: SortOrder
 };
 
-@ObjectType()
+@ObjectType({isAbstract: true})
 export class AssetFilterParameter {
     createdAt?: DateOperators
     updatedAt?: DateOperators
@@ -102,7 +102,7 @@ export class AssetFilterParameter {
     preview?: StringOperators
 };
 
-@ObjectType()
+@ObjectType({isAbstract: true})
 export class AssetListOptions {
     @Field(() => Int)
     skip?: number
@@ -114,7 +114,7 @@ export class AssetListOptions {
     filter?: Maybe<AssetFilterParameter>;
 };
 
-@ObjectType()
+@ObjectType({isAbstract: true})
 export class QueryAssetsArgs  {
     options?: any
 };

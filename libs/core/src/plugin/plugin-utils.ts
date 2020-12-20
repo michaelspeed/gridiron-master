@@ -11,6 +11,7 @@ export function createProxyHandler(options: ProxyOptions): RequestHandler {
         pathRewrite: {
             [`^${route}`]: `/` + (options.basePath || ''),
         },
+        logLevel: "silent",
         logProvider(provider) {
             return {
                 log(message: string) {
@@ -68,6 +69,7 @@ export interface ProxyOptions {
     basePath?: string;
 }
 
+/*
 export function getProxyMiddlewareCliGreetings(config: RuntimeGridIronConfig): Array<[string, string]> {
     const output: Array<[string, string]> = [];
     for (const middleware of config.apiOptions.middleware || []) {
@@ -84,4 +86,5 @@ export function getProxyMiddlewareCliGreetings(config: RuntimeGridIronConfig): A
     }
     return output;
 }
+*/
 

@@ -2,7 +2,7 @@ import {BaseEntity, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, Up
 import {ID, ObjectType} from '@nestjs/graphql';
 import {FilterableField} from '@nestjs-query/query-graphql';
 
-@ObjectType('Customer')
+@ObjectType('Customer', {isAbstract: true})
 @Entity({name: 'customer'})
 export class Customer extends BaseEntity {
     @FilterableField(() => ID)
@@ -26,11 +26,11 @@ export class Customer extends BaseEntity {
     title: string;
 
     @FilterableField()
-    @Column() 
+    @Column()
     firstName: string;
 
     @FilterableField()
-    @Column() 
+    @Column()
     lastName: string;
 
     @FilterableField()

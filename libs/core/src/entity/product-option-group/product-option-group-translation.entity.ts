@@ -3,7 +3,7 @@ import {GridIronEntity} from '../base/base.entity';
 import {ObjectType} from '@nestjs/graphql';
 import {FilterableField} from '@nestjs-query/query-graphql';
 
-@ObjectType('ProductOptionGroupTranslation')
+@ObjectType('ProductOptionGroupTranslation', {isAbstract: true})
 @Entity({name: 'productOptionGroupTranslation'})
 export class ProductOptionGroupTranslation extends GridIronEntity {
 

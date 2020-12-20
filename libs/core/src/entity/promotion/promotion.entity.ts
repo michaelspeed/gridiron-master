@@ -10,7 +10,7 @@ import {
 import {ID, ObjectType} from '@nestjs/graphql';
 import {FilterableField} from '@nestjs-query/query-graphql';
 
-@ObjectType('Promotion')
+@ObjectType('Promotion', {isAbstract: true})
 @Entity({name: 'promotion'})
 export class Promotion extends BaseEntity {
     @FilterableField(() => ID)
@@ -47,7 +47,7 @@ export class Promotion extends BaseEntity {
     perCustomerUsageLimit: number;
 
     @FilterableField()
-    @Column() 
+    @Column()
     name: string;
 
     @FilterableField()
@@ -57,5 +57,5 @@ export class Promotion extends BaseEntity {
     @FilterableField()
     @Column()
     priorityScore: number;
-    
+
 }

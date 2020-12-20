@@ -19,7 +19,7 @@ registerEnumType(RoleType, {
     name: 'RoleType'
 })
 
-@ObjectType('Role')
+@ObjectType('Role', {isAbstract: true})
 @Entity({name: 'role'})
 export class Role extends BaseEntity {
     @FilterableField(() => ID)
@@ -39,11 +39,11 @@ export class Role extends BaseEntity {
     deletedAt?: Date;
 
     @FilterableField()
-    @Column() 
+    @Column()
     code: string;
 
     @FilterableField()
-    @Column() 
+    @Column()
     description: string;
 
     @Field(type => [Permission])
@@ -53,5 +53,5 @@ export class Role extends BaseEntity {
     @Field(type => RoleType)
     @Column({enum: RoleType, type: 'enum', default: RoleType.BASIC})
     type: RoleType
-    
+
 }

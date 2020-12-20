@@ -18,7 +18,7 @@ registerEnumType(AdministratorEnum, {
     name: 'AdministratorEnum'
 })
 
-@ObjectType('Administrator')
+@ObjectType('Administrator', {isAbstract: true})
 @Relation('user', () => User, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true, relationName: 'user'})
 @Entity({name: 'administrator'})
 export class Administrator extends BaseEntity {
@@ -40,7 +40,7 @@ export class Administrator extends BaseEntity {
     deletedAt?: Date;
 
     @FilterableField()
-    @Column() 
+    @Column()
     firstName: string;
 
     @FilterableField()

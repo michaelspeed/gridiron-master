@@ -25,11 +25,11 @@ export class HealthCheckController {
     @HealthCheck()
     check() {
         return this.health.check([
-            async () => this.dns.pingCheck('google', 'https://www.google.com/'),
-            async () => this.db.pingCheck('database', {timeout: 300}),
-            async () => this.memory.checkHeap('memory_heap', 1024 * 1024 * 1024),
-            async () => this.memory.checkRSS('memory_rss', 1024 * 1024 * 1024),
-            async () => this.disk.checkStorage('storage', { threshold: 250 * 1024 * 1024 * 1024, path: '/' }),
+            () => this.dns.pingCheck('google', 'https://www.google.com/'),
+            () => this.db.pingCheck('database', {timeout: 300}),
+            () => this.memory.checkHeap('memory_heap', 1024 * 1024 * 1024),
+            () => this.memory.checkRSS('memory_rss', 1024 * 1024 * 1024),
+            () => this.disk.checkStorage('storage', { threshold: 250 * 1024 * 1024 * 1024, path: '/' }),
         ])
     }
 }

@@ -20,7 +20,7 @@ registerEnumType(PageCategory, {
     name: 'PageCategory'
 })
 
-@ObjectType('Page')
+@ObjectType('Page', {isAbstract: true})
 @Entity('page')
 export class Page extends BaseEntity {
 

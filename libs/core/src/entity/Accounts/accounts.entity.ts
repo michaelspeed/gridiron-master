@@ -11,7 +11,7 @@ import {
 import {FilterableField, PagingStrategies, Relation} from "@nestjs-query/query-graphql";
 import {Store, Vendor} from "@gridiron/core";
 
-@ObjectType('Account')
+@ObjectType('Account', { isAbstract: true})
 @Entity({name: 'account'})
 @Relation('vendor', () => Vendor, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 export class Accounts extends BaseEntity {

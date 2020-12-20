@@ -1,6 +1,3 @@
-import {BaseEntity, CreateDateColumn, PrimaryGeneratedColumn, UpdateDateColumn} from 'typeorm';
-import {FilterableField} from '@nestjs-query/query-graphql';
-import {ID} from '@nestjs/graphql';
 import {DeepPartial} from '../../common';
 
 export abstract class GridIronEntity {

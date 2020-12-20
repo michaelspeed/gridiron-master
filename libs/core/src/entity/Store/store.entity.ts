@@ -28,7 +28,7 @@ import {
     Vendor, Zip,
     Zone,
     Settlements,
-    StoreBalance
+    StoreBalance, Asset
 } from '..';
 
 export enum StoreTypeEnum {
@@ -40,9 +40,10 @@ registerEnumType(StoreTypeEnum, {
     name: 'StoreTypeEnum',
 });
 
-@ObjectType('Store')
+@ObjectType('Store', {isAbstract: true})
 @Relation('country', () => Country, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @Relation('balance', () => StoreBalance, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true, nullable: true})
+@Relation('logo', () => Asset, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true, nullable: true})
 @Connection('sku', () => StockKeeping, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @FilterableConnection('settlement', () => Settlements, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true, relationName: 'settlement'})
 @Connection('prices', () => ProductVariantPrice, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
@@ -107,6 +108,18 @@ export class Store extends BaseEntity {
     @Column({default: false})
     channelMarkets: boolean;
 
+    @FilterableField()
+    @Column({default: false})
+    services: boolean;
+
+    @FilterableField()
+    @Column()
+    assetAPI: string;
+
+    @FilterableField()
+    @Column()
+    mainAPI: string;
+
     @Field(() => StoreTypeEnum)
     @Column({enum: StoreTypeEnum, type: "enum", default: StoreTypeEnum.DEFAULT})
     type: StoreTypeEnum
@@ -124,6 +137,10 @@ export class Store extends BaseEntity {
     @OneToOne(type1 => StoreBalance, balance => balance.store)
     @JoinColumn()
     balance: StoreBalance
+
+    @OneToOne(type => Asset, asset => asset.store)
+    @JoinColumn()
+    logo: Asset
 
     @OneToMany(type1 => BillingAgreement, agreement => agreement.store)
     agreement: BillingAgreement[]

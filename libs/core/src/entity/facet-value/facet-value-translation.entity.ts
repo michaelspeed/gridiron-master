@@ -3,7 +3,7 @@ import {ObjectType} from '@nestjs/graphql';
 import {FilterableField} from '@nestjs-query/query-graphql';
 import {GridIronEntity} from '../base/base.entity';
 
-@ObjectType('FacetValueTranslation')
+@ObjectType('FacetValueTranslation', {isAbstract: true})
 @Entity({name: 'facetValueTranslation'})
 export class FacetValueTranslation extends GridIronEntity {
 
@@ -12,5 +12,5 @@ export class FacetValueTranslation extends GridIronEntity {
     @FilterableField()
     @Column()
     name: string;
-    
+
 }

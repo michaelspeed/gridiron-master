@@ -11,7 +11,7 @@ import {
 import {FilterableField, PagingStrategies, Relation} from "@nestjs-query/query-graphql";
 import {Store} from "./store.entity";
 
-@ObjectType('StoreBalance')
+@ObjectType('StoreBalance', {isAbstract: true})
 @Relation('store', () => Store, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @Entity('storebalance')
 export class StoreBalance extends BaseEntity {

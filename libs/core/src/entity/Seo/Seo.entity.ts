@@ -3,7 +3,7 @@ import {FilterableField, PagingStrategies, Relation} from '@nestjs-query/query-g
 import {Field, ID, ObjectType} from '@nestjs/graphql';
 import {Collection, ProductVariant} from '..';
 
-@ObjectType('Seo')
+@ObjectType('Seo', {isAbstract: true})
 @Entity({name: 'seo'})
 @Relation('collection', () => Collection, {nullable: true, pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @Relation('variant', () => ProductVariant, {nullable: true, pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})

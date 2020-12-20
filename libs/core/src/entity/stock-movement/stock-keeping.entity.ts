@@ -8,7 +8,7 @@ registerEnumType(StockKeepingType, {
     name: 'StockKeepingType'
 })
 
-@ObjectType('StockKeeping')
+@ObjectType('StockKeeping', {isAbstract: true})
 @Entity({name: 'StockKeeping'})
 @Relation('variant', () => ProductVariant, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @Relation('store', () => Store, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})

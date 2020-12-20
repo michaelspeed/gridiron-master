@@ -12,14 +12,26 @@ import {
 } from 'typeorm';
 import {Field, ID, ObjectType} from '@nestjs/graphql';
 import {Connection, FilterableField, PagingStrategies, Relation} from '@nestjs-query/query-graphql';
-import {Asset, Collection, Facet, FacetValue, ProductAsset, ProductOptionGroup, ProductVariant, View, Hsn} from '../';
+import {
+    Asset,
+    Collection,
+    Facet,
+    FacetValue,
+    ProductAsset,
+    ProductOptionGroup,
+    ProductVariant,
+    View,
+    Hsn,
+    Serviceable
+} from '../';
 
-@ObjectType('Product')
+@ObjectType('Product', {isAbstract: true})
 @Entity({name: 'product'})
 @Connection('assets', () => ProductAsset, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @Connection('variants', () => ProductVariant, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @Connection('facets', () => FacetValue, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @Connection('options', () => ProductOptionGroup, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
+@Relation('serviceable', () => Serviceable, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true, nullable: true})
 @Relation('featuredAsset', () => Asset, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @Relation('collection', () => Collection, {nullable: true, pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @Relation('hsn', () => Hsn, {nullable: true, pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
@@ -83,6 +95,10 @@ export class Product extends BaseEntity {
     @Field(() => [ProductVariant])
     @OneToMany(type => ProductVariant, variant => variant.product)
     variants: ProductVariant[]
+
+    @Field(() => Serviceable)
+    @ManyToOne(() => Serviceable, serviceable => serviceable.product)
+    serviceable: Serviceable
 
     @OneToMany(() => View, view => view.product)
     views: View[]

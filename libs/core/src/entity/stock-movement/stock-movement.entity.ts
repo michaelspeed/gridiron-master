@@ -3,7 +3,7 @@ import {ID, ObjectType} from '@nestjs/graphql';
 import {FilterableField, PagingStrategies, Relation} from '@nestjs-query/query-graphql';
 import {StockKeeping, Store} from '..';
 
-@ObjectType('StockMovement')
+@ObjectType('StockMovement', {isAbstract: true})
 @Entity({name: 'StockMovement'})
 @Relation('keeping', () => StockKeeping, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 export class StockMovement extends BaseEntity {
@@ -18,9 +18,9 @@ export class StockMovement extends BaseEntity {
     @FilterableField()
     @UpdateDateColumn()
     updatedAt: Date;
- 
+
     @FilterableField()
-    @Column() 
+    @Column()
     quantity: number;
 
     @ManyToOne(() => StockKeeping, keeping => keeping.movement)

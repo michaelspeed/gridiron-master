@@ -11,7 +11,7 @@ import {
 import {FilterableField} from "@nestjs-query/query-graphql";
 import {DeliverySignIn, OrderLine} from "../../entity";
 
-@ObjectType('DeliveryPool')
+@ObjectType('DeliveryPool', {isAbstract: true})
 @Entity({name: 'deliverypool'})
 export class DeliveryPool extends BaseEntity {
     @FilterableField(() => ID)

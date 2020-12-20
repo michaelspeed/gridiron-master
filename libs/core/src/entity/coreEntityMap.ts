@@ -73,6 +73,8 @@ import {Refund} from "./refund/refund.entity";
 import {ResetCode} from "./reset-code/reset-code.entity";
 import {ViewCodes} from "./view-codes/view-codes.entity";
 import {Hsn} from "./hsn/hsn.entity";
+import {Serviceable} from "./serviceable/serviceable.entity";
+import {ServiceableOrders} from "./serviceable/serviceableOrders.entity";
 
 export const coreEntityMap = {
     Address,
@@ -147,7 +149,9 @@ export const coreEntityMap = {
     Invoice,
     Refund,
     ResetCode,
-    ViewCodes
+    ViewCodes,
+    Serviceable,
+    ServiceableOrders
 }
 
 export const nestQueryDTOMap = {
