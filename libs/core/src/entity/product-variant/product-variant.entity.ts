@@ -32,7 +32,7 @@ import {
     StockKeeping, Review
 } from '../';
 
-@ObjectType('ProductVariant')
+@ObjectType('ProductVariant', {isAbstract: true})
 @Entity({name: 'productVariant'})
 @Relation('product', () => Product, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @Relation('asset', () => ProductVariantAsset, {nullable: true, pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
@@ -87,11 +87,11 @@ export class ProductVariant extends BaseEntity {
     @Column({default: true})
     trackInventory: boolean;
 
-    @Field(() => ProductVariantAsset, {nullable: true})
+    // @Field(() => ProductVariantAsset, {nullable: true})
     @OneToOne(type => ProductVariantAsset, prod => prod.variant)
     asset: ProductVariantAsset
 
-    @Field(() => [ProductVariantPrice], {nullable: true})
+    // @Field(() => [ProductVariantPrice], {nullable: true})
     @OneToMany(type => ProductVariantPrice, price => price.variant)
     price: ProductVariantPrice[]
 

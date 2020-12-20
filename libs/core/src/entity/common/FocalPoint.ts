@@ -1,6 +1,6 @@
 import {Field, ObjectType} from '@nestjs/graphql';
 
-@ObjectType('FocalPoint')
+@ObjectType('FocalPoint', {isAbstract: true})
 export class FocalPoint {
     @Field()
     x: number

@@ -2,7 +2,7 @@ import {BaseEntity, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDate
 import {ID, ObjectType} from '@nestjs/graphql';
 import {FilterableField} from '@nestjs-query/query-graphql';
 
-@ObjectType('OrderHistroyEntry')
+@ObjectType('OrderHistroyEntry', {isAbstract: true})
 @Entity({name: 'orderHistroyEntry'})
 export class OrderHistoryEntry extends BaseEntity {
     @FilterableField(() => ID)
@@ -18,5 +18,5 @@ export class OrderHistoryEntry extends BaseEntity {
     updatedAt: Date;
 
     //linking has to be done
-    
+
 }

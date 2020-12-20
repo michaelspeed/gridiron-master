@@ -10,7 +10,7 @@ import {
 import {ID, ObjectType} from '@nestjs/graphql';
 import {FilterableField} from '@nestjs-query/query-graphql';
 
-@ObjectType('HistroyEntry')
+@ObjectType('HistroyEntry', {isAbstract: true})
 @Entity({name: 'histroyEntry'})
 export class HistoryEntry extends BaseEntity {
     @FilterableField(() => ID)
@@ -38,5 +38,5 @@ export class HistoryEntry extends BaseEntity {
 
     @Column('simple-json')
     data: any;
-    
+
 }

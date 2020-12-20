@@ -4,7 +4,7 @@ import {Connection, FilterableField, PagingStrategies} from '@nestjs-query/query
 import {ID, ObjectType} from '@nestjs/graphql';
 import {Store, TaxRate} from '..';
 
-@ObjectType('Zone')
+@ObjectType('Zone', {isAbstract: true})
 @Connection('taxrates', () => TaxRate, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @Connection('stores', () => Store, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @Connection('members', () => Country, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})

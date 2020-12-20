@@ -2,7 +2,7 @@ import {BaseEntity, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, Up
 import {ID, ObjectType} from '@nestjs/graphql';
 import {FilterableField} from '@nestjs-query/query-graphql';
 
-@ObjectType('CustomerGroup')
+@ObjectType('CustomerGroup', {isAbstract: true})
 @Entity({name: 'customer-group'})
 export class CustomerGroup extends BaseEntity {
     @FilterableField(() => ID)
@@ -16,7 +16,7 @@ export class CustomerGroup extends BaseEntity {
     @FilterableField()
     @UpdateDateColumn()
     updatedAt: Date;
-    
+
     @FilterableField()
     @Column()
     name: string;

@@ -16,7 +16,7 @@ registerEnumType(SettlementType, {
     name: 'SettlementType'
 })
 
-@ObjectType('Settlements')
+@ObjectType('Settlements', {isAbstract: true})
 @Relation('store', () => Store, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @Entity('settlements')
 export class Settlements extends BaseEntity {

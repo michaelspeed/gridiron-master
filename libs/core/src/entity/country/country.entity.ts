@@ -25,7 +25,7 @@ registerEnumType(CountryZone, {
     name: 'CountryZone'
 })
 
-@ObjectType('Country')
+@ObjectType('Country', {isAbstract: true})
 @Entity({name: 'country'})
 @Connection('zone', () => Zone, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @Connection('stores', () => Store, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})

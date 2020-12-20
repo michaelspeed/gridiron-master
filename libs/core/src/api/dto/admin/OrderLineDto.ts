@@ -1,6 +1,6 @@
 import {Field, InputType, ObjectType} from "@nestjs/graphql";
 
-@InputType()
+@InputType({isAbstract: true})
 export class OrderLineDto {
     @Field()
     priceId: string

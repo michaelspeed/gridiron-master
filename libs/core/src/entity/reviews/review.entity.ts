@@ -11,7 +11,7 @@ import {
 import {FilterableField} from "@nestjs-query/query-graphql";
 import {ProductVariant, User} from "@gridiron/core";
 
-@ObjectType('Review')
+@ObjectType('Review', {isAbstract: true})
 @Entity({name: 'review'})
 export class Review extends BaseEntity {
 

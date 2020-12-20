@@ -13,7 +13,7 @@ import {ID, ObjectType} from '@nestjs/graphql';
 import {Connection, FilterableField, PagingStrategies, Relation} from '@nestjs-query/query-graphql';
 import {ProductOptionGroup, ProductVariant} from '../';
 
-@ObjectType('ProductOption')
+@ObjectType('ProductOption', {isAbstract: true})
 @Entity({name: 'productOption'})
 @Connection('variant', () => ProductVariant, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @Relation('group', () => ProductOptionGroup, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})

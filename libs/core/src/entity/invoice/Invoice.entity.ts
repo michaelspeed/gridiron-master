@@ -16,7 +16,7 @@ registerEnumType(InvoiceEnum, {
     name: 'InvoiceEnum'
 })
 
-@ObjectType('Invoice')
+@ObjectType('Invoice', {isAbstract: true})
 @Entity({name: 'invoice'})
 @FilterableRelation('line', () => OrderLine, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true, relationName: 'line'})
 @FilterableRelation('store', () => Store, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true, relationName: 'line'})

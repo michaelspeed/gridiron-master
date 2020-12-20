@@ -24,7 +24,7 @@ registerEnumType(BillingAgreementState, {
     name: 'BillingAgreementState'
 })
 
-@ObjectType('BillingAgreement')
+@ObjectType('BillingAgreement', {isAbstract: true})
 @Entity('billing-agreement')
 @Relation('collection', () => Collection, {nullable: true,pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 @FilterableRelation('variant', () => ProductVariant, {nullable: true,pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true, relationName: 'variant'})

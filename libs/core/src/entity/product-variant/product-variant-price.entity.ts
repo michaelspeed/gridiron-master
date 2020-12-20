@@ -13,7 +13,7 @@ import {Field, ID, ObjectType} from '@nestjs/graphql';
 import {Connection, FilterableField, FilterableRelation, PagingStrategies, Relation} from '@nestjs-query/query-graphql';
 import {CartItem, Hsn, ProductVariant, PromotionVariantPrice, StockBackLog, Store, TaxRate} from '../';
 
-@ObjectType('ProductVariantPrice')
+@ObjectType('ProductVariantPrice', {isAbstract: true})
 @Entity({name: 'productVariantPrice'})
 @FilterableRelation('variant', () => ProductVariant)
 @Relation('tax', () => TaxRate, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true, nullable: true})
@@ -39,7 +39,7 @@ export class ProductVariantPrice extends BaseEntity {
     deletedAt?: Date;
 
     @FilterableField()
-    @Column() 
+    @Column()
     price: number;
 
     @FilterableField()
@@ -73,5 +73,5 @@ export class ProductVariantPrice extends BaseEntity {
     @Field(() => StockBackLog, {nullable: true})
     @OneToMany(() => StockBackLog, backlog => backlog.variant)
     backlog: StockBackLog[]
-    
+
 }

@@ -2,614 +2,6 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type Administrator {
-  id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  deletedAt: DateTime!
-  firstName: String!
-  lastName: String!
-  emailAddress: String!
-  type: AdministratorEnum!
-  user: User!
-}
-
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
-
-enum AdministratorEnum {
-  SUPERADMIN
-  STAFF
-}
-
-type Asset {
-  id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  deletedAt: DateTime!
-  name: String!
-  type: AssetType!
-  mimeType: String!
-  width: Float!
-  height: Float!
-  fileSize: Float!
-  source: String!
-  preview: String!
-  focalPoint: JSONObject!
-}
-
-enum AssetType {
-  IMAGE
-  VIDEO
-  BINARY
-}
-
-"""
-The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
-"""
-scalar JSONObject @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
-
-type Collection {
-  id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  deletedAt: DateTime!
-  isRoot: Boolean!
-  inMenu: Boolean!
-  position: Float!
-  isPrivate: Boolean!
-  name: String!
-  description: String!
-  children: [Collection!]!
-  products: [Product!]!
-  seo: Seo!
-  agreements: [BillingAgreement!]!
-  cartPrice: CartPriceRules!
-}
-
-type Facet {
-  id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  deletedAt: DateTime!
-  name: String!
-  isPrivate: Boolean!
-  code: String!
-}
-
-type FacetValue {
-  id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  deletedAt: DateTime!
-  code: String!
-  product: [Product!]!
-  facet: Facet!
-}
-
-type Order {
-  id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  deletedAt: DateTime!
-  totalPrice: Float!
-  address: String!
-  mode: PaymentModes!
-  line: [OrderLine!]!
-}
-
-enum PaymentModes {
-  card
-  netbanking
-  wallet
-  emi
-  upi
-  cod
-}
-
-type OrderItem {
-  id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  deletedAt: DateTime!
-  quantity: Float!
-  productVariant: ProductVariant!
-}
-
-type OrderLine {
-  id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  deletedAt: DateTime!
-  priceField: JSON!
-  stage: OrderStageType!
-  item: OrderItem!
-  store: Store!
-  invoice: [Invoice!]!
-  refund: Refund!
-}
-
-"""
-The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
-"""
-scalar JSON @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
-
-enum OrderStageType {
-  CREATED
-  PACKAGED
-  PROCESSED
-  SHIPPED
-  DELIVERED
-  RETURNINITIATED
-  RETURNED
-  RETURNEDREFUNDED
-}
-
-type Product {
-  id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  deletedAt: DateTime!
-  productName: String!
-  slug: String!
-  description: String!
-  hsn: Hsn
-  collection: Collection
-  options: [ProductOptionGroup!]!
-  featuredAsset: Asset!
-  facets: [FacetValue!]!
-  assets: [ProductAsset!]
-  variants: [ProductVariant!]!
-  viewcode: [String!]!
-}
-
-type User {
-  id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  email: String!
-  verified: Boolean!
-  verificationToken: String
-  passwordResetToken: String
-  identifierChangeToken: String
-  pendingIdentifier: String
-  lastLogin: DateTime
-  firstName: String
-  lastName: String
-  phoneNumber: String!
-  administrator: Administrator
-  vendor: Vendor
-  delivery: Delivery
-  cart: Cart
-  view: [View!]!
-  reviews: [Review!]!
-  address: [Address!]
-  order: [Order!]
-  reset: [ResetCode!]
-}
-
-type Vendor {
-  id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  vendorName: String!
-  phoneNumber: String!
-  email: String!
-  zip: Zip
-}
-
-type TaxRate {
-  id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  name: String!
-  value: Float!
-  enabled: Boolean!
-}
-
-type Store {
-  id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  storeName: String!
-  phoneNumber: String!
-  officialemail: String!
-  zipcode: String!
-  streetAddress1: String!
-  streetAddress2: String!
-  GSTIN: String!
-  singleStore: Boolean!
-  rentalStore: Boolean!
-  channelMarkets: Boolean!
-  type: StoreTypeEnum!
-  vendor: Vendor
-  cart: [CartItem!]!
-  backlogs: StockBackLog!
-  zip: Zip
-}
-
-enum StoreTypeEnum {
-  DEFAULT
-  VENDOR
-}
-
-type Seo {
-  id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  deletedAt: DateTime!
-  urlKey: String!
-  metatitle: String!
-  metakeywords: [String!]
-  metadesc: String!
-}
-
-type ProductAsset {
-  id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  deletedAt: DateTime!
-  product: Product!
-  asset: Asset!
-}
-
-type ProductVariant {
-  id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  deletedAt: DateTime!
-  dum_price: Float!
-  enabled: Boolean!
-  sku: String!
-  name: String!
-  rating: Float!
-  product: Product!
-  trackInventory: Boolean!
-  asset: ProductVariantAsset
-  price: [ProductVariantPrice!]
-  specs: ProductVariantSpecs
-  seo: Seo
-  agreements: [BillingAgreement!]!
-  stock: [StockKeeping!]!
-  line: [OrderItem!]!
-  carts: [CartItem!]!
-  reviews: [Review!]!
-  viewcode: [String!]!
-}
-
-type ProductVariantAsset {
-  id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  deletedAt: DateTime!
-  asset: Asset!
-  variant: ProductVariant!
-}
-
-type ProductVariantPrice {
-  id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  deletedAt: DateTime!
-  price: Float!
-  taxIncluded: Boolean!
-  hsn: Hsn!
-  tax: TaxRate!
-  variant: ProductVariant!
-  store: Store
-  promoprice: PromotionVariantPrice
-  cartItem: CartItem
-  backlog: StockBackLog
-}
-
-type ProductOption {
-  id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  deletedAt: DateTime!
-  name: String!
-  code: String!
-}
-
-type ProductOptionGroup {
-  id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  deletedAt: DateTime!
-  name: String!
-  code: String!
-  product: Product!
-  options: [ProductOption!]!
-}
-
-type BillingAgreement {
-  id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  deletedAt: DateTime!
-  value: Float!
-  type: BillingAgreementEnum!
-  state: BillingAgreementState!
-  variant: ProductVariant!
-  collection: Collection
-  store: Store!
-  request: [BillingAgreementRequest!]!
-}
-
-enum BillingAgreementEnum {
-  PLANBASE
-  COLLECTIONBASE
-  COMISSIONBASE
-  PRODCOMMISSION
-}
-
-enum BillingAgreementState {
-  APPROVED
-  PENDING
-  REJECTED
-}
-
-type ProductVariantSpecs {
-  id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  deletedAt: DateTime!
-  specs: JSON!
-  variant: ProductVariant!
-}
-
-type Cart {
-  id: ID!
-  items: [CartItem!]!
-  user: User
-}
-
-type View {
-  id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-}
-
-type BillingAgreementRequest {
-  id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  deletedAt: DateTime!
-  value: Float!
-  state: BillingAgreementState!
-}
-
-type StockKeeping {
-  id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  quantity: Float!
-  available_quantity: Float!
-  threshold: Float!
-  multiple: Boolean!
-  backorder: Boolean!
-  stockstatus: Boolean!
-  sku: String!
-  type: StockKeepingType!
-  variant: ProductVariant!
-}
-
-enum StockKeepingType {
-  GLOBAL
-  VENDOR
-}
-
-type Zip {
-  id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  name: String!
-  slug: String!
-  code: Float!
-}
-
-type Page {
-  id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  deletedAt: DateTime!
-  title: String!
-  targetId: String!
-  single: JSON
-  list: [String!]
-  pageType: PageType!
-  pageCategory: PageCategory!
-}
-
-enum PageType {
-  LIST
-  SINGLE
-}
-
-enum PageCategory {
-  HOME
-  CATEGORY
-  SINGLEPROD
-  PRODVARIANT
-}
-
-type Delivery {
-  id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  deletedAt: DateTime!
-  user: User!
-  signIn: [DeliverySignIn!]!
-}
-
-type DeliveryPool {
-  id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  deletedAt: DateTime!
-  signIn: DeliverySignIn!
-  lines: [OrderLine!]!
-}
-
-type Search {
-  id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  search: String!
-  userId: String!
-}
-
-type PromotionVariantPrice {
-  id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  deletedAt: DateTime!
-  priceType: PricePromoType!
-  value: Float!
-  forever: Boolean!
-  startsAt: DateTime!
-  endsAt: DateTime!
-  enabled: Boolean!
-}
-
-enum PricePromoType {
-  FLAT
-  PERCENTAGE
-}
-
-type CartPriceRules {
-  id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  deletedAt: DateTime!
-  priceType: PricePromoType!
-  value: Float!
-}
-
-type DeliverySignIn {
-  id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  deletedAt: DateTime!
-  delivery: Delivery!
-  pool: DeliveryPool!
-}
-
-type PaymentMethod {
-  id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  deletedAt: DateTime!
-  api: String!
-  secretKey: String!
-  enabled: Boolean!
-}
-
-type CartItem {
-  id: ID!
-  quantity: Float!
-  cart: Cart!
-  variant: ProductVariant!
-  store: Store!
-  price: ProductVariantPrice!
-}
-
-type StockBackLog {
-  id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  quantity: Float!
-}
-
-type Review {
-  id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  deletedAt: DateTime!
-  stars: Int!
-  text: String!
-  user: User!
-  variant: ProductVariant!
-}
-
-type Invoice {
-  id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  deletedAt: DateTime!
-  type: InvoiceEnum!
-  total: Float!
-  amount: Float!
-  fees: Float!
-  tax: Float!
-  nulled: Boolean!
-}
-
-enum InvoiceEnum {
-  STORE
-  CONSUMER
-  MASTER
-}
-
-type Refund {
-  id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  deletedAt: DateTime!
-  reason: String!
-  destination: String!
-  transactionId: String!
-  stage: RefundEnum!
-}
-
-enum RefundEnum {
-  INITIATED
-  REFUNDED
-}
-
-type ResetCode {
-  id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  deletedAt: DateTime!
-  code: String!
-  user: User!
-}
-
-type Hsn {
-  id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  deletedAt: DateTime!
-  code: String!
-  value: Float!
-}
-
-type Address {
-  id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  deletedAt: DateTime!
-  fullName: String!
-  addressLine: String!
-  city: String!
-  state: String!
-  landmark: String!
-  postalCode: String!
-  phoneNumber: String!
-  alternatePhoneNumber: String!
-  defaultShippingAddress: Boolean!
-  defaultBillingAddress: Boolean!
-  addressType: AddressType!
-}
-
-enum AddressType {
-  HOME
-  WORK
-}
-
 type AssetCountAggregate {
   id: Int
   createdAt: Int
@@ -650,6 +42,17 @@ type AssetMinAggregate {
   fileSize: Float
   source: String
   preview: String
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+enum AssetType {
+  IMAGE
+  VIDEO
+  BINARY
 }
 
 type AssetMaxAggregate {
@@ -1281,6 +684,9 @@ type StoreCountAggregate {
   singleStore: Int
   rentalStore: Int
   channelMarkets: Int
+  services: Int
+  assetAPI: Int
+  mainAPI: Int
 }
 
 type StoreMinAggregate {
@@ -1294,6 +700,8 @@ type StoreMinAggregate {
   streetAddress1: String
   streetAddress2: String
   GSTIN: String
+  assetAPI: String
+  mainAPI: String
 }
 
 type StoreMaxAggregate {
@@ -1307,6 +715,8 @@ type StoreMaxAggregate {
   streetAddress1: String
   streetAddress2: String
   GSTIN: String
+  assetAPI: String
+  mainAPI: String
 }
 
 type StoreInvoicesCountAggregate {
@@ -1346,6 +756,12 @@ type StoreInvoicesMinAggregate {
   amount: Float
   fees: Float
   tax: Float
+}
+
+enum InvoiceEnum {
+  STORE
+  CONSUMER
+  MASTER
 }
 
 type StoreInvoicesMaxAggregate {
@@ -1560,6 +976,11 @@ type StoreSkusMinAggregate {
   threshold: Float
   sku: String
   type: StockKeepingType
+}
+
+enum StockKeepingType {
+  GLOBAL
+  VENDOR
 }
 
 type StoreSkusMaxAggregate {
@@ -1808,6 +1229,11 @@ type UserAddressesMinAggregate {
   addressType: AddressType
 }
 
+enum AddressType {
+  HOME
+  WORK
+}
+
 type UserAddressesMaxAggregate {
   id: ID
   createdAt: DateTime
@@ -1949,6 +1375,9 @@ type ZoneStoresCountAggregate {
   singleStore: Int
   rentalStore: Int
   channelMarkets: Int
+  services: Int
+  assetAPI: Int
+  mainAPI: Int
 }
 
 type ZoneStoresMinAggregate {
@@ -1962,6 +1391,8 @@ type ZoneStoresMinAggregate {
   streetAddress1: String
   streetAddress2: String
   GSTIN: String
+  assetAPI: String
+  mainAPI: String
 }
 
 type ZoneStoresMaxAggregate {
@@ -1975,6 +1406,8 @@ type ZoneStoresMaxAggregate {
   streetAddress1: String
   streetAddress2: String
   GSTIN: String
+  assetAPI: String
+  mainAPI: String
 }
 
 type ZoneTaxratesCountAggregate {
@@ -2052,6 +1485,9 @@ type CountryStoresCountAggregate {
   singleStore: Int
   rentalStore: Int
   channelMarkets: Int
+  services: Int
+  assetAPI: Int
+  mainAPI: Int
 }
 
 type CountryStoresMinAggregate {
@@ -2065,6 +1501,8 @@ type CountryStoresMinAggregate {
   streetAddress1: String
   streetAddress2: String
   GSTIN: String
+  assetAPI: String
+  mainAPI: String
 }
 
 type CountryStoresMaxAggregate {
@@ -2078,6 +1516,8 @@ type CountryStoresMaxAggregate {
   streetAddress1: String
   streetAddress2: String
   GSTIN: String
+  assetAPI: String
+  mainAPI: String
 }
 
 type CountryZonesCountAggregate {
@@ -2909,10 +2349,6 @@ type VendorLicenseMaxAggregate {
   tenureEnd: DateTime
 }
 
-type MenuResponseTypes {
-  menu: String!
-}
-
 type StockKeepingCountAggregate {
   id: Int
   createdAt: Int
@@ -3186,6 +2622,17 @@ type OrderLinesMinAggregate {
   stage: OrderStageType
 }
 
+enum OrderStageType {
+  CREATED
+  PACKAGED
+  PROCESSED
+  SHIPPED
+  DELIVERED
+  RETURNINITIATED
+  RETURNED
+  RETURNEDREFUNDED
+}
+
 type OrderLinesMaxAggregate {
   id: ID
   createdAt: DateTime
@@ -3243,6 +2690,9 @@ type ZipStoresCountAggregate {
   singleStore: Int
   rentalStore: Int
   channelMarkets: Int
+  services: Int
+  assetAPI: Int
+  mainAPI: Int
 }
 
 type ZipStoresMinAggregate {
@@ -3256,6 +2706,8 @@ type ZipStoresMinAggregate {
   streetAddress1: String
   streetAddress2: String
   GSTIN: String
+  assetAPI: String
+  mainAPI: String
 }
 
 type ZipStoresMaxAggregate {
@@ -3269,6 +2721,8 @@ type ZipStoresMaxAggregate {
   streetAddress1: String
   streetAddress2: String
   GSTIN: String
+  assetAPI: String
+  mainAPI: String
 }
 
 type ZipVendorsCountAggregate {
@@ -3382,6 +2836,18 @@ type PageMinAggregate {
   pageCategory: PageCategory
 }
 
+enum PageType {
+  LIST
+  SINGLE
+}
+
+enum PageCategory {
+  HOME
+  CATEGORY
+  SINGLEPROD
+  PRODVARIANT
+}
+
 type PageMaxAggregate {
   id: ID
   createdAt: DateTime
@@ -3492,16 +2958,6 @@ type SettlementsMaxAggregate {
   transactionID: String
   remarks: String
   type: SettlementType
-}
-
-type CollectionSingleResponse {
-  collection: Collection!
-  facetValues: [FacetValue!]!
-}
-
-type UserResponse {
-  user: User!
-  token: String!
 }
 
 type OrderLineCountAggregate {
@@ -3643,6 +3099,11 @@ type PromotionVariantPriceMinAggregate {
   endsAt: DateTime
 }
 
+enum PricePromoType {
+  FLAT
+  PERCENTAGE
+}
+
 type PromotionVariantPriceMaxAggregate {
   id: ID
   createdAt: DateTime
@@ -3752,15 +3213,6 @@ type DeliverySignInsMaxAggregate {
   deletedAt: DateTime
 }
 
-type DataSource {
-  sum: Float!
-  amount: Float!
-}
-
-type ProdDataSource {
-  sum: Float!
-}
-
 type StockBackLogCountAggregate {
   id: Int
   createdAt: Int
@@ -3861,6 +3313,11 @@ type RefundMinAggregate {
   destination: String
   transactionId: String
   stage: RefundEnum
+}
+
+enum RefundEnum {
+  INITIATED
+  REFUNDED
 }
 
 type RefundMaxAggregate {
@@ -4040,6 +3497,100 @@ type HsnProdsMaxAggregate {
   description: String
 }
 
+type ServiceableCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  name: Int
+  type: Int
+  mode: Int
+}
+
+type ServiceableMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  name: String
+  type: ServiceableTypes
+  mode: ServiceableOrderTypes
+}
+
+enum ServiceableTypes {
+  VENDOR
+  PRODUCT
+}
+
+enum ServiceableOrderTypes {
+  IMMEDIATE
+  DATE
+}
+
+type ServiceableMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  name: String
+  type: ServiceableTypes
+  mode: ServiceableOrderTypes
+}
+
+type ServiceableProductsCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  deletedAt: Int
+  productName: Int
+  slug: Int
+  description: Int
+}
+
+type ServiceableProductsMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+  productName: String
+  slug: String
+  description: String
+}
+
+type ServiceableProductsMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+  productName: String
+  slug: String
+  description: String
+}
+
+type ServiceableVendorsCountAggregate {
+  id: Int
+  createdAt: Int
+  updatedAt: Int
+  vendorName: Int
+  phoneNumber: Int
+  email: Int
+}
+
+type ServiceableVendorsMinAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  vendorName: String
+  phoneNumber: String
+  email: String
+}
+
+type ServiceableVendorsMaxAggregate {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  vendorName: String
+  phoneNumber: String
+  email: String
+}
+
 type Query {
   GetMenu: MenuResponseTypes!
   getAllCollection: [Collection!]!
@@ -4068,6 +3619,574 @@ type Query {
   getSingleOrder(id: ID!): Order!
 }
 
+type MenuResponseTypes {
+  menu: String!
+}
+
+type Collection {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  isRoot: Boolean!
+  inMenu: Boolean!
+  position: Float!
+  isPrivate: Boolean!
+  name: String!
+  description: String!
+  children: [Collection!]!
+  products: [Product!]!
+  seo: Seo!
+  asset: Asset!
+  agreements: [BillingAgreement!]!
+  cartPrice: CartPriceRules!
+}
+
+type Product {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  productName: String!
+  slug: String!
+  description: String!
+  hsn: Hsn
+  collection: Collection
+  options: [ProductOptionGroup!]!
+  featuredAsset: Asset!
+  facets: [FacetValue!]!
+  assets: [ProductAsset!]
+  variants: [ProductVariant!]!
+  serviceable: Serviceable!
+  viewcode: [String!]!
+}
+
+type Hsn {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  code: String!
+  value: Float!
+}
+
+type ProductOptionGroup {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  name: String!
+  code: String!
+  product: Product!
+  options: [ProductOption!]!
+}
+
+type ProductOption {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  name: String!
+  code: String!
+}
+
+type Asset {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  name: String!
+  type: AssetType!
+  mimeType: String!
+  width: Float!
+  height: Float!
+  fileSize: Float!
+  source: String!
+  preview: String!
+  focalPoint: JSONObject!
+}
+
+"""
+The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSONObject @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
+
+type FacetValue {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  code: String!
+  product: [Product!]!
+  facet: Facet!
+}
+
+type Facet {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  name: String!
+  isPrivate: Boolean!
+  code: String!
+}
+
+type ProductAsset {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  product: Product!
+  asset: Asset!
+}
+
+type ProductVariant {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  dum_price: Float!
+  enabled: Boolean!
+  sku: String!
+  name: String!
+  rating: Float!
+  product: Product!
+  trackInventory: Boolean!
+  specs: ProductVariantSpecs
+  seo: Seo
+  agreements: [BillingAgreement!]!
+  stock: [StockKeeping!]!
+  line: [OrderItem!]!
+  carts: [CartItem!]!
+  reviews: [Review!]!
+  viewcode: [String!]!
+}
+
+type ProductVariantSpecs {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  specs: JSON!
+  variant: ProductVariant!
+}
+
+"""
+The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
+
+type Seo {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  urlKey: String!
+  metatitle: String!
+  metakeywords: [String!]
+  metadesc: String!
+}
+
+type BillingAgreement {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  value: Float!
+  type: BillingAgreementEnum!
+  state: BillingAgreementState!
+  variant: ProductVariant!
+  collection: Collection
+  store: Store!
+  request: [BillingAgreementRequest!]!
+}
+
+enum BillingAgreementEnum {
+  PLANBASE
+  COLLECTIONBASE
+  COMISSIONBASE
+  PRODCOMMISSION
+}
+
+enum BillingAgreementState {
+  APPROVED
+  PENDING
+  REJECTED
+}
+
+type Store {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  storeName: String!
+  phoneNumber: String!
+  officialemail: String!
+  zipcode: String!
+  streetAddress1: String!
+  streetAddress2: String!
+  GSTIN: String!
+  singleStore: Boolean!
+  rentalStore: Boolean!
+  channelMarkets: Boolean!
+  services: Boolean!
+  assetAPI: String!
+  mainAPI: String!
+  type: StoreTypeEnum!
+  vendor: Vendor
+  cart: [CartItem!]!
+  backlogs: StockBackLog!
+  zip: Zip
+}
+
+enum StoreTypeEnum {
+  DEFAULT
+  VENDOR
+}
+
+type Vendor {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  vendorName: String!
+  phoneNumber: String!
+  email: String!
+  zip: Zip
+}
+
+type Zip {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  name: String!
+  slug: String!
+  code: Float!
+}
+
+type CartItem {
+  id: ID!
+  quantity: Float!
+  cart: Cart!
+  variant: ProductVariant!
+  store: Store!
+  price: ProductVariantPrice!
+}
+
+type Cart {
+  id: ID!
+  items: [CartItem!]!
+  user: User
+}
+
+type User {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  email: String!
+  verified: Boolean!
+  verificationToken: String
+  passwordResetToken: String
+  identifierChangeToken: String
+  pendingIdentifier: String
+  lastLogin: DateTime
+  firstName: String
+  lastName: String
+  phoneNumber: String!
+  administrator: Administrator
+  vendor: Vendor
+  delivery: Delivery
+  cart: Cart
+  view: [View!]!
+  reviews: [Review!]!
+  address: [Address!]
+  order: [Order!]
+  reset: [ResetCode!]
+}
+
+type Administrator {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  firstName: String!
+  lastName: String!
+  emailAddress: String!
+  type: AdministratorEnum!
+  user: User!
+}
+
+enum AdministratorEnum {
+  SUPERADMIN
+  STAFF
+}
+
+type Delivery {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  user: User!
+  signIn: [DeliverySignIn!]!
+}
+
+type DeliverySignIn {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  delivery: Delivery!
+  pool: DeliveryPool!
+}
+
+type DeliveryPool {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  signIn: DeliverySignIn!
+  lines: [OrderLine!]!
+}
+
+type OrderLine {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  priceField: JSON!
+  stage: OrderStageType!
+  item: OrderItem!
+  store: Store!
+  invoice: [Invoice!]!
+  refund: Refund!
+  serviceable: ServiceableOrders!
+}
+
+type OrderItem {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  quantity: Float!
+  productVariant: ProductVariant!
+}
+
+type Invoice {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  type: InvoiceEnum!
+  total: Float!
+  amount: Float!
+  fees: Float!
+  tax: Float!
+  nulled: Boolean!
+}
+
+type Refund {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  reason: String!
+  destination: String!
+  transactionId: String!
+  stage: RefundEnum!
+}
+
+type ServiceableOrders {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  dateTime: DateTime!
+}
+
+type View {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Review {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  stars: Int!
+  text: String!
+  user: User!
+  variant: ProductVariant!
+}
+
+type Address {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  fullName: String!
+  addressLine: String!
+  city: String!
+  state: String!
+  landmark: String!
+  postalCode: String!
+  phoneNumber: String!
+  alternatePhoneNumber: String!
+  defaultShippingAddress: Boolean!
+  defaultBillingAddress: Boolean!
+  addressType: AddressType!
+}
+
+type Order {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  totalPrice: Float!
+  address: String!
+  mode: PaymentModes!
+  line: [OrderLine!]!
+}
+
+enum PaymentModes {
+  card
+  netbanking
+  wallet
+  emi
+  upi
+  cod
+}
+
+type ResetCode {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  code: String!
+  user: User!
+}
+
+type ProductVariantPrice {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  price: Float!
+  taxIncluded: Boolean!
+  hsn: Hsn!
+  tax: TaxRate!
+  variant: ProductVariant!
+  store: Store
+  promoprice: PromotionVariantPrice
+  cartItem: CartItem
+  backlog: StockBackLog
+}
+
+type TaxRate {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  name: String!
+  value: Float!
+  enabled: Boolean!
+}
+
+type PromotionVariantPrice {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  priceType: PricePromoType!
+  value: Float!
+  forever: Boolean!
+  startsAt: DateTime!
+  endsAt: DateTime!
+  enabled: Boolean!
+}
+
+type StockBackLog {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  quantity: Float!
+}
+
+type BillingAgreementRequest {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  value: Float!
+  state: BillingAgreementState!
+}
+
+type StockKeeping {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  quantity: Float!
+  available_quantity: Float!
+  threshold: Float!
+  multiple: Boolean!
+  backorder: Boolean!
+  stockstatus: Boolean!
+  sku: String!
+  type: StockKeepingType!
+  variant: ProductVariant!
+}
+
+type Serviceable {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  name: String!
+  type: ServiceableTypes!
+  mode: ServiceableOrderTypes!
+}
+
+type CartPriceRules {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  priceType: PricePromoType!
+  value: Float!
+}
+
+type CollectionSingleResponse {
+  collection: Collection!
+  facetValues: [FacetValue!]!
+}
+
+type Page {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  title: String!
+  targetId: String!
+  single: JSON
+  list: [String!]
+  pageType: PageType!
+  pageCategory: PageCategory!
+}
+
+type Search {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  search: String!
+  userId: String!
+}
+
+type PaymentMethod {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  api: String!
+  secretKey: String!
+  enabled: Boolean!
+}
+
 type Mutation {
   ShiftProductVariant(prodId: String!, name: String!): ProductVariant!
   creteReview(stars: Float!, varId: String!, text: String!): Review!
@@ -4088,6 +4207,11 @@ enum ViewEnum {
   PRODUCT
   VARIANT
   COLLECTION
+}
+
+type UserResponse {
+  user: User!
+  token: String!
 }
 
 input CartItemDto {

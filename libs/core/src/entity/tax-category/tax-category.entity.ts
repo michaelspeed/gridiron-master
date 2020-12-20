@@ -3,7 +3,7 @@ import {ID, ObjectType} from '@nestjs/graphql';
 import {Connection, FilterableField, PagingStrategies} from '@nestjs-query/query-graphql';
 import {Store, TaxRate} from '..';
 
-@ObjectType('TaxCategory')
+@ObjectType('TaxCategory', {isAbstract: true})
 @Entity({name: 'taxCategory'})
 @Connection('rate', () => TaxRate, {pagingStrategy: PagingStrategies.OFFSET, enableAggregate: true})
 export class TaxCategory extends BaseEntity {
@@ -18,9 +18,9 @@ export class TaxCategory extends BaseEntity {
     @FilterableField()
     @UpdateDateColumn()
     updatedAt: Date;
- 
+
     @FilterableField()
-    @Column() 
+    @Column()
     name: string;
 
     @ManyToOne(type => Store, store => store.taxCategory)
