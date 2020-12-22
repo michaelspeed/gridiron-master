@@ -135,7 +135,13 @@ export class AssetsServerPlugin implements OnGridironBootstrap, OnGridironClose 
                     Logger.debug(`Pre-cached Asset not found: ${req.path}`, loggerCtx);
                     let file: Buffer;
                     try {
-                        file = await AssetsServerPlugin.assetStorage.readFileToBuffer(req.path);
+                        AssetsServerPlugin.assetStorage.readFileToBuffer(req.path)
+                            .then(value => {
+                                console.log(value)
+                                file = value
+                            })
+                            .catch(err => console.log(err))
+                        /*file = await AssetsServerPlugin.assetStorage.readFileToBuffer(req.path);*/
                     } catch (err) {
                         res.status(404).send('Resource not found');
                         return;
