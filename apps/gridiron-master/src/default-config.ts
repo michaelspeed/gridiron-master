@@ -28,7 +28,14 @@ export const DEF_CONFIG: GridIronConfig = {
             route: 'assets',
             assetUploadDir: path.join(__dirname, 'assets'),
             port: 5002,
-            namingStrategy: new DefaultAssetsNamingStrategy()
+            namingStrategy: new DefaultAssetsNamingStrategy(),
+            storageStrategyFactory: configureS3AssetStorage({
+                bucket: 'assmamart',
+                credentials: {
+                    accessKeyId: 'AKIASNOC7JBKUGISNXNO',
+                    secretAccessKey: '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'
+                }
+            })
         }),
         /*EmailPlugin.init({
             devMode: true,
