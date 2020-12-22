@@ -14,7 +14,7 @@ export class ShopStoreResolver {
         private readonly storeService: ShopStoreService,
     ) {}
 
-    @Query(() => Store)
+    @Query(() => Store, {nullable: true})
     async GetDefaultStore(): Promise<Store> {
         return this.storeService.GetDefaultStore()
     }
