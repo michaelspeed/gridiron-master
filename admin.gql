@@ -7996,7 +7996,7 @@ type Query {
     """Filter to find records to aggregate on"""
     filter: StoreAggregateFilter
   ): StoreAggregateResponse!
-  GetDefaultStore: Store!
+  GetDefaultStore: Store
   taxCategory(
     """The id of the record to find."""
     id: ID!
