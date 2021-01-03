@@ -20,7 +20,7 @@ export class StoreResolver extends CRUDResolver(Store, {
         super(service);
     }
 
-    @Query(returns => Store)
+    @Query(returns => Store, {nullable: true})
     async GetDefaultStore(): Promise<Store> {
         return this.storeService.GetDefaultStore()
     }
