@@ -62,10 +62,10 @@ export const DEF_CONFIG: GridIronConfig = {
     dbConnectionOptions: {
         database: 'oihelp',
         type: 'mysql',
-        host: 'localhost',
+        host: 'ls-cac559240bd8e22d83894da3b6ee0768e4d43bc1.cxkzwswlsfxz.ap-south-1.rds.amazonaws.com',
         port: 3306,
         username: 'root',
-        password: 'mike0001',
+        password: '%gqg28yBNf73RPjTHX$yij3G$J1vcn?a',
         /*logger: "advanced-console",
         logging: "all"*/
     },
