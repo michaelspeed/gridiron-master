@@ -36,7 +36,7 @@ export const DEF_CONFIG: GridIronConfig = {
         username: 'root',
         password: '%gqg28yBNf73RPjTHX$yij3G$J1vcn?a',
         connectTimeout: 1000000,
-        synchronize: true,
+        synchronize: false,
         /*logger: "advanced-console",
         logging: "all"*/
     },
