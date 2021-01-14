@@ -4,6 +4,7 @@ import * as path from 'path';
 import { Readable, Stream } from 'stream';
 import {AssetsStorageStrategy, Logger} from "@gridiron/core";
 import {loggerCtx} from "./constants";
+import AWS from 'aws-sdk';
 
 export type S3Credentials = {
     accessKeyId: string;
@@ -121,11 +122,29 @@ export class S3AssetStorageStrategy implements AssetsStorageStrategy {
     constructor(
         private s3Config: S3Config,
         public readonly toAbsoluteUrl: (request: Request, identifier: string) => string,
-    ) {}
+    ) {
+        try {
+            this.AWS = AWS
+        } catch (e) {
+            Logger.error(
+                `Could not find the "aws-sdk" package. Make sure it is installed`,
+                loggerCtx,
+                e.stack,
+            );
+        }
+
+        const config = {
+            credentials: this.getS3Credentials(),
+            region: this.s3Config.region,
+            ...this.s3Config.nativeS3Configuration,
+        };
+        this.s3 = new this.AWS.S3(config);
+        this.ensureBucket(this.s3Config.bucket);
+    }
 
     async init() {
         try {
-            this.AWS = await import('aws-sdk');
+            this.AWS = AWS
         } catch (e) {
             Logger.error(
                 `Could not find the "aws-sdk" package. Make sure it is installed`,
