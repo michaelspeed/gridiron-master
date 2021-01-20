@@ -8,7 +8,6 @@ import {
     RestPlugin
 } from '@gridiron/core';
 import {AssetsServerPlugin, configureGoogleCloudStorage, configureS3AssetStorage} from '@gridiron/asset-server-plugin';
-import {defaultEmailHandlers, EmailPlugin} from "@gridiron/email-plugin";
 
 
 // anibo config
@@ -17,9 +16,9 @@ export const DEF_CONFIG: GridIronConfig = {
     apiOptions: {
         hostname: '',
         port: 5588,
-        adminApiPath: 'admin-api',
-        shopApiPath: 'shop-api',
-        cors: true,
+        adminApiPath: process.env.admin_api,
+        shopApiPath: process.env.shop_api,
+        cors: Boolean(process.env.cors),
         middleware: [],
         apolloServerPlugin: []
     },
@@ -30,10 +29,10 @@ export const DEF_CONFIG: GridIronConfig = {
             port: 5002,
             namingStrategy: new DefaultAssetsNamingStrategy(),
             storageStrategyFactory: configureS3AssetStorage({
-                bucket: 'assmamart',
+                bucket: process.env.bucket,
                 credentials: {
-                    accessKeyId: 'AKIASNOC7JBKUGISNXNO',
-                    secretAccessKey: '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'
+                    accessKeyId: process.env.accessKeyId,
+                    secretAccessKey: process.env.secretAccessKey
                 }
             })
         }),
@@ -57,15 +56,15 @@ export const DEF_CONFIG: GridIronConfig = {
         }
     },
     authOptions: {
-        authTokenHeaderKey: 'gridiron-key'
+        authTokenHeaderKey: process.env.authTokenHeaderKey
     },
     dbConnectionOptions: {
-        database: 'assammart',
+        database: process.env.db,
         type: 'mysql',
-        host: 'ls-cac559240bd8e22d83894da3b6ee0768e4d43bc1.cxkzwswlsfxz.ap-south-1.rds.amazonaws.com',
+        host: process.env.host,
         port: 3306,
-        username: 'root',
-        password: '%gqg28yBNf73RPjTHX$yij3G$J1vcn?a',
+        username: process.env.username,
+        password: process.env.password,
         connectTimeout: 1000000,
         synchronize: false,
         /*logger: "advanced-console",

@@ -3817,6 +3817,7 @@ type Store {
   mainAPI: String!
   type: StoreTypeEnum!
   vendor: Vendor
+  logo: Asset!
   cart: [CartItem!]!
   backlogs: StockBackLog!
   zip: Zip
