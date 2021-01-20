@@ -9,9 +9,9 @@ export const DEF_CONFIG: GridIronConfig = {
     apiOptions: {
         hostname: '',
         port: 5588,
-        adminApiPath: 'admin-api',
-        shopApiPath: 'shop-api',
-        cors: true,
+        adminApiPath: process.env.admin_api,
+        shopApiPath: process.env.shop_api,
+        cors: Boolean(process.env.cors),
         middleware: [],
         apolloServerPlugin: []
     },
@@ -29,12 +29,14 @@ export const DEF_CONFIG: GridIronConfig = {
         authTokenHeaderKey: 'gridiron-key'
     },
     dbConnectionOptions: {
-        database: 'gridiron',
+        database: process.env.db,
         type: 'mysql',
-        host: 'localhost',
+        host: process.env.host,
         port: 3306,
-        username: 'root',
-        password: 'mike0001',
+        username: process.env.username,
+        password: process.env.password,
+        connectTimeout: 1000000,
+        synchronize: false,
         /*logger: "advanced-console",
         logging: "all"*/
     },
