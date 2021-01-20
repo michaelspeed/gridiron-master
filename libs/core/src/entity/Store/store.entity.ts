@@ -138,6 +138,7 @@ export class Store extends BaseEntity {
     @JoinColumn()
     balance: StoreBalance
 
+    @Field(() => Asset)
     @OneToOne(type => Asset, asset => asset.store)
     @JoinColumn()
     logo: Asset
