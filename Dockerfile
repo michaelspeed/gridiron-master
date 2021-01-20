@@ -1,12 +1,26 @@
-FROM node:14-alpine
+FROM node:14-alpine AS BUILD_IMAGE
 
 WORKDIR /app
 
+COPY package.json yarn.lock ./
+
+RUN yarn --frozen-lockfile
+
 COPY . .
 
-RUN npm install
+RUN yarn build
 
-RUN npm run build
+FROM node:14-alpine
+
+RUN npm install -g concurrently
+
+WORKDIR /app
+
+COPY --from=BUILD_IMAGE /app/ ./
+
+RUN rm -rf node_modules
+
+RUN yarn --frozen-lockfile
 
 EXPOSE 3000 5588 5002 3020
 
