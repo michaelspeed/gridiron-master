@@ -2,7 +2,7 @@ import {MiddlewareConsumer, Module, NestModule, OnApplicationBootstrap, OnApplic
 import { CoreService } from './core.service';
 import {EventBusModule} from './event-bus/event-bus.module';
 import {ApiModule} from './api/api.module';
-import {ServiceCoreModule, ServiceModule} from './service/service.module';
+import {ServiceModule} from './service/service.module';
 import {ConfigModule, ConfigService, Logger} from './config';
 import {WorkerModule} from './worker/worker.module';
 import {JobQueueModule} from './job-queue/job-queue.module';
@@ -12,13 +12,10 @@ import {ProcessContextModule} from './process-context/process-context.module';
 import {ModuleRef} from '@nestjs/core';
 import {RequestHandler} from 'express';
 import {InjectableStrategy, Injector} from '@gridiron/core/common';
-import {GraphQLModule} from '@nestjs/graphql';
-import {LoggerModule} from 'nestjs-pino';
 
 @Module({
   imports:[
       ConfigModule,
-      LoggerModule.forRoot(),
       EventBusModule,
       ServiceModule.forRoot(),
       WorkerModule,
