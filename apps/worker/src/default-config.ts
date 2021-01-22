@@ -1,14 +1,17 @@
 import {Transport} from '@nestjs/microservices';
-import {DefaultLogger, GridIronConfig, InMemoryJobQueueStrategy} from '@gridiron/core';
+import {DefaultLogger, GridIronConfig, InMemoryJobQueueStrategy, RestPlugin} from '@gridiron/core';
+import * as dotenv from 'dotenv';
+
+const {parsed} = dotenv.config()
 
 export const DEF_CONFIG: GridIronConfig = {
     logger: new DefaultLogger(),
     apiOptions: {
         hostname: '',
         port: 5588,
-        adminApiPath: 'admin-api',
-        shopApiPath: 'shop-api',
-        cors: true,
+        adminApiPath: parsed.admin_api,
+        shopApiPath: parsed.shop_api,
+        cors: Boolean(parsed.cors),
         middleware: [],
         apolloServerPlugin: []
     },
@@ -26,14 +29,14 @@ export const DEF_CONFIG: GridIronConfig = {
         authTokenHeaderKey: 'gridiron-key'
     },
     dbConnectionOptions: {
-        database: 'anibo-shop',
+        database: parsed.db,
         type: 'mysql',
-        host: 'ls-cac559240bd8e22d83894da3b6ee0768e4d43bc1.cxkzwswlsfxz.ap-south-1.rds.amazonaws.com',
+        host: parsed.host,
         port: 3306,
-        username: 'root',
-        password: '%gqg28yBNf73RPjTHX$yij3G$J1vcn?a',
+        username: parsed.username,
+        password: parsed.password,
         connectTimeout: 1000000,
-        synchronize: true,
+        synchronize: false,
         /*logger: "advanced-console",
         logging: "all"*/
     },

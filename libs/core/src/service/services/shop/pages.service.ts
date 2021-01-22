@@ -13,4 +13,8 @@ export class ShopPagesService {
     async getHomePageData(): Promise<Page> {
         return this.connection.getRepository(Page).findOne({where: {pageCategory: PageCategory.HOME}})
     }
+
+    async getPageData(id: string): Promise<Page> {
+        return this.connection.getRepository(Page).findOne({where: {id: id}})
+    }
 }
