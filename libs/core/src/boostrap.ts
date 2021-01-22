@@ -5,7 +5,6 @@ import {DefaultLogger, GridIronConfig, Logger, RuntimeGridIronConfig} from './co
 import {getConfig, setConfig} from './config/config-helpers';
 import {InternalServerError, ReadOnlyRequired, Type} from './common';
 import {NestjsQueryTypeOrmModule} from '@nestjs-query/query-typeorm';
-import { NestEnlighten } from 'nestjs-enlighten';
 import {getConfigurationFunction, getEntitiesFromPlugin} from './plugin/plugin-metadata';
 import {coreEntityMap} from './entity/coreEntityMap';
 
@@ -26,7 +25,6 @@ export async function BootstrapServer(userConfig: Partial<GridIronConfig>): Prom
     // DefaultLogger.restoreOriginalLogLevel()
     app.useLogger(new Logger())
     app.enableCors({origin: '*'})
-    app.useGlobalFilters(new NestEnlighten({ theme: 'theme-dark' }));
     await app.listen(port, hostname || '')
     app.enableShutdownHooks()
     if (config.workerOptions.runInMainProcess) {
