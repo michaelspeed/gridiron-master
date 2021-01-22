@@ -4,8 +4,7 @@ import {
     DefaultAssetsNamingStrategy,
     DefaultLogger,
     GridIronConfig,
-    InMemoryJobQueueStrategy, NoopLogger,
-    RestPlugin
+    InMemoryJobQueueStrategy
 } from '@gridiron/core';
 import {AssetsServerPlugin, configureGoogleCloudStorage, configureS3AssetStorage} from '@gridiron/asset-server-plugin';
 import * as dotenv from 'dotenv';
