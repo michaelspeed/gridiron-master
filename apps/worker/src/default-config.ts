@@ -22,7 +22,7 @@ export const DEF_CONFIG: GridIronConfig = {
         runInMainProcess: false,
         transport: Transport.TCP,
         options: {
-            port: 3020
+            port: 3021
         }
     },
     authOptions: {

@@ -2,7 +2,7 @@
 <project version="4">
   <component name="SshConfigs">
     <configs>
-      <sshConfig authType="PASSWORD" host="45.118.132.119" id="68e60bb8-2ee5-407c-a384-f3f48b2bf782" port="22" nameFormat="DESCRIPTIVE" username="root" />
+      <sshConfig host="52.221.210.210" id="68e60bb8-2ee5-407c-a384-f3f48b2bf782" keyPath="$USER_HOME$/Library/Mobile Documents/com~apple~CloudDocs/awskeys/assmmart/assammartkey.pem" port="22" nameFormat="DESCRIPTIVE" username="bitnami" />
     </configs>
   </component>
 </project>

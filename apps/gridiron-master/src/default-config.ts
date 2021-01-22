@@ -27,7 +27,7 @@ export const DEF_CONFIG: GridIronConfig = {
         AssetsServerPlugin.init({
             route: 'assets',
             assetUploadDir: path.join(__dirname, 'assets'),
-            port: 5002,
+            port: 6002,
             namingStrategy: new DefaultAssetsNamingStrategy(),
             storageStrategyFactory: configureS3AssetStorage({
                 bucket: parsed.bucket,
@@ -42,7 +42,7 @@ export const DEF_CONFIG: GridIronConfig = {
             handlers: defaultEmailHandlers,
             templatePath: path.join(__dirname, 'templates'),
             outputPath: path.join(__dirname, 'test-emails'),
-            mailboxPort: 5003,
+            mailboxPort: 6003,
             globalTemplateVars: {
                 verifyEmailAddressUrl: 'http://localhost:4201/verify',
                 passwordResetUrl: 'http://localhost:4201/reset-password',
@@ -53,7 +53,7 @@ export const DEF_CONFIG: GridIronConfig = {
         runInMainProcess: false,
         transport: Transport.TCP,
         options: {
-            port: 3020
+            port: 3021
         }
     },
     authOptions: {

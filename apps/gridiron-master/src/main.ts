@@ -5,8 +5,7 @@ import {DEF_CONFIG} from './default-config';
 
 async function bootstrap() {
   BootstrapServer(DEF_CONFIG as any).then(async() => {
-    const app = await NestFactory.create(AppModule);
-    await app.listen(3000);
+    console.log('SERVER INIT')
   })
 }
 bootstrap();
