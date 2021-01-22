@@ -1,17 +1,17 @@
 import {Transport} from '@nestjs/microservices';
-import * as path from 'path';
 import {DefaultLogger, GridIronConfig, InMemoryJobQueueStrategy, RestPlugin} from '@gridiron/core';
-import {AssetsServerPlugin} from '@gridiron/asset-server-plugin';
-import {defaultEmailHandlers, EmailPlugin} from "@gridiron/email-plugin";
+import * as dotenv from 'dotenv';
+
+const {parsed} = dotenv.config()
 
 export const DEF_CONFIG: GridIronConfig = {
     logger: new DefaultLogger(),
     apiOptions: {
         hostname: '',
-        port: 6898,
-        adminApiPath: 'admin-api',
-        shopApiPath: 'shop-api',
-        cors: true,
+        port: 5588,
+        adminApiPath: parsed.admin_api,
+        shopApiPath: parsed.shop_api,
+        cors: Boolean(parsed.cors),
         middleware: [],
         apolloServerPlugin: []
     },
@@ -29,12 +29,12 @@ export const DEF_CONFIG: GridIronConfig = {
         authTokenHeaderKey: 'gridiron-key'
     },
     dbConnectionOptions: {
-        database: 'oihelp',
+        database: parsed.db,
         type: 'mysql',
-        host: 'ls-cac559240bd8e22d83894da3b6ee0768e4d43bc1.cxkzwswlsfxz.ap-south-1.rds.amazonaws.com',
+        host: parsed.host,
         port: 3306,
-        username: 'root',
-        password: '%gqg28yBNf73RPjTHX$yij3G$J1vcn?a',
+        username: parsed.username,
+        password: parsed.password,
         connectTimeout: 1000000,
         synchronize: false,
         /*logger: "advanced-console",
