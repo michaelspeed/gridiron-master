@@ -1,17 +1,17 @@
 import {Transport} from '@nestjs/microservices';
-import * as path from 'path';
 import {DefaultLogger, GridIronConfig, InMemoryJobQueueStrategy, RestPlugin} from '@gridiron/core';
-import {AssetsServerPlugin} from '@gridiron/asset-server-plugin';
-import {defaultEmailHandlers, EmailPlugin} from "@gridiron/email-plugin";
+import * as dotenv from 'dotenv';
+
+const {parsed} = dotenv.config()
 
 export const DEF_CONFIG: GridIronConfig = {
     logger: new DefaultLogger(),
     apiOptions: {
         hostname: '',
         port: 5588,
-        adminApiPath: process.env.admin_api,
-        shopApiPath: process.env.shop_api,
-        cors: Boolean(process.env.cors),
+        adminApiPath: parsed.admin_api,
+        shopApiPath: parsed.shop_api,
+        cors: Boolean(parsed.cors),
         middleware: [],
         apolloServerPlugin: []
     },
@@ -29,12 +29,12 @@ export const DEF_CONFIG: GridIronConfig = {
         authTokenHeaderKey: 'gridiron-key'
     },
     dbConnectionOptions: {
-        database: process.env.db,
+        database: parsed.db,
         type: 'mysql',
-        host: process.env.host,
+        host: parsed.host,
         port: 3306,
-        username: process.env.username,
-        password: process.env.password,
+        username: parsed.username,
+        password: parsed.password,
         connectTimeout: 1000000,
         synchronize: false,
         /*logger: "advanced-console",
