@@ -70,6 +70,7 @@ export async function bootstrapWorkerInternal(
     const workerModule = await import('./worker/worker.module')
     DefaultLogger.hideNestBoostrapLogs()
     const workerApp = await NestFactory.createMicroservice(workerModule.WorkerModule, {
+        host: gridIronConfig.workerOptions.host,
         transport: gridIronConfig.workerOptions.transport,
         logger: new Logger(),
         options: gridIronConfig.workerOptions.options,

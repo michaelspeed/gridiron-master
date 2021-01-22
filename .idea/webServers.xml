@@ -3,7 +3,14 @@
   <component name="WebServers">
     <option name="servers">
       <webServer id="1ab647c7-6509-4837-8512-5f548e3b8b99" name="oncall-linode">
-        <fileTransfer accessType="SFTP" host="45.118.132.119" port="22" sshConfigId="68e60bb8-2ee5-407c-a384-f3f48b2bf782" sshConfig="root@45.118.132.119:22 password">
+        <fileTransfer accessType="SFTP" host="52.221.210.210" port="22" sshConfigId="68e60bb8-2ee5-407c-a384-f3f48b2bf782" sshConfig="bitnami@52.221.210.210:22 key" keyPair="true">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+      <webServer id="28d4a1be-1c47-4cfb-882c-912b81127a80" name="oihelp">
+        <fileTransfer accessType="SFTP" host="52.221.210.210" port="22" sshConfigId="68e60bb8-2ee5-407c-a384-f3f48b2bf782" sshConfig="bitnami@52.221.210.210:22 key" keyPair="true">
           <advancedOptions>
             <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
           </advancedOptions>
